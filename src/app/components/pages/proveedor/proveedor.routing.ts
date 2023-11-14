@@ -4,7 +4,7 @@ import { ProveedorComponent } from './proveedor.component';
 
 @NgModule({
 	imports: [RouterModule.forChild([
-		{ path: '', component: ProveedorComponent }
+		{ path: '', component: ProveedorComponent }		 
 	])],
 	exports: [RouterModule]
 })

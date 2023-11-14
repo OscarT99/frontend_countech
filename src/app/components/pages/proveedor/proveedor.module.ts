@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ProveedorRoutingModule } from './proveedor.routing'; 
-import { ProveedorComponent } from './proveedor.component'; 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProveedorRoutingModule } from './proveedor.routing';   
+import { ProveedorComponent }  from './proveedor.component'; 
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -17,6 +17,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from "primeng/autocomplete";
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 
 @NgModule({
@@ -37,7 +38,9 @@ import { AutoCompleteModule } from "primeng/autocomplete";
         RadioButtonModule,
         InputNumberModule,
         DialogModule,
-        AutoCompleteModule
+        AutoCompleteModule,
+        ReactiveFormsModule,
+        InputSwitchModule,             
     ],
     declarations: [ProveedorComponent]
 })

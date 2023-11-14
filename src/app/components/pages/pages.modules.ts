@@ -8,8 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
     imports: [
         CommonModule,
         PagesRoutingModule,
-        HttpClientModule,
-                                
+        HttpClientModule,                                
     ]
 })
 export class PagesModule { }

@@ -1,88 +1,160 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/interfaces/product';
-import { MessageService, SelectItem } from 'primeng/api';
+import { SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { ProductService } from 'src/app/services/product.service';
-import { ProveedorService } from 'src/app/services/proveedor/proveedor.service';
+import { ProveedorService } from 'src/app/services/proveedor/proveedor.service';  
+import { Proveedor } from 'src/app/interfaces/proveedor/proveedor.interface'; 
+import { ToastrService } from 'ngx-toastr';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import * as XLSX from 'xlsx';
 
 
 @Component({
     templateUrl: './proveedor.component.html',
-    providers: [MessageService]
+    
 })
 export class ProveedorComponent implements OnInit {
-    tipoProveedor: SelectItem[] = [];
-    selectedProveedor: SelectItem = { value: '' };
+    listProveedores: Proveedor[] = []
+    proveedor: Proveedor = {}
+    formProveedor:FormGroup;
+    id:number=0;
 
-    tipoIdentificacion: SelectItem[] = [];
+    valSwitch: boolean = false;
+    showConfirmationDialog: boolean = false;
+    proveedorSeleccionado: Proveedor | null = null;
+    switchState: boolean | undefined = undefined;
+
+    tipoProveedor: SelectItem[] = [
+      { label: 'Empresa', value: 'Empresa' },
+      { label: 'Persona', value: 'Persona' }
+    ];
+    selectedProveedor: string = ''; 
+
+    tipoIdentificacion:SelectItem[] = [
+      { label: 'NIT',value:'NIT' },
+      { label: 'Cedula de Ciudadania', value:'Cedula de ciudadania' },
+      { label: 'Registro civil', value:'Registro civil' },
+      { label: 'Tarjeta de extranjero', value:'Tarjeta de extranjero' },
+      { label: 'Cedula de extranjero', value:'Cedula de extranjero' },
+      { label: 'Pasaporte', value:'Pasaporte' },
+      { label: 'Tarjeta de identidad', value:'Tarjeta de identidad' },
+    ];
     selectedIdentificacion: SelectItem = { value: '' };
 
-    estado: SelectItem[] = [];
-    selectedEstado: SelectItem = { label: 'Activo', value: { id: 1, name: 'True' } };
+    estado:SelectItem[] = [
+      { label: 'Activo', value: true },
+      { label: 'Inactivo', value: false }
+    ];
+    selectedEstado: SelectItem = {value: ''};
 
     countries: any[] = [];
     filteredCountries: any[] = [];
     selectedCountryAdvanced: any[] = [];
 
     productDialog: boolean = false;
-
-    deleteProductDialog: boolean = false;
-
-    deleteProductsDialog: boolean = false;
-
+    
     products: Product[] = [];
 
     product: Product = {};
 
     selectedProducts: Product[] = [];
 
-    submitted: boolean = false;
+    rowsPerPageOptions = [5, 10, 15];
 
-    cols: any[] = [];
 
-    statuses: any[] = [];
+    constructor(private fb:FormBuilder,
+      private _proveedorService:ProveedorService,
+      private toastr: ToastrService,      
+      private aRouter:ActivatedRoute,
+      ){
+        this.formProveedor = this.fb.group({
+          tipoProveedor: ['',Validators.required],
+          tipoIdentificacion: ['',Validators.required],
+          numeroIdentificacion: ['',Validators.required],
+          razonSocial: ['',Validators.required],
+          nombreComercial: ['',Validators.required],
+          ciudad: ['',Validators.required],
+          direccion: ['',],
+          contacto: ['',],
+          telefono: ['',],
+          correo: ['',],
+          estado: ['',],
+        })
+        this.aRouter.params.subscribe(params => {
+          this.id = +params['id']; // Obtén el valor del parámetro 'id' de la URL y actualiza id
+        });
+       }
 
-    rowsPerPageOptions = [5, 10, 20];
-
-    constructor(private productService: ProductService,private _proveedorService:ProveedorService,private messageService: MessageService,) { }
-
-    ngOnInit() {
-        this.productService.getProducts().then(data => this.products = data);
+    ngOnInit():void {        
+        this.getListProveedores()
 
         this._proveedorService.getCountries().then(countries => {
             this.countries = countries;
-        });
-
-        this.tipoProveedor = [
-            { label: 'Empresa', value:'Empresa' },
-            { label: 'Persona', value:'Persona' }            
-        ];
-
-        this.tipoIdentificacion = [
-            { label: 'NIT', value:'NIT' },
-            { label: 'Cedula de Ciudadania', value:'CedulaDeCiudadania' }
-        ];
-
-        this.estado = [
-            { label: 'Activo', value: 'True' },
-            { label: 'Inactivo', value: 'False' }
-        ];
+        });                        
+    }
 
     
-        this.cols = [
-            { field: 'product', header: 'Product' },
-            { field: 'price', header: 'Price' },
-            { field: 'category', header: 'Category' },
-            { field: 'rating', header: 'Reviews' },
-            { field: 'inventoryStatus', header: 'Status' }
-        ];
 
-        this.statuses = [
-            { label: 'INSTOCK', value: 'instock' },
-            { label: 'LOWSTOCK', value: 'lowstock' },
-            { label: 'OUTOFSTOCK', value: 'outofstock' }
-        ];
+    getListProveedores(){     
+        this._proveedorService.getListProveedores().subscribe((data:any) =>{      
+          this.listProveedores = data.listProveedores;          
+        })        
     }
+
+    getProveedor(id:number){      
+      this._proveedorService.getProveedor(id).subscribe((data:Proveedor) => {
+        console.log(data)
+        this.formProveedor.setValue({
+          tipoProveedor: data.tipoProveedor,
+          tipoIdentificacion: data.tipoIdentificacion,
+          numeroIdentificacion: data.numeroIdentificacion,
+          razonSocial: data.razonSocial,
+          nombreComercial : data.nombreComercial,
+          ciudad: data.ciudad,
+          direccion:data.direccion,
+          contacto:data.contacto,
+          telefono:data.telefono,
+          correo: data.correo,
+          estado: data.estado
+        })
+      })
+    }
+
+
+    addProveedor(){
+      const proveedor : Proveedor = {
+       tipoProveedor: this.formProveedor.value.tipoProveedor,
+       tipoIdentificacion: this.formProveedor.value.tipoIdentificacion,
+       numeroIdentificacion: this.formProveedor.value.numeroIdentificacion,
+       razonSocial: this.formProveedor.value.razonSocial,
+       nombreComercial: this.formProveedor.value.nombreComercial,
+       ciudad: this.formProveedor.value.ciudad,
+       direccion: this.formProveedor.value.direccion,
+       contacto: this.formProveedor.value.contacto,
+       telefono: this.formProveedor.value.telefono,
+       correo: this.formProveedor.value.correo,
+       estado: this.formProveedor.value.estado,
+      }
+ 
+      if(this.id !== 0){
+        proveedor.id = this.id
+       this._proveedorService.putProveedor(this.id,proveedor).subscribe(()=>{         
+        this.productDialog = false;
+        this.toastr.info(`El proveedor ${proveedor.razonSocial} fue actualizado con exito`,`Cliente actualizado`)
+        this.getListProveedores();         
+       })
+      }else{            
+       this._proveedorService.postProveedor(proveedor).subscribe(() => {        
+        this.productDialog = false;
+        this.toastr.success(`El proveedor ${proveedor.razonSocial} fue registrado con exito`,`Cliente agregado`)        
+        this.getListProveedores();
+       })
+      }
+ 
+      this.productDialog = false;
+     
+   }
 
     filterCountry(event: any) {
         const filtered: any[] = [];
@@ -93,97 +165,87 @@ export class ProveedorComponent implements OnInit {
                 filtered.push(country);
             }
         }
-
         this.filteredCountries = filtered;
     }
 
-
     openNew() {
-        this.product = {};
-        this.submitted = false;
+        this.id = 0;                
+        this.formProveedor.reset()
         this.productDialog = true;
+        this.selectedCountryAdvanced = [];
     }
-
-    deleteSelectedProducts() {
-        this.deleteProductsDialog = true;
-    }
-
-    editProduct(product: Product) {
-        this.product = { ...product };
+    
+    editProduct(id:number) {
+        this.id=id;
         this.productDialog = true;
-    }
-
-    deleteProduct(product: Product) {
-        this.deleteProductDialog = true;
-        this.product = { ...product };
-    }
-
-    confirmDeleteSelected() {
-        this.deleteProductsDialog = false;
-        this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-        this.selectedProducts = [];
-    }
-
-    confirmDelete() {
-        this.deleteProductDialog = false;
-        this.products = this.products.filter(val => val.id !== this.product.id);
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-        this.product = {};
+        this.getProveedor(id)
     }
 
     hideDialog() {
         this.productDialog = false;
-        this.submitted = false;
-    }
-
-    saveProduct() {
-        this.submitted = true;
-
-        if (this.product.name?.trim()) {
-            if (this.product.id) {
-                // @ts-ignore
-                this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-                this.products[this.findIndexById(this.product.id)] = this.product;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-            } else {
-                this.product.id = this.createId();
-                this.product.code = this.createId();
-                this.product.image = 'product-placeholder.svg';
-                // @ts-ignore
-                this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-                this.products.push(this.product);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-            }
-
-            this.products = [...this.products];
-            this.productDialog = false;
-            this.product = {};
-        }
-    }
-
-    findIndexById(id: string): number {
-        let index = -1;
-        for (let i = 0; i < this.products.length; i++) {
-            if (this.products[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    }
-
-    createId(): string {
-        let id = '';
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
     }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
+
+    showConfirmation(proveedor:Proveedor) {
+      this.switchState = proveedor.estado;
+      this.proveedorSeleccionado = proveedor;
+      this.showConfirmationDialog = true;      
+    }
+    
+    confirmAction(confirmation: boolean) {
+      if (confirmation && this.proveedorSeleccionado) {      
+        if (this.proveedorSeleccionado.id) {
+          this._proveedorService.putProveedor(this.proveedorSeleccionado.id, this.proveedorSeleccionado).subscribe(() => {
+            if (this.proveedorSeleccionado!.estado !== undefined) {
+              this.valSwitch = this.proveedorSeleccionado!.estado;
+            }
+          });
+        }
+      }
+      this.showConfirmationDialog = false;
+      this.proveedorSeleccionado = null;
+    }
+    
+    exportToExcel() {
+      const data: any[] = []; // Array para almacenar los datos
+    
+      // Agregar encabezados a la matriz de datos
+      const headers = [
+        'Tipo',
+        'N° Identificación',
+        'Razon Social',
+        'Telefono',
+        'Email',
+        'Estado'
+      ];
+    
+      data.push(headers);
+    
+      // Agregar datos de cada fila a la matriz de datos
+      this.listProveedores.forEach(proveedor => {
+        const row = [
+            proveedor.tipoProveedor,
+            proveedor.numeroIdentificacion,
+            proveedor.razonSocial,
+            proveedor.telefono,
+            proveedor.correo,
+            proveedor.estado ? 'Activo' : 'Inactivo'
+        ];
+    
+        data.push(row);
+      });
+    
+      // Crear un libro de Excel
+      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Proveedores');
+    
+      // Guardar el libro de Excel como archivo
+      XLSX.writeFile(wb, 'Proveedores.xlsx');
+    }
+    
+            
 }

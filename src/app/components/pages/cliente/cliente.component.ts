@@ -10,8 +10,6 @@ import { ActivatedRoute } from '@angular/router';
 import * as XLSX from 'xlsx';
 
 
-
-
 @Component({
     templateUrl: './cliente.component.html',
     
