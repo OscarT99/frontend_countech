@@ -15,6 +15,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
+import { UsuarioService } from './services/usuario/usuario.service';
+import { LoginService } from './services/login/login.service';
+import { VentaService } from './services/venta/venta.service';
+import { AbonoVentaService } from './services/abonoVenta/abonoVenta.service';
+
+
+
 
 @NgModule({
   declarations: [
@@ -34,7 +41,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    ProductService,ClienteService
+    ProductService,ClienteService,UsuarioService,LoginService, VentaService, AbonoVentaService
   ],
   bootstrap: [AppComponent]
 })
