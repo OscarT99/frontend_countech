@@ -22,7 +22,7 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Usuarios',
                 items: [
-                    { label: 'usuarios', icon: 'pi pi-fw pi-users', routerLink: ['#'] },                    
+                    { label: 'usuarios', icon: 'pi pi-fw pi-users', routerLink: ['/pages/usuario'] },                    
                 ]
             },
             {
@@ -47,8 +47,8 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     { label: 'Clientes', icon: 'pi pi-fw pi-user', routerLink: ['/pages/cliente'] },
                     { label: 'Pedidos', icon: 'pi pi-fw pi-file-o', routerLink: ['#'] },
-                    { label: 'Ventas', icon: 'pi pi-fw pi-book', routerLink: ['#'] },
-                    { label: 'Abonos', icon: 'pi pi-fw pi-money-bill', routerLink: ['#'] },
+                    { label: 'Ventas', icon: 'pi pi-fw pi-book', routerLink: ['/pages/venta'] },
+                    { label: 'Abonos', icon: 'pi pi-fw pi-money-bill', routerLink: ['/pages/abonoVenta'] },
                 ]
             },
         ];

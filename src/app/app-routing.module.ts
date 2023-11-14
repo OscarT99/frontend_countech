@@ -10,6 +10,7 @@ import { AppLayoutComponent } from './shared/app.layout.component';
     children:[
       {path:'pages',loadChildren:()=>import('./components/pages/pages.modules').then(m => m.PagesModule)}
     ]
+    
   }
 ])],
   exports: [RouterModule]
