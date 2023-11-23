@@ -65,7 +65,7 @@
 
         <p-dialog [(visible)]="productDialog" [style]="{width: '650px'}" header="Nuevo Usuario" [modal]="true" class="p-fluid">            
                 <form [formGroup]="formUsuario" (ngSubmit)="addUsuario()">
-                    <div class="formgrid grid">
+                    <div class="formgrid grid" style="margin-top: 20px;">
                         <div class="field col">
                             <span class="p-float-label">
                                 <input formControlName="nombre" id="nombre" type="text" pInputText>
@@ -84,10 +84,11 @@
                                 La Cédula es <strong>requerida</strong>
                             </span>
                         </div>
+                        
                     </div>
 
 
-                    <div class="formgrid grid">
+                    <div class="formgrid grid" style="margin-top: 20px;">
                         <div class="field col">
                             <span class="p-float-label">
                                 <input formControlName="email" id="email" type="text" pInputText>
@@ -98,11 +99,21 @@
                             </span>
                         </div>
                     </div>
-    
-                    <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" ></button>
-                    <button type="submit" pButton pRipple label="Guadar"  class="p-button-success mr-2" ></button>
-                                
-                </form>             
+                        
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <div class="field">
+                          <button type="button" pButton pRipple label="Cancelar" class="p-button-rounded p-button-danger" (click)="hideDialog()"></button>
+                        </div>
+                        <div class="field" style="margin-left: 8px;"> <!-- Agrega un margen entre los botones -->
+                          <button type="submit" pButton pRipple label="Guardar" class="p-button-rounded p-button-success"></button>
+                        </div>
+                    </div>
+                      
+                      
+                </form> 
+                
+                
+                             
         </p-dialog>
 
         <p-dialog
