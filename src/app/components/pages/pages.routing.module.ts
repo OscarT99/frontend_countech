@@ -10,9 +10,8 @@ import { RouterModule } from '@angular/router';
         {path:'login',loadChildren:()=>import('./auth/login/login.module').then(m => m.LoginModule)},             
         {path:'venta',loadChildren:()=>import('./venta/venta.module').then(m => m.VentaModule)},                     
         {path:'abonoVenta',loadChildren:()=>import('./abonoVenta/abonoVenta.module').then(m => m.AbonoVentaModule)},                     
-
-
-
+        {path:'pedido',loadChildren:()=>import('./pedido/list.pedido/list.pedido.module').then(m => m.ListPedidoModule)},
+        {path:'pedido/add-edit',loadChildren:()=>import('./pedido/add.edit.pedido/add.edit.pedido.module').then(m => m.AddEditPedidoModule)},
     ])],
     exports: [RouterModule]
 })

@@ -87,8 +87,8 @@
                     </div>
 
                     <div class="formgrid grid">
-                        <div class="field col">
-                            <span class="p-float-label mt-4">
+                        <div class="field col mt-3">
+                            <span class="p-float-label ">
                                 <input formControlName="numeroIdentificacion" id="numeroIdentificacion" type="text" pInputText>
                                 <label for="numeroIdentificacion">N° Identificación</label>
                             </span>
@@ -96,8 +96,8 @@
                                 El numero Identificación es <strong>requerido</strong>
                             </span>                       
                         </div>
-                        <div class="field col">
-                            <span class="p-float-label">
+                        <div class="field col mt-3">
+                            <span class="p-float-label ">
                                 <input formControlName="razonSocial" id="razonSocial" type="text" pInputText>
                                 <label for="razonSocial">Razon Social</label>
                             </span>
@@ -108,8 +108,8 @@
                     </div>
 
                     <div class="formgrid grid">
-                        <div class="field col">
-                            <span class="p-float-label">
+                        <div class="field col mt-3">
+                            <span class="p-float-label ">
                                 <input formControlName="nombreComercial" id="nombreComercial" type="text" pInputText>
                                 <label for="nombreComercial">Nombre Comercial</label>
                             </span>
@@ -117,7 +117,7 @@
                                 El Nombre Comercial es <strong>requerido</strong>
                             </span>                                               
                         </div>
-                        <div class="field col">
+                        <div class="field col mt-3">
                             <p-autoComplete formControlName="ciudad" placeholder="Ciudad" [(ngModel)]="selectedCountryAdvanced" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name" [dropdown]="true"> 
                             </p-autoComplete>
                             <span *ngIf="formCliente.get('ciudad')?.hasError('required') && formCliente.get('ciudad')?.touched">
@@ -127,13 +127,13 @@
                     </div>
 
                     <div class="formgrid grid">
-                        <div class="field col">
+                        <div class="field col mt-3">
                             <span class="p-float-label">
                                 <input formControlName="direccion" id="direccion" type="text" pInputText>
                                 <label for="direccion">Dirección</label>
                             </span>                       
                         </div>
-                        <div class="field col">
+                        <div class="field col mt-3">
                             <span class="p-float-label">
                                 <input formControlName="contacto" id="contacto" type="text" pInputText>
                                 <label for="contacto">Contacto</label>
@@ -142,13 +142,13 @@
                     </div>
     
                     <div class="formgrid grid">
-                        <div class="field col">
+                        <div class="field col mt-3">
                             <span class="p-float-label">
                                 <input formControlName="telefono" id="telefono" type="text" pInputText>
                                 <label for="telefono">Télefono</label>
                             </span>                       
                         </div>
-                        <div class="field col">
+                        <div class="field col mt-3">
                             <span class="p-float-label">
                                 <input formControlName="correo" id="correo" type="text" pInputText>
                                 <label for="correo">Email</label>
@@ -156,15 +156,13 @@
                         </div>
                     </div>
     
-                    <div class="formgrid">                   
+                    <!-- <div class="formgrid mt-3">                   
                         <p-dropdown formControlName="estado" [options]="estado" [(ngModel)]="selectedEstado" placeholder="Estado" [showClear]="true" [style]="{'width': '48%'}"></p-dropdown>                   
-                    </div>
-                    
-                    
-                        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" routerLink="/pages/cliente"></button>
-                        <button type="submit" pButton pRipple label="Guadar" icon="pi pi-check" class="p-button-text" ></button>
-                                
-                </form>             
+                    </div> -->
+                                        
+                    <span pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></span>
+                    <button type="submit" pButton pRipple label="Guadar" icon="pi pi-check" class="p-button-text" ></button>                                                
+                </form>                                                                      
         </p-dialog>
 
         <p-dialog

@@ -33,10 +33,10 @@ export class ClienteComponent implements OnInit {
 
     tipoIdentificacion:SelectItem[] = [
       { label: 'NIT',value:'NIT' },
-      { label: 'Cedula de Ciudadania', value:'Cedula de ciudadania' },
+      { label: 'Cédula de ciudadanía', value:'Cédula de ciudadanía' },
       { label: 'Registro civil', value:'Registro civil' },
-      { label: 'Tarjeta de extranjero', value:'Tarjeta de extranjero' },
-      { label: 'Cedula de extranjero', value:'Cedula de extranjero' },
+      { label: 'Tarjeta de extranjería', value:'Tarjeta de extranjería' },
+      { label: 'Cedula de extranjero', value:'Cédula de extranjería' },
       { label: 'Pasaporte', value:'Pasaporte' },
       { label: 'Tarjeta de identidad', value:'Tarjeta de identidad' },
     ];
