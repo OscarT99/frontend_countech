@@ -31,7 +31,6 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Proveedores', icon: 'pi pi-fw pi-user', routerLink: ['/pages/proveedor'] },
                     { label: 'Insumos', icon: 'pi pi-fw pi-box', routerLink: ['#'] },
                     { label: 'Compras', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['#'] },
-                    { label: 'Abonos', icon: 'pi pi-fw pi-credit-card', routerLink: ['#'] },
                 ]
             },
             {
@@ -48,7 +47,6 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Clientes', icon: 'pi pi-fw pi-user', routerLink: ['/pages/cliente'] },
                     { label: 'Pedidos', icon: 'pi pi-fw pi-file-o', routerLink: ['/pages/pedido'] },
                     { label: 'Ventas', icon: 'pi pi-fw pi-book', routerLink: ['/pages/venta'] },
-                    { label: 'Abonos', icon: 'pi pi-fw pi-money-bill', routerLink: ['/pages/abonoVenta'] },
                 ]
             },
         ];
