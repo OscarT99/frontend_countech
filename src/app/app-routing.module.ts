@@ -8,6 +8,7 @@ import { AppLayoutComponent } from './shared/app.layout.component';
     {
     path: '', component: AppLayoutComponent,
     children:[
+      {path:'',loadChildren:()=>import('./components/pages/inicio/inicio.module').then(m => m.InicioModule)},
       {path:'pages',loadChildren:()=>import('./components/pages/pages.modules').then(m => m.PagesModule)}
     ]
     
