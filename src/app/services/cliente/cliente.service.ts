@@ -21,6 +21,12 @@ import { Observable } from 'rxjs';
     getListClientes(): Observable<Cliente[]>{
       return this.http.get<Cliente[]>(`${this.myAppUrl}${this.myApiUrl}`)    
     }
+
+    // Cambia la interfaz
+    getListClientesPedido(): Observable<{ listClientes: Cliente[] }> {
+      return this.http.get<{ listClientes: Cliente[] }>(`${this.myAppUrl}${this.myApiUrl}`);
+    }
+
   
     postCliente(cliente : Cliente):Observable<void>{
       return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}`,cliente)
@@ -40,6 +46,12 @@ import { Observable } from 'rxjs';
           .then(res => res.data as any[])
           .then(data => data);
     }
+
+    buscarClientes(termino: string): Observable<Cliente[]> {
+      const url = `${this.myAppUrl}${this.myApiUrl}buscar?termino=${termino}`;
+      return this.http.get<Cliente[]>(url);
+    }
+  
     
   }
   

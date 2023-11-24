@@ -17,6 +17,7 @@ import * as XLSX from 'xlsx';
 
 @Component({
   templateUrl: './abonoVenta.component.html',
+  
   providers: [ConfirmationService, MessageService]
 
 })
@@ -136,7 +137,6 @@ export class AbonoVentaComponent implements OnInit {
     })
   }
 
-
   addAbonoVenta() {
     const abonoVenta: AbonoVenta = {
       venta: this.formAbonoVenta.value.venta,
@@ -201,6 +201,7 @@ export class AbonoVentaComponent implements OnInit {
     // Guardar el libro de Excel como archivo
     XLSX.writeFile(wb, 'abonosVentas.xlsx');
   }
+
 
 
 }

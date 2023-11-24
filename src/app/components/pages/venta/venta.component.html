@@ -54,8 +54,8 @@
                         </td>
                         <td>
                             <div class="flex">                                
-                                <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-primary mr-2" (click)="editProduct(venta.id)"></button>                                
-                                <button (click)="navigateToAbonoVenta()"  pButton pRipple icon="pi pi-dollar" class="p-button-rounded p-button-success mr-2"></button>    
+                                <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-primary mr-2" (click)="detalleVenta(venta.id)"></button>
+                                <button (click)="newAbonoVenta(venta.id)" pButton pRipple icon="pi pi-dollar" class="p-button-rounded p-button-success mr-2"></button>    
                             </div>
                             
                         </td>
@@ -64,61 +64,183 @@
             </p-table>            
         </div>
 
-        <p-dialog [(visible)]="productDialog" [style]="{width: '1200px'}" header="Detalle Venta" [modal]="true" class="p-fluid">            
-                <form [formGroup]="formVenta" (ngSubmit)="addVenta()">
-                    <div class="formgrid grid">
-                        <div class="field col">
-                            <span class="p-float-label">
-                                <input formControlName="cliente" id="cliente" type="number" pInputText>
+        <p-dialog [(visible)]="productDialogAbono" [style]="{width: '1000px', height: '500px' }" header="Abono Venta" [modal]="true" class="p-fluid">         
+            <div style="display: flex;">
+                <div style="flex: 1;">    
+                    <form [formGroup]="formVenta" (ngSubmit)="addVenta()">
+                        <div class="formgrid grid">
+                            <div class="field col">
+                                <label for="id">Id Venta</label>
+                                    <input formControlName="id" id="id" type="number" pInputText readonly >
+                            </div>
+                            <div class="field col">
                                 <label for="cliente">Cliente</label>
-                            </span>                                         
+                                    <input id="cliente" type="text" pInputText readonly [value]="getNombreCliente(venta.cliente)">
+                            </div>
+                            
                         </div>
-                        <div class="field col">
-                            <span class="p-float-label">
-                                <input formControlName="ordenTrabajo" id="ordenTrabajo" type="text" pInputText>
-                                <label for="ordenTrabajo">Orden de Trabajo</label>
-                            </span>                                         
-                        </div>
-                    </div>
 
-                    <div class="formgrid grid">
-                        <div class="field col">
-                            <span class="p-float-label">
-                                <input formControlName="fechaVenta" id="fechaVenta" type="text" pInputText>
-                                <label for="fechaVenta">Fecha de Venta</label>
-                            </span>                                         
+                        <div class="formgrid grid">
+
+                            <div class="field col">
+                                <label for="valorAbono">Total</label>
+                                <div class="p-inputgroup">
+                                    <span class="p-inputgroup-addon">$</span>
+                                    <p-inputNumber formControlName="valorTotal" [(ngModel)]="value8" [readonly]="true"></p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="field col">
+                                <label for="valorAbono">Restante</label>
+                                <div class="p-inputgroup">
+                                    <span class="p-inputgroup-addon" readonly>$</span>
+                                    <p-inputNumber inputId="valorRestante" [ngModel]="getValorRestante()" [readonly]="true"></p-inputNumber>
+                                </div>
+                            </div>
+                            
+                    
                         </div>
-                        <div class="field col">
-                            <span class="p-float-label">
-                                <input formControlName="formaPago" id="formaPago" type="text" pInputText>
-                                <label for="formaPago">Forma de Pago</label>
-                            </span>                                         
+                       
+                    </form> 
+                    <div class="mb-2">
+                        <label for="valorAbono">Valor Abono</label>
+                    </div>
+                     
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon">$</span>
+                        <p-inputNumber inputId="valorAbono" [(ngModel)]="value9" placeholder="000.000.000" ></p-inputNumber>
+                        <p-toast></p-toast>
+                        <button class="ml-1" (click)="confirm2($event)" pButton icon="pi pi-plus" class="p-button-rounded p-button-success"></button>
+                        <p-confirmPopup key="confirm2"></p-confirmPopup>
+                    </div>
+                </div>
+                <div style="flex: 1;"> 
+                    <div class="card m-5" [style]="{width: '500px'}">
+                            <h5 >Abonos De La Venta {{ id }}</h5>
+                            <p-table #dt [value]="listAbonoVentas" responsiveLayout="scroll" [rows]="10" dataKey="id">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th pSortableColumn="idAbono">Id Abono</th>
+                                        <th pSortableColumn="fechaAbono">Fecha</th>
+                                        <th pSortableColumn="valorAbono">Valor Abonado</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-abonoVenta>
+                                    <tr>
+                                        <td style="width:14%; min-width:5rem;"><span class="p-column-title">Id Abono</span>
+                                            {{ abonoVenta.id }}
+                                        </td>
+                                        <td style="width:14%; min-width:10rem;">
+                                            <span class="p-column-title">Fecha</span>
+                                            {{ abonoVenta.fechaAbono }}
+                                        </td>
+                                        <td style="width:14%; min-width:8rem;">
+                                            <span class= "p-column-title">Valor Abonado</span>
+                                            {{ abonoVenta.valorAbono  }}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; flex: 1;">
+                        <div class="field">
+                            <button pButton pRipple label="Regresar" class="p-button-rounded p-button-info" (click)="hideDialog()"></button>
                         </div>
                     </div>
-                    <div class="formgrid grid">
-                        <div class="field col">
-                            <span class="p-float-label">
-                                <input formControlName="valorTotal" id="valorTotal" type="number" pInputText>
-                                <label for="valorTotal">Valor Total</label>
-                            </span>                                         
-                        </div>
-                        <div class="field col">
-                            <span class="p-float-label">
-                                <select formControlName="estadoPago" id="estadoPago" class="p-inputtext">
-                                    <option value="Pago">Pago</option>
-                                    <option value="Pendiente">Pendiente</option>
-                                </select>
-                                <label for="estadoPago">Estado de Pago</label>
-                            </span>
-                        </div>
-                        
-                    </div>
-                        <button pButton pRipple label="Cancelar" class="p-button-danger" (click)="hideDialog()"></button>
-                        <button type="submit" pButton pRipple label="Guadar"  class="p-button-success" ></button>
-                                
-                </form>             
+                    
+                    
+                
+                </div>
+                
+            </div>
         </p-dialog>
 
+
+        <p-dialog [(visible)]="productDialogDetalle" [style]="{width: '1300px', height: '800px' }" header="Detalle Venta" [modal]="true" class="p-fluid">         
+            <div style="display: flex;">
+                <div style="flex: 1;">    
+                    <form [formGroup]="formVenta" (ngSubmit)="addVenta()">
+                        <div class="formgrid grid">
+                            <div class="field col">
+                                <label for="id">Id Venta</label>
+                                    <input formControlName="id" id="id" type="number" pInputText readonly >
+                            </div>
+                            <div class="field col">
+                                <label for="cliente">Cliente</label>
+                                    <input id="cliente" type="text" pInputText readonly [value]="getNombreCliente(venta.cliente)">
+                            </div>
+                            <div class="field col">
+                                <label for="ordenTrabajo">Orden Trabajo</label>
+                                    <input formControlName="ordenTrabajo" id="ordenTrabajo" type="text" pInputText readonly >
+                            </div>
+                        </div>
+
+                        <div class="formgrid grid">
+                            <div class="field col">
+                                <label for="fechaVenta">Fecha Venta</label>
+                                    <input formControlName="fechaVenta" id="fechaVenta" type="text" pInputText readonly >
+                            </div>
+                            <div class="field col">
+                                <label for="formaPago">Fecha Venta</label>
+                                    <input formControlName="formaPago" id="formaPago" type="text" pInputText readonly >
+                            </div>
+                            <div class="field col">
+                                <label for="valorAbono">Valor Total</label>
+                                <div class="p-inputgroup">
+                                    <span class="p-inputgroup-addon">$</span>
+                                    <p-inputNumber formControlName="valorTotal" [(ngModel)]="value8" [readonly]="true"></p-inputNumber>
+                                </div>
+                            </div>
+                        </div>   
+                        <div class="formgrid grid">
+                            <div class="field col-4">
+                                <label for="estadoPago">Estado de Pago</label>
+                                    <input formControlName="estadoPago" id="estadoPago" type="text" pInputText readonly >
+                            </div>
+                        </div>     
+                            
+                    
+                    </form> 
+                </div>
+                <div style="flex: 1;"> 
+                    <div class="card m-5" [style]="{width: '500px'}">
+                            <h5 >Abonos De La Venta {{ id }}</h5>
+                            <p-table #dt [value]="listAbonoVentas" responsiveLayout="scroll" [rows]="10" dataKey="id">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th pSortableColumn="idAbono">Id Abono</th>
+                                        <th pSortableColumn="fechaAbono">Fecha</th>
+                                        <th pSortableColumn="valorAbono">Valor Abonado</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-abonoVenta>
+                                    <tr>
+                                        <td style="width:14%; min-width:5rem;"><span class="p-column-title">Id Abono</span>
+                                            {{ abonoVenta.id }}
+                                        </td>
+                                        <td style="width:14%; min-width:10rem;">
+                                            <span class="p-column-title">Fecha</span>
+                                            {{ abonoVenta.fechaAbono }}
+                                        </td>
+                                        <td style="width:14%; min-width:8rem;">
+                                            <span class= "p-column-title">Valor Abonado</span>
+                                            {{ abonoVenta.valorAbono  }}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; flex: 1;">
+                        <div class="field">
+                            <button pButton pRipple label="Regresar" class="p-button-rounded p-button-info" (click)="hideDialog()"></button>
+                        </div>
+                    </div>
+                    
+                    
+                
+                </div>
+                
+            </div>
+        </p-dialog>
 
           
     </div>

@@ -1,0 +1,314 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <form>
+                <div class="grid">                    
+                        <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                            <label htmlFor="cliente">Cliente</label>                            
+                            <div>
+                                <p-autoComplete [(ngModel)]="clienteSeleccionado" [suggestions]="sugerenciasClientes"
+                                    field="nombreComercial" [minLength]="0" placeholder="Buscar cliente"
+                                    (completeMethod)="buscarClientes($event)" name="clienteSeleccionado" [dropdown]="true">
+                                </p-autoComplete>
+                            </div>                            
+                        </div>
+
+                        <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                            <label htmlFor="contacto">Contacto</label>
+                            <div><input class="mt-1" type="text" pInputText  [value]="clienteSeleccionado?.contacto" [disabled]="true"/></div>                            
+                        </div>
+                          
+                        <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                            <label htmlFor="ordenTrabajo">Orden Trabajo</label>
+                            <div><input class="mt-1" type="text" pInputText/></div>                            
+                        </div>                                        
+                </div>
+
+                <div class="grid">                    
+                        <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                            <label htmlFor="fechaOrdenTrabajo">F. Orden</label>
+                            <p-calendar [showIcon]="true" inputId="fechaOrdenTrabajo"></p-calendar>
+                        </div>                        
+                    
+                        <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                            <label htmlFor="fechaEntregaOrden">F. Entrega</label>
+                            <p-calendar [showIcon]="true" inputId="fechaEntregaOrden"></p-calendar>
+                        </div>                                                                
+                </div>
+
+                <div class="grid mt-2">
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="referencia">Referencia</label>
+                        <div><input class="mt-1" type="text" id="referencia" pInputText/></div>                            
+                    </div>
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="descripcion">Descripción</label>
+                        <div><input class="mt-1" type="text" id="descripcion" pInputText/></div>                            
+                    </div>
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="valorUnitario">Valor Unitario</label>
+                        <div><input class="mt-1" type="number" id="valorUnitario" pInputText/></div>                            
+                    </div>
+                </div>
+
+                <div class="p-fluid grid">
+                    <div class="col-12 md:col-6">
+                      <label htmlFor="procedimiento">Procedimiento</label>
+                      <div><input pInputText type="text" [(ngModel)]="procedimiento" /></div>
+                    </div>
+                    <div class="col-12 md:col-4">
+                      <label htmlFor="tipoMaquina">Tipo de Máquina</label>
+                      <div><p-dropdown [options]="tipoMaquina"></p-dropdown></div>
+                    </div>
+                    <div class="col-12 md:col-2">
+                      <label for="">.</label>
+                      <div><button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-outlined" (click)="agregarProcedimiento()"></button></div>
+                    </div>
+                </div>
+                  
+                <button (click)="agregarReferencia()" pButton pRipple label="Agregar Referencia" icon="pi pi-check"></button>
+
+                <div>
+                    <table class="mt-3 table table-bordered">
+                        <thead >
+                          <tr>
+                            <th>Referencia</th>
+                            <th>Descripción</th>
+                            <th>Valor Unitario</th>
+                            <th>Cantidad</th>
+                            <th>Valor Total</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody id="referenciasTableBody">                      
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="p-fluid grid">
+                    <div class="col-12 md:col-4">
+                        <label htmlFor="formaPago">Forma de Pago</label>
+                        <div><p-dropdown [options]="formaPago"></p-dropdown></div>
+                    </div>
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="totalNeto">Total Neto</label>
+                        <div><input id="totalNeto" class="mt-1 totalNeto"readonly pInputText/></div>                            
+                    </div>
+                </div>
+
+            </form>
+        </div>        
+    </div>
+</div>
+
+<!-- 
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <form>
+                <div class="grid">
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="cliente">Cliente</label>
+                        <div>
+                            <p-autoComplete [(ngModel)]="clienteSeleccionado" [suggestions]="sugerenciasClientes"
+                                field="nombreComercial" [minLength]="0" placeholder="Buscar cliente"
+                                (completeMethod)="buscarClientes($event)" name="clienteSeleccionado" [dropdown]="true">
+                            </p-autoComplete>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="contacto">Contacto</label>
+                        <div><input class="mt-1" type="text" pInputText [value]="clienteSeleccionado?.contacto"
+                                [disabled]="true" /></div>
+                    </div>
+
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="ordenTrabajo">Orden Trabajo</label>
+                        <div><input class="mt-1" type="text" pInputText /></div>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="fechaOrdenTrabajo">F. Orden</label>
+                        <p-calendar [showIcon]="true" inputId="fechaOrdenTrabajo"></p-calendar>
+                    </div>
+
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="fechaEntregaOrden">F. Entrega</label>
+                        <p-calendar [showIcon]="true" inputId="fechaEntregaOrden"></p-calendar>
+                    </div>
+                </div>
+
+                <div class="grid mt-2">
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="referencia">Referencia</label>
+                        <div><input class="mt-1" type="text" id="referencia" name="referencia" [(ngModel)]="referencia"
+                                pInputText /></div>
+                    </div>
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="descripcion">Descripción</label>
+                        <div><input class="mt-1" type="text" id="descripcion" name="descripcion"
+                                [(ngModel)]="descripcion" pInputText /></div>
+                    </div>
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="valorUnitario">Valor Unitario</label>
+                        <div><input class="mt-1" type="number" id="valorUnitario" name="valorUnitario"
+                                [(ngModel)]="valorUnitario" pInputText /></div>
+                    </div>
+                </div>
+
+                <div class="p-fluid grid">
+                    <div class="col-12 md:col-6">
+                        <label htmlFor="proceso">Procedimiento</label>
+                        <div><input pInputText type="text" [(ngModel)]="proceso" name="proceso" id="proceso" /></div>
+                    </div>
+                    <div class="col-12 md:col-3">
+                        <label htmlFor="tipoDeMaquina">Tipo de Máquina</label>
+                        <div><p-dropdown [options]="tipoMaquina" [(ngModel)]="tipoDeMaquina" name="tipoDeMaquina"
+                                id="tipoDeMaquina"></p-dropdown></div>
+                    </div>
+                    <div class="col-12 md:col-3">
+                        <label for="">.</label>
+                        <div>
+                            <button pButton pRipple type="button" icon="pi pi-plus"
+                                class="p-button-rounded p-button-outlined" (click)="agregarProceso()"></button>
+                            <button pButton pRipple type="button" icon="pi pi-search"
+                                class="p-button-rounded p-button-outlined"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <button pButton pRipple (click)="agregarReferencia()" label="Agregar Referencia"
+                    icon="pi pi-check"></button>
+
+                <div>
+                    <p-table [value]="referencias" responsiveLayout="scroll" dataKey="id" [expandedRowKeys]="expandedRows">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th></th>
+                                <th>Referencia</th>
+                                <th>Descripción</th>
+                                <th>Valor Unitario</th>
+                                <th>Cantidad</th>
+                                <th>Valor Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-referencia let-i="rowIndex" let-expanded="expanded">
+                            <tr>
+                                <td>                                
+                                    <button type="button" pButton pRipple class="p-button-text p-button-rounded p-button-plain"
+                                        [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                                        (click)="onRowToggle(referencia)">
+                                    </button>
+                                </td>
+                                <td>{{referencia.referenciaPedido.referencia}}</td>
+                                <td>{{referencia.referenciaPedido.descripcion}}</td>
+                                <td>{{referencia.referenciaPedido.valorUnitario}}</td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"></button>
+                                    <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-outlined"
+                                        (click)="mostrarDetalles(referencia)">
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <ng-template>
+                                
+                            </ng-template>                            
+                                <tr *ngIf="expandedRows[referencia.id]">
+                                    <td colspan="7">
+                                        <ng-container *ngIf="referencia.referenciaPedido">
+                                            <p-table  [value]="referencias" responsiveLayout="scroll" dataKey="id" >
+                                                <ng-template pTemplate="header">
+                                                    <tr>
+                                                        <th>Color/Talla</th>
+                                                        <th >S</th>
+                                                        <th >M</th>
+                                                        <th >L</th>
+                                                        <th >XL</th>
+                                                        <th >Cantitad Total</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-talla>
+                                                    <tr>
+                                                        <td [contentEditable]="true"></td>
+                                                        <td id="S" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'S', talla)"></td>
+                                                        <td id="M" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'M', talla)"></td>
+                                                        <td id="L" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'L', talla)"> </td>
+                                                        <td id="XL" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'XL', talla)" (keydown.tab)="agregarNuevaFila()"></td>
+                                                        <td id="cantidadTotal" [innerText]="calcularCantitadTotal(referencia)"></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </ng-container>
+                                    </td>
+                                </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+
+                <div class="p-fluid grid mt-5">
+                    <div class="col-12 md:col-4">
+                        <label htmlFor="formaPago">Forma de Pago</label>
+                        <div><p-dropdown [options]="formaPago"></p-dropdown></div>
+                    </div>
+                    <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                        <label htmlFor="totalNeto">Total Neto</label>
+                        <div><input id="totalNeto" class="mt-1 totalNeto" readonly pInputText /></div>
+                    </div>
+                </div>
+
+                <p-dialog [(visible)]="mostrarModal" [modal]="true" [responsive]="true" [style]="{width: '60vw'}"
+                    (onHide)="limpiarDetalles()">
+                    <ng-template pTemplate="header">
+                        <div class="modal-header">
+                            <h5>Procedimientos de la Referencia</h5>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="content">
+                        <div class="p-fluid">
+                            <ng-container
+                                *ngIf="procesosReferenciaSeleccionados && procesosReferenciaSeleccionados.length > 0; else noProcedimientos">
+                                <p-table [value]="procesosReferenciaSeleccionados">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>Proceso</th>
+                                            <th>Tipo de Máquina</th>
+                                            <th></th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-proceso>
+                                        <tr>
+                                            <td>{{proceso.proceso}}</td>
+                                            <td>{{proceso.tipoDeMaquina}}</td>
+                                            <td>
+                                                <button pButton type="button" icon="pi pi-times"
+                                                    class="p-button-rounded p-button-danger"
+                                                    (click)="eliminarProceso()">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </ng-container>
+                            <ng-template #noProcedimientos>
+                                <div class="p-message p-message-info">
+                                    <span class="p-message-icon pi pi-info-circle"></span>
+                                    <span>No hay procedimientos agregados a esta referencia.</span>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </ng-template>
+                </p-dialog>
+            </form>
+        </div>
+    </div>
+</div> -->

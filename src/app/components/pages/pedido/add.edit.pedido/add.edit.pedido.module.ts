@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { VentaRoutingModule } from './venta.routing';  
-import { VentaComponent } from './venta.component'; 
+import { AddEditPedidoRoutingModule } from './add.edit.pedido.routing';  
+import { AddEditPedidoComponent } from './add.edit.pedido.component';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -18,12 +18,14 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { CalendarModule } from 'primeng/calendar';
+
+
 
 @NgModule({
     imports: [
         CommonModule,
-        VentaRoutingModule,
+        AddEditPedidoRoutingModule,
         TableModule,
         FileUploadModule,
         FormsModule,
@@ -40,9 +42,9 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
         DialogModule,
         AutoCompleteModule,
         ReactiveFormsModule,
-        InputSwitchModule,    
-        ConfirmPopupModule,         
+        InputSwitchModule,
+        CalendarModule                     
     ],
-    declarations: [VentaComponent]
+    declarations: [AddEditPedidoComponent]
 })
-export class VentaModule { }
+export class AddEditPedidoModule { }

@@ -11,6 +11,8 @@ import { AppLayoutModule } from './shared/app.layout.module';
 
 import { ProductService } from './services/product.service';
 import { ClienteService } from './services/cliente/cliente.service';
+import { PedidoService } from './services/pedido/pedido.service';
+
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -41,7 +43,7 @@ import { AbonoVentaService } from './services/abonoVenta/abonoVenta.service';
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    ProductService,ClienteService,UsuarioService,LoginService, VentaService, AbonoVentaService
+    ProductService,ClienteService,UsuarioService,LoginService, VentaService, AbonoVentaService,PedidoService
   ],
   bootstrap: [AppComponent]
 })
