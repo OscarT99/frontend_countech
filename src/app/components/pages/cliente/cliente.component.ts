@@ -95,7 +95,6 @@ export class ClienteComponent implements OnInit {
         });                        
     }
 
-    
 
     getListClientes(){     
         this._clienteService.getListClientes().subscribe((data:any) =>{      
