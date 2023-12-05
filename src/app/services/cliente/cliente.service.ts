@@ -21,8 +21,7 @@ import { Observable } from 'rxjs';
     getListClientes(): Observable<Cliente[]>{
       return this.http.get<Cliente[]>(`${this.myAppUrl}${this.myApiUrl}`)    
     }
-
-    // Cambia la interfaz
+ 
     getListClientesPedido(): Observable<{ listClientes: Cliente[] }> {
       return this.http.get<{ listClientes: Cliente[] }>(`${this.myAppUrl}${this.myApiUrl}`);
     }

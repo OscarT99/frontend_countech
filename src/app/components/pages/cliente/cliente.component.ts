@@ -29,7 +29,6 @@ export class ClienteComponent implements OnInit {
       { label: 'Empresa', value: 'Empresa' },
       { label: 'Persona', value: 'Persona' }
     ];
-    selectedCliente: string = ''; 
 
     tipoIdentificacion:SelectItem[] = [
       { label: 'NIT',value:'NIT' },
@@ -40,18 +39,17 @@ export class ClienteComponent implements OnInit {
       { label: 'Pasaporte', value:'Pasaporte' },
       { label: 'Tarjeta de identidad', value:'Tarjeta de identidad' },
     ];
-    selectedIdentificacion: SelectItem = { value: '' };
 
     estado:SelectItem[] = [
       { label: 'Activo', value: true },
       { label: 'Inactivo', value: false }
     ];
-    selectedEstado: SelectItem = {value: ''};
 
+    
     countries: any[] = [];
     filteredCountries: any[] = [];
-    selectedCountryAdvanced: any[] = [];
 
+    
     productDialog: boolean = false;
     
 
@@ -147,7 +145,7 @@ export class ClienteComponent implements OnInit {
       }else{            
        this._clienteService.postCliente(cliente).subscribe(() => {        
         this.productDialog = false;
-        this.toastr.success(`El cliente ${cliente.razonSocial} fue registrado con exito`,`Cliente agregado`)        
+                
         this.getListClientes();
        })
       }
@@ -172,7 +170,6 @@ export class ClienteComponent implements OnInit {
         this.id = 0;                
         this.formCliente.reset()
         this.productDialog = true;
-        this.selectedCountryAdvanced = [];
     }
     
     editProduct(id:number) {

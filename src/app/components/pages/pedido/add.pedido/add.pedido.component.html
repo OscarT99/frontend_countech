@@ -1,0 +1,697 @@
+<div class="grid">    
+    <div class="col-12">
+        <div class="card px-6 ">
+            <h4>Nuevo Pedido</h4>
+                <form  [formGroup]="formPedido" (ngSubmit)="addPedido()"  >                    
+                    <div class="grid p-fluid mt-3">
+                        <div class="col-4">
+                            <label >Cliente</label>
+                            <div>
+                              <p-autoComplete class="inputs-pedido"
+                                formControlName="cliente"
+                                [suggestions]="sugerenciasClientes"
+                                (completeMethod)="buscarClientes($event)"
+                                [dropdown]="true"
+                                [minLength]="1"                            
+                                [placeholder]="'Buscar cliente'"
+                                (onSelect)="seleccionarCliente($event)">
+                                <ng-template let-cliente pTemplate="item">
+                                  {{cliente.razonSocial}} - {{cliente.numeroIdentificacion}} - {{cliente.estado}}
+                                </ng-template>
+                              </p-autoComplete>                              
+                            </div>
+                            <span *ngIf="formPedido.get('cliente')?.hasError('required') && formPedido.get('cliente')?.touched" style="color: red;">
+                                El Cliente es <strong>requerido</strong>
+                            </span>
+                        </div>
+                                          
+                        <div class="col-4">
+                            <label htmlFor="contacto">Contacto</label>
+                            <div>
+                                <input  class="mt-1 inputs-pedido" type="text" pInputText  [disabled]="true"  [value]="formPedido.get('contacto')!.value" />
+                            </div>                            
+                        </div>
+    
+                        <div class="col-3">
+                            <label htmlFor="ordenTrabajo">Orden de Trabajo </label>
+                            <div>
+                                <input [maxLength]="8" formControlName="ordenTrabajo" class="mt-1 inputs-pedido" type="text" pInputText   />                                                        
+                            </div>
+                            <span *ngIf="formPedido.get('ordenTrabajo')?.hasError('required') && formPedido.get('ordenTrabajo')?.touched" style="color: red;">
+                                La orden es <strong>requerida</strong>
+                            </span>                            
+                        </div>                        
+                    </div>                                     
+                                               
+                    <div class="grid p-fluid">
+                        <div class="col-4">
+                            <label htmlFor="fechaOrdenTrabajo">Fecha de Orden</label>
+                            <div>
+                                <p-calendar class="inputs-pedido" formControlName="fechaOrdenTrabajo" [showIcon]="true" inputId="fechaOrdenTrabajo" dateFormat="yy-mm-dd"></p-calendar>
+                            </div>
+                            <span *ngIf="formPedido.get('fechaOrdenTrabajo')?.hasError('required') && formPedido.get('fechaOrdenTrabajo')?.touched" style="color: red;">
+                                La fecha de Orden es <strong>requerida</strong>
+                            </span>
+                        </div>
+    
+                        <div class="col-4">
+                            <label htmlFor="fechaEntregaOrden">Fecha Entrega Orden</label>
+                            <div>
+                                <p-calendar class="inputs-pedido" formControlName="fechaEntregaOrden" [showIcon]="true" inputId="fechaEntregaOrden" dateFormat="yy-mm-dd"></p-calendar>
+                            </div>
+                            <span *ngIf="formPedido.get('fechaEntregaOrden')?.hasError('required') && formPedido.get('fechaEntregaOrden')?.touched" style="color: red;">
+                                La fecha de Entrega es <strong>requerida</strong>
+                            </span>
+                        </div>                        
+                    </div>
+                    
+                    <strong>Detalles de Referencias</strong>
+                    <div class="grid p-fluid mt-1" style="border-top: 1px solid var(--surface-border);">                          
+                        <div class="col-4">
+                            <label htmlFor="referencia">Referencia</label>
+                            <div>
+                                <input class="mt-1 inputs-pedido" type="text" id="referencia" formControlName="referencia" pInputText />
+                            </div>
+                            <span *ngIf="formPedido.get('referencia')?.hasError('required') && formPedido.get('referencia')?.touched" style="color: red;">
+                                La Referencia es <strong>requerida</strong>
+                            </span>
+                        </div>
+
+                        <div class="col-4">
+                            <label htmlFor="descripcion">Descripción</label>
+                            <div>
+                                <input class="mt-1 inputs-pedido" type="text" id="descripcion" formControlName="descripcion" pInputText />
+                            </div>
+                            <span *ngIf="formPedido.get('descripcion')?.hasError('required') && formPedido.get('descripcion')?.touched" style="color: red;">
+                                La Descripción es <strong>requerida</strong>
+                            </span>
+                        </div>
+                        <div class="col-3">
+                            <label htmlFor="valorUnitario">Valor Unitario</label>
+                            <div>
+                                <p-inputNumber class="mt-1 inputs-pedido" [min]=1  id="valorUnitario" formControlName="valorUnitario"></p-inputNumber>
+                            </div>
+                            <span *ngIf="formPedido.get('valorUnitario')?.hasError('required') && formPedido.get('valorUnitario')?.touched" style="color: red;">
+                                El valor es unitario <strong>requerido</strong>
+                            </span>                            
+                        </div>
+                    </div>
+    
+                    <div class="grid p-fluid">
+                        <div class="col-4">
+                            <label htmlFor="proceso">Proceso</label>
+                            <div>
+                                <input class="inputs-pedido" pInputText type="text" formControlName="proceso" id="proceso" #procesoInput/>
+                            </div>
+                            <span *ngIf="formPedido.get('proceso')?.hasError('required') && formPedido.get('proceso')?.touched 
+                            && procesosReferencia.length === 0 && referencias.length === 0"  style="color: red;">
+                                El procedimientos es <strong>requerido</strong>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <label htmlFor="tipoMaquina">Tipo de Máquina</label>
+                            <div>
+                                <p-dropdown class="inputs-pedido" [autoDisplayFirst]="false" [options]="tipoMaquina" formControlName="tipoDeMaquina"
+                                    placeholder="Selecciona la maquina" >
+                                </p-dropdown>
+                            </div>
+                            <span *ngIf="formPedido.get('tipoDeMaquina')?.hasError('required') && formPedido.get('tipoDeMaquina')?.touched" style="color: red;">
+                                La maquina es <strong>requerida</strong>
+                            </span>
+                         </div>
+                            
+                        <div class="col-3">                                                                                    
+                            <button pButton pRipple type="button" class="p-button-secondary mt-3" (click)="agregarProceso()" label="Agregar Proceso"
+                                icon="pi pi-plus">
+                            </button>                                                        
+                        </div>                                                
+                    </div>
+    
+                    <div class="grid p-fluid">
+                        <div class="col-6" *ngIf="procesosReferencia.length > 0">
+                            <div class="card " style="overflow-y: 1px;">
+                                <p-table styleClass="p-datatable-sm" [value]="procesosReferencia" >
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>Procedimiento</th>
+                                            <th>Tipo Maquina</th>
+                                            <th ></th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-proceso let-i="rowIndex">
+                                        <tr>
+                                            <td>{{proceso.proceso}}</td>
+                                            <td>{{proceso.tipoDeMaquina}}</td>
+                                            <td>
+                                                <button pButton pRipple type="button" class="p-button-rounded  p-button-text" (click)="eliminarProceso(i)">
+                                                    <i class="pi pi-trash" style="font-size: 1.5em; color: red;"></i>
+                                                </button>        
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>                            
+                        </div>                        
+                    </div>
+
+                    <div class="col-3">
+                        <label htmlFor="color">Colores</label>
+                        <div>
+                            <p-multiSelect class="inputs-pedido" [options]="colores" formControlName="coloresSeleccionados"  placeholder="Seleccione los colores"> 
+                            </p-multiSelect>
+                        </div>              
+                        <span *ngIf="formPedido.get('coloresSeleccionados')?.hasError('required') && formPedido.get('coloresSeleccionados')?.touched" style="color: red;">
+                            Un color es <strong>requerido</strong>
+                        </span>
+                    </div>
+                    
+                    <div class="col-4 mt-3">
+                        <button pButton pRipple type="button" (click)="agregarReferencia()" label="Agregar Referencia"
+                            icon="pi pi-check">
+                        </button>
+                    </div>
+
+                     
+                                            
+                    <div class="grid p-fluid">
+                        <div class="col-11">
+                            <p-table [value]="referencias" responsiveLayout="scroll" dataKey="id" [expandedRowKeys]="expandedRows"
+                            [resizableColumns]="true" styleClass="p-datatable-gridlines p-datatable-sm">   
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th></th>
+                                        <th>Referencia</th>
+                                        <th>Descripción</th>
+                                        <th>Valor Unitario</th>
+                                        <th>Cantidad</th>
+                                        <th>Valor Total</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-referencia let-i="rowIndex" let-expanded="expanded">
+                                    <tr>
+                                        <td>                                
+                                            <button type="button" pButton pRipple class="p-button-text p-button-rounded p-button-plain"
+                                                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                                                (click)="onRowToggle(referencia)">
+                                            </button>
+                                        </td>
+                                        <td>{{referencia.referencia}}</td>
+                                        <td>{{referencia.descripcion}}</td>
+                                        <td>{{referencia.valorUnitario | number:'1.2'}}</td>
+                                        <td>{{referencia.cantidadTotal}}</td>
+                                        <td>{{(referencia.cantidadTotal*referencia.valorUnitario || 0) | number:'1.2'}}</td>
+                                        <td>
+                                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="eliminarReferencia(referencia)"></button>
+                                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-outlined"
+                                                (click)="mostrarDetalles(referencia)">
+                                            </button>
+                                        </td>
+                                    </tr>
+                                        <tr *ngIf="expandedRows[referencia.id]">
+                                            <td colspan="5">
+                                                <ng-container >
+                                                        <p-table styleClass="p-datatable-gridlines p-datatable-sm" [value]="referencia.ProcesoEnReferenciaEnPedidos[0]?.ColorEnProcesoEnReferenciaEnPedidos" responsiveLayout="scroll" dataKey="id" >
+                                                            <ng-template pTemplate="header">
+                                                                <tr>
+                                                                    <th>Color/Talla</th>
+                                                                    <th >S</th>
+                                                                    <th >M</th>
+                                                                    <th >L</th>
+                                                                    <th >XL</th>
+                                                                    <th >Cantitad Total</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </ng-template>
+                                                            <ng-template pTemplate="body" let-color>
+                                                                <tr>
+                                                                    <td>{{color.color}}</td>
+                                                                    <td id="S" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'S',color)"></td>
+                                                                    <td id="M" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'M',color)"></td>
+                                                                    <td id="L" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'L',color)"> </td>
+                                                                    <td id="XL" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'XL',color)"></td>
+                                                                    <td id="cantidadTotal">{{color.cantidadTotal}}</td>
+                                                                    <td>
+                                                                        <button pButton pRipple type="button" class="p-button-rounded  p-button-text" (click)="eliminarColor(color)">
+                                                                            <i class="pi pi-trash" style="font-size: 1.5em; color: red;"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>                                                        
+                                                            </ng-template>
+                                                            <ng-template pTemplate="footer" let-color>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td colspan="4">TOTAL:</td>                                                                    
+                                                                    <td id="cantidadTotalReferencia">{{ sumarCantidadTotalReferencia() }}</td>
+                                                                    <td>
+                                                                        <button pButton pRipple type="button" class="p-button-rounded p-button-text" (click)="asignarCantidadTotalReferencia()">
+                                                                            <i class="pi pi-save" style="font-size: 1.5em; color: green;"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                                                                                
+                                                                </tr>                                                        
+                                                            </ng-template>                                                                                                                                                                  
+                                                        </p-table>
+                                                </ng-container>
+                                            </td>
+                                        </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        
+    
+                    </div>
+    
+                    <div class="grid p-fluid mt-1 col-12 justify-content-between" >
+                        <div class="col-4">
+                            <label htmlFor="formaPago"><strong>Formas de Pago</strong></label>
+                            <p-dropdown [autoDisplayFirst]="false" placeholder="Seleccione forma de pago" formControlName="formaPago" [options]="formaPago"></p-dropdown>
+                        </div>
+                        <div class="col-6">
+                            <label htmlFor="totalNeto"><h5>Total Neto:</h5></label>
+                            <input formControlName="totalNeto" [value]="formPedido.get('totalNeto')?.value | number:'1.2'" readonly pInputText />                            
+                        </div>
+                    </div>
+    
+                    <div class="grid p-fluid col-8" >
+                        <div><strong >Observaciones</strong></div>
+                        
+			            <textarea rows="2" cols="50" placeholder="Aqui puedes ingresar observaciones adicionales." pInputTextarea></textarea>   
+                    
+                    </div>
+                                                  
+                            <footer class="footer-pedido">
+                                <div>
+                                    <button pButton pRipple type="button" label="Cancelar" class="p-button-danger" routerLink="/pages/pedido" ></button>                                    
+                                    <button pButton pRipple label="Guardar" class="p-button-success" ></button>
+                                </div>
+                            </footer>
+                            
+                          
+                    
+                    <p-dialog [(visible)]="mostrarModal" [modal]="true" [responsive]="true" [style]="{width: '30vw'}">
+                        <ng-template pTemplate="header">
+                            <div class="modal-header">
+                                <h5>Procedimientos de la Referencia</h5>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="content">
+                            <div class="p-fluid">
+                                <ng-container
+                                    *ngIf="procesosReferenciaSeleccionados && procesosReferenciaSeleccionados.length > 0">
+                                    <p-table styleClass="p-datatable-sm" [value]="procesosReferenciaSeleccionados">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th>Proceso</th>
+                                                <th>Tipo de Máquina</th>
+                                                <th></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-proceso>
+                                            <tr>
+                                                <td>{{proceso.proceso}}</td>
+                                                <td>{{proceso.tipoDeMaquina}}</td>
+                                                <td>
+                                                    <button pButton pRipple type="button" class="p-button-rounded  p-button-text">
+                                                        <i class="pi pi-trash" style="font-size: 1.5em; color: red;"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </ng-container>                            
+                            </div>
+                        </ng-template>
+                    </p-dialog>                    
+                </form>                        
+        </div>
+    </div>
+</div>
+
+
+
+<!-- <div class="grid">    
+    <div class="col-12">
+        <div class="card px-6 ">
+            <h4>Nuevo Pedido</h4>
+                <form  [formGroup]="formPedido" (ngSubmit)="addPedido()"  >                    
+                    <div class="grid p-fluid mt-3">
+                        <div class="col-4">
+                            <label >Cliente</label>
+                            <div>
+                              <p-autoComplete class="inputs-pedido"
+                                formControlName="cliente"
+                                [suggestions]="sugerenciasClientes"
+                                (completeMethod)="buscarClientes($event)"
+                                [dropdown]="true"
+                                [minLength]="1"                            
+                                [placeholder]="'Buscar cliente'"
+                                (onSelect)="seleccionarCliente($event)">
+                                <ng-template let-cliente pTemplate="item">
+                                  {{cliente.razonSocial}} - {{cliente.numeroIdentificacion}} - {{cliente.estado}}
+                                </ng-template>
+                              </p-autoComplete>                              
+                            </div>
+                            <span *ngIf="formPedido.get('cliente')?.hasError('required') && formPedido.get('cliente')?.touched" style="color: red;">
+                                El Cliente es <strong>requerido</strong>
+                            </span>
+                        </div>
+                                          
+                        <div class="col-4">
+                            <label htmlFor="contacto">Contacto</label>
+                            <div>
+                                <input  class="mt-1 inputs-pedido" type="text" pInputText  [disabled]="true"  [value]="formPedido.get('contacto')!.value" />
+                            </div>                            
+                        </div>
+    
+                        <div class="col-3">
+                            <label htmlFor="ordenTrabajo">Orden de Trabajo </label>
+                            <div>
+                                <input [maxLength]="8" formControlName="ordenTrabajo" class="mt-1 inputs-pedido" type="text" pInputText   />                                                        
+                            </div>
+                            <span *ngIf="formPedido.get('ordenTrabajo')?.hasError('required') && formPedido.get('ordenTrabajo')?.touched" style="color: red;">
+                                La orden es <strong>requerida</strong>
+                            </span>                            
+                        </div>                        
+                    </div>                                     
+                                               
+                    <div class="grid p-fluid">
+                        <div class="col-4">
+                            <label htmlFor="fechaOrdenTrabajo">Fecha de Orden</label>
+                            <div>
+                                <p-calendar class="inputs-pedido" formControlName="fechaOrdenTrabajo" [showIcon]="true" inputId="fechaOrdenTrabajo" dateFormat="yy-mm-dd"></p-calendar>
+                            </div>
+                            <span *ngIf="formPedido.get('fechaOrdenTrabajo')?.hasError('required') && formPedido.get('fechaOrdenTrabajo')?.touched" style="color: red;">
+                                La fecha de Orden es <strong>requerida</strong>
+                            </span>
+                        </div>
+    
+                        <div class="col-4">
+                            <label htmlFor="fechaEntregaOrden">Fecha Entrega Orden</label>
+                            <div>
+                                <p-calendar class="inputs-pedido" formControlName="fechaEntregaOrden" [showIcon]="true" inputId="fechaEntregaOrden" dateFormat="yy-mm-dd"></p-calendar>
+                            </div>
+                            <span *ngIf="formPedido.get('fechaEntregaOrden')?.hasError('required') && formPedido.get('fechaEntregaOrden')?.touched" style="color: red;">
+                                La fecha de Entrega es <strong>requerida</strong>
+                            </span>
+                        </div>                        
+                    </div>
+                    
+                    <strong>Detalles de Referencias</strong>
+                    <div class="grid p-fluid mt-1" style="border-top: 1px solid var(--surface-border);">                          
+                        <div class="col-4">
+                            <label htmlFor="referencia">Referencia</label>
+                            <div>
+                                <input class="mt-1 inputs-pedido" type="text" id="referencia" formControlName="referencia" pInputText />
+                            </div>
+                            <span *ngIf="formPedido.get('referencia')?.hasError('required') && formPedido.get('referencia')?.touched" style="color: red;">
+                                La Referencia es <strong>requerida</strong>
+                            </span>
+                        </div>
+
+                        <div class="col-4">
+                            <label htmlFor="descripcion">Descripción</label>
+                            <div>
+                                <input class="mt-1 inputs-pedido" type="text" id="descripcion" formControlName="descripcion" pInputText />
+                            </div>
+                            <span *ngIf="formPedido.get('descripcion')?.hasError('required') && formPedido.get('descripcion')?.touched" style="color: red;">
+                                La Descripción es <strong>requerida</strong>
+                            </span>
+                        </div>
+                        <div class="col-3">
+                            <label htmlFor="valorUnitario">Valor Unitario</label>
+                            <div>
+                                <p-inputNumber class="mt-1 inputs-pedido" [min]=1  id="valorUnitario" formControlName="valorUnitario"></p-inputNumber>
+                            </div>
+                            <span *ngIf="formPedido.get('valorUnitario')?.hasError('required') && formPedido.get('valorUnitario')?.touched" style="color: red;">
+                                El valor es unitario <strong>requerido</strong>
+                            </span>                            
+                        </div>
+                    </div>
+    
+                    <div class="grid p-fluid">
+                        <div class="col-4">
+                            <label htmlFor="proceso">Proceso</label>
+                            <div>
+                                <input class="inputs-pedido" pInputText type="text" formControlName="proceso" id="proceso" #procesoInput/>
+                            </div>
+                            <span *ngIf="formPedido.get('proceso')?.hasError('required') && formPedido.get('proceso')?.touched 
+                            && procesosReferencia.length === 0 && referencias.length === 0"  style="color: red;">
+                                El procedimientos es <strong>requerido</strong>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <label htmlFor="tipoMaquina">Tipo de Máquina</label>
+                            <div>
+                                <p-dropdown class="inputs-pedido" [autoDisplayFirst]="false" [options]="tipoMaquina" formControlName="tipoDeMaquina"
+                                    placeholder="Selecciona la maquina" >
+                                </p-dropdown>
+                            </div>
+                            <span *ngIf="formPedido.get('tipoDeMaquina')?.hasError('required') && formPedido.get('tipoDeMaquina')?.touched" style="color: red;">
+                                La maquina es <strong>requerida</strong>
+                            </span>
+                         </div>
+                            
+                        <div class="col-3">                                                                                    
+                            <button pButton pRipple type="button" class="p-button-secondary mt-3" (click)="agregarProceso()" label="Agregar Proceso"
+                                icon="pi pi-plus">
+                            </button>                                                        
+                        </div>                                                
+                    </div>
+    
+                    <div class="grid p-fluid">
+                        <div class="col-6" *ngIf="procesosReferencia.length > 0">
+                            <div class="card " style="overflow-y: 1px;">
+                                <p-table styleClass="p-datatable-sm" [value]="procesosReferencia" >
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>Procedimiento</th>
+                                            <th>Tipo Maquina</th>
+                                            <th ></th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-proceso let-i="rowIndex">
+                                        <tr>
+                                            <td>{{proceso.proceso}}</td>
+                                            <td>{{proceso.tipoDeMaquina}}</td>
+                                            <td>
+                                                <button pButton pRipple type="button" class="p-button-rounded  p-button-text" (click)="eliminarProceso(i)">
+                                                    <i class="pi pi-trash" style="font-size: 1.5em; color: red;"></i>
+                                                </button>        
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>                            
+                        </div>                        
+                    </div>
+
+                    <div class="col-3">
+                        <label htmlFor="color">Colores</label>
+                        <div>
+                            <p-multiSelect class="inputs-pedido" [options]="colores" formControlName="coloresSeleccionados"  placeholder="Seleccione los colores"> 
+                            </p-multiSelect>
+                        </div>              
+                        <span *ngIf="formPedido.get('coloresSeleccionados')?.hasError('required') && formPedido.get('coloresSeleccionados')?.touched" style="color: red;">
+                            Un color es <strong>requerido</strong>
+                        </span>
+                    </div>
+                    
+                    <div class="col-4 mt-3">
+                        <button pButton pRipple type="button" (click)="agregarReferencia()" label="Agregar Referencia"
+                            icon="pi pi-check">
+                        </button>
+                    </div>
+
+                     
+                                            
+                    <div class="grid p-fluid">
+                        <div class="col-11">
+                            <p-table [value]="referencias" responsiveLayout="scroll" dataKey="id" [expandedRowKeys]="expandedRows"
+                            [resizableColumns]="true" styleClass="p-datatable-gridlines p-datatable-sm">   
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th></th>
+                                        <th>Referencia</th>
+                                        <th>Descripción</th>
+                                        <th>Valor Unitario</th>
+                                        <th>Cantidad</th>
+                                        <th>Valor Total</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-referencia let-i="rowIndex" let-expanded="expanded">
+                                    <tr>
+                                        <td>                                
+                                            <button type="button" pButton pRipple class="p-button-text p-button-rounded p-button-plain"
+                                                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                                                (click)="onRowToggle(referencia)">
+                                            </button>
+                                        </td>
+                                        <td>{{referencia.referencia}}</td>
+                                        <td>{{referencia.descripcion}}</td>
+                                        <td>{{referencia.valorUnitario | number:'1.2'}}</td>
+                                        <td>{{referencia.cantidadTotal}}</td>
+                                        <td>{{(referencia.cantidadTotal*referencia.valorUnitario || 0) | number:'1.2'}}</td>
+                                        <td>
+                                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="eliminarReferencia(referencia)"></button>
+                                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-outlined"
+                                                (click)="mostrarDetalles(referencia)">
+                                            </button>
+                                        </td>
+                                    </tr>
+                                        <tr *ngIf="expandedRows[referencia.id]">
+                                            <td colspan="5">
+                                                <ng-container >
+                                                        <p-table styleClass="p-datatable-gridlines p-datatable-sm" [value]="referencia.ProcesoEnReferenciaEnPedidos[0]?.ColorEnProcesoEnReferenciaEnPedidos" responsiveLayout="scroll" dataKey="id" >
+                                                            <ng-template pTemplate="header">
+                                                                <tr>
+                                                                    <th>Color/Talla</th>
+                                                                    <th >S</th>
+                                                                    <th >M</th>
+                                                                    <th >L</th>
+                                                                    <th >XL</th>
+                                                                    <th >Cantitad Total</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </ng-template>
+                                                            <ng-template pTemplate="body" let-color>
+                                                                <tr>
+                                                                    <td>{{color.color}}</td>
+                                                                    <td [pEditableColumn]="color.color" pEditableColumnField="color">
+                                                                        <p-cellEditor>
+                                                                            <ng-template pTemplate="input">
+                                                                                <input pInputText type="number">
+                                                                            </ng-template>
+                                                                            <ng-template pTemplate="output">
+                                                                                {{color.color}}
+                                                                            </ng-template>
+                                                                        </p-cellEditor>
+                                                                    </td>
+                                                                    <td [pEditableColumn]="color.color" pEditableColumnField="color">
+                                                                        <p-cellEditor>
+                                                                            <ng-template pTemplate="input">
+                                                                                <input pInputText type="number">
+                                                                            </ng-template>
+                                                                            <ng-template pTemplate="output">
+                                                                                {{color.color}}
+                                                                            </ng-template>
+                                                                        </p-cellEditor>
+                                                                    </td>
+                                                                    <td [pEditableColumn]="color.color" pEditableColumnField="color">
+                                                                        <p-cellEditor>
+                                                                            <ng-template pTemplate="input">
+                                                                                <input pInputText type="number">
+                                                                            </ng-template>
+                                                                            <ng-template pTemplate="output">
+                                                                                {{color.color}}
+                                                                            </ng-template>
+                                                                        </p-cellEditor>
+                                                                    </td>
+                                                                    <td [pEditableColumn]="color.color" pEditableColumnField="color">
+                                                                        <p-cellEditor>
+                                                                            <ng-template pTemplate="input">
+                                                                                <input pInputText type="number">
+                                                                            </ng-template>
+                                                                            <ng-template pTemplate="output">
+                                                                                {{color.color}}
+                                                                            </ng-template>
+                                                                        </p-cellEditor>
+                                                                    </td>                                                                    
+                                                                    <td id="cantidadTotal">{{color.cantidadTotal}}</td>
+                                                                    <td>
+                                                                        <button pButton pRipple type="button" class="p-button-rounded  p-button-text" (click)="eliminarColor(color)">
+                                                                            <i class="pi pi-trash" style="font-size: 1.5em; color: red;"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>                                                        
+                                                            </ng-template>
+                                                            <ng-template pTemplate="footer" let-color>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td colspan="4">TOTAL:</td>                                                                    
+                                                                    <td id="cantidadTotalReferencia">{{ sumarCantidadTotalReferencia() }}</td>
+                                                                    <td>
+                                                                        <button pButton pRipple type="button" class="p-button-rounded p-button-text" (click)="asignarCantidadTotalReferencia()">
+                                                                            <i class="pi pi-save" style="font-size: 1.5em; color: green;"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                                                                                
+                                                                </tr>                                                        
+                                                            </ng-template>                                                                                                                                                                  
+                                                        </p-table>
+                                                </ng-container>
+                                            </td>
+                                        </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        
+    
+                    </div>
+    
+                    <div class="grid p-fluid mt-1 col-12 justify-content-between" >
+                        <div class="col-4">
+                            <label htmlFor="formaPago"><strong>Formas de Pago</strong></label>
+                            <p-dropdown [autoDisplayFirst]="false" placeholder="Seleccione forma de pago" formControlName="formaPago" [options]="formaPago"></p-dropdown>
+                        </div>
+                        <div class="col-6">
+                            <label htmlFor="totalNeto"><h5>Total Neto:</h5></label>
+                            <input formControlName="totalNeto" [value]="formPedido.get('totalNeto')?.value | number:'1.2'" readonly pInputText />                            
+                        </div>
+                    </div>
+    
+                    <div class="grid p-fluid col-8" >
+                        <div><strong >Observaciones</strong></div>
+                        
+			            <textarea rows="2" cols="50" placeholder="Aqui puedes ingresar observaciones adicionales." pInputTextarea></textarea>   
+                    
+                    </div>
+                                                  
+                            <footer class="footer-pedido">
+                                <div>
+                                    <button pButton pRipple type="button" label="Cancelar" class="p-button-danger" routerLink="/pages/pedido" ></button>                                    
+                                    <button pButton pRipple label="Guardar" class="p-button-success" ></button>
+                                </div>
+                            </footer>
+                            
+                          
+                    
+                    <p-dialog [(visible)]="mostrarModal" [modal]="true" [responsive]="true" [style]="{width: '30vw'}">
+                        <ng-template pTemplate="header">
+                            <div class="modal-header">
+                                <h5>Procedimientos de la Referencia</h5>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="content">
+                            <div class="p-fluid">
+                                <ng-container
+                                    *ngIf="procesosReferenciaSeleccionados && procesosReferenciaSeleccionados.length > 0">
+                                    <p-table styleClass="p-datatable-sm" [value]="procesosReferenciaSeleccionados">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th>Proceso</th>
+                                                <th>Tipo de Máquina</th>
+                                                <th></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-proceso>
+                                            <tr>
+                                                <td>{{proceso.proceso}}</td>
+                                                <td>{{proceso.tipoDeMaquina}}</td>
+                                                <td>
+                                                    <button pButton pRipple type="button" class="p-button-rounded  p-button-text">
+                                                        <i class="pi pi-trash" style="font-size: 1.5em; color: red;"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </ng-container>                            
+                            </div>
+                        </ng-template>
+                    </p-dialog>                    
+                </form>                        
+        </div>
+    </div>
+</div> -->
