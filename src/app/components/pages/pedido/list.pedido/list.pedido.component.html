@@ -4,7 +4,7 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2" routerLink="/pages/pedido/add-edit"></button>                        
+                        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/pages/pedido/add', 0]"></button>                        
                     </div>
                 </ng-template>
 
@@ -60,8 +60,9 @@
                             {{ pedido.estado }}
                         </td>
                         <td>
-                            <div class="flex">                                
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>                                
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="eliminarPedido(pedido.id,pedido.estado)"></button>                                
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"  (click)="editarPedido(pedido.id)"></button>                                
                             </div>
                         </td>
                     </tr>

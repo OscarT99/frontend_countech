@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AddEditPedidoRoutingModule } from './add.edit.pedido.routing';  
-import { AddEditPedidoComponent } from './add.edit.pedido.component';
+import { AddPedidoRoutingModule } from './add.pedido.routing';  
+import { AddPedidoComponent } from './add.pedido.component';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -19,13 +19,13 @@ import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from 'primeng/calendar';
-
+import { MultiSelectModule } from "primeng/multiselect";
 
 
 @NgModule({
     imports: [
         CommonModule,
-        AddEditPedidoRoutingModule,
+        AddPedidoRoutingModule,
         TableModule,
         FileUploadModule,
         FormsModule,
@@ -43,8 +43,9 @@ import { CalendarModule } from 'primeng/calendar';
         AutoCompleteModule,
         ReactiveFormsModule,
         InputSwitchModule,
-        CalendarModule                     
+        CalendarModule,
+        MultiSelectModule                     
     ],
-    declarations: [AddEditPedidoComponent]
+    declarations: [AddPedidoComponent],     
 })
-export class AddEditPedidoModule { }
+export class AddPedidoModule { }

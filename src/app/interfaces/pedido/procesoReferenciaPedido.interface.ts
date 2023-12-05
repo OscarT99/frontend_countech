@@ -1,15 +1,12 @@
-import { ColorProcesoReferenciaPedido } from "./colorProcesoReferenciaPedido.interface";
+import { ColorProcesoReferenciaPedidoInstance } from "./colorProcesoReferenciaPedido.interface";
 
-export interface ProcesoReferenciaPedido {
+  
+  export interface ProcesoReferenciaPedidoInstance {
+    id?: number;
     referencia?: number;
     proceso: string;
     tipoDeMaquina: 'Fileteadora' | 'Plana' | 'Presilladora' | 'Recubridora' | 'Manual';
     cantidadTotal?: number;
-  }
-  
-  export interface ProcesoReferenciaPedidoInstance {
-    id?: number;
-    procesoReferenciaPedido: ProcesoReferenciaPedido;
-    colorProcesoReferenciaPedidos?: ColorProcesoReferenciaPedido[];
+    ColorEnProcesoEnReferenciaEnPedidos?: ColorProcesoReferenciaPedidoInstance[];
   }
   

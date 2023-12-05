@@ -1,16 +1,12 @@
-import { ProcesoReferenciaPedido } from "./procesoReferenciaPedido.interface";
+import {ProcesoReferenciaPedidoInstance } from "./procesoReferenciaPedido.interface";
 
-export interface ReferenciaPedido {
+  export interface ReferenciaPedidoInstance {
+    id?: string;
     pedido?: number;
     referencia: string;
     descripcion: string;
     valorUnitario: number;
     cantidadTotal?: number;
-  }
-  
-  export interface ReferenciaPedidoInstance {
-    id?: string;
-    referenciaPedido: ReferenciaPedido;
-    procesoReferenciaPedidos: ProcesoReferenciaPedido[];
+    ProcesoEnReferenciaEnPedidos: ProcesoReferenciaPedidoInstance[];
   }
   

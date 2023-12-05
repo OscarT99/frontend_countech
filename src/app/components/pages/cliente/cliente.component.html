@@ -73,13 +73,13 @@
                 <form [formGroup]="formCliente" (ngSubmit)="addCliente()">
                     <div class="formgrid grid">
                         <div class="field col">
-                            <p-dropdown formControlName="tipoCliente" [options]="tipoCliente" [(ngModel)]="selectedCliente" placeholder="Tipo Cliente" [showClear]="true"></p-dropdown>
+                            <p-dropdown formControlName="tipoCliente" [options]="tipoCliente"  placeholder="Tipo Cliente" [showClear]="true"></p-dropdown>
                             <span *ngIf="formCliente.get('tipoCliente')?.hasError('required') && formCliente.get('tipoCliente')?.touched">
                                 El Tipo de cliente es <strong>requerido</strong>
                             </span>                        
                         </div>
                         <div class="field col">
-                            <p-dropdown formControlName="tipoIdentificacion" [options]="tipoIdentificacion" [(ngModel)]="selectedIdentificacion" placeholder="Tipo Documento" [showClear]="true"></p-dropdown>
+                            <p-dropdown formControlName="tipoIdentificacion" [options]="tipoIdentificacion"  placeholder="Tipo Documento" [showClear]="true"></p-dropdown>
                             <span *ngIf="formCliente.get('tipoIdentificacion')?.hasError('required') && formCliente.get('tipoIdentificacion')?.touched">
                                 El Tipo de identificación es <strong>requerido</strong>
                             </span>
@@ -118,7 +118,7 @@
                             </span>                                               
                         </div>
                         <div class="field col mt-3">
-                            <p-autoComplete formControlName="ciudad" placeholder="Ciudad" [(ngModel)]="selectedCountryAdvanced" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name" [dropdown]="true"> 
+                            <p-autoComplete formControlName="ciudad" placeholder="Ciudad"  [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name" [dropdown]="true"> 
                             </p-autoComplete>
                             <span *ngIf="formCliente.get('ciudad')?.hasError('required') && formCliente.get('ciudad')?.touched">
                                 La ciudad es <strong>requerida</strong>
