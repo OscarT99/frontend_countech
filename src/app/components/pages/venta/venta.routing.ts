@@ -9,3 +9,4 @@ import { VentaComponent } from './venta.component';
 	exports: [RouterModule]
 })
 export class VentaRoutingModule { }
+

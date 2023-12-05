@@ -75,7 +75,7 @@
                             </div>
                             <div class="field col">
                                 <label for="cliente">Cliente</label>
-                                    <input id="cliente" type="text" pInputText readonly [value]="getNombreCliente(venta.cliente)">
+                                    <input formControlName="cliente" id="cliente" type="text" pInputText readonly [value]="getNombreCliente(venta.cliente)">
                             </div>
                             
                         </div>
@@ -93,7 +93,7 @@
                                 <label for="valorAbono">Restante</label>
                                 <div class="p-inputgroup">
                                     <span class="p-inputgroup-addon" readonly>$</span>
-                                    <p-inputNumber inputId="valorRestante" [ngModel]="getValorRestante()" [readonly]="true"></p-inputNumber>
+                                    <p-inputNumber formControlName="valorRestante" inputId="valorRestante" [ngModel]="getValorRestante()" [readonly]="true"></p-inputNumber>
                                 </div>
                             </div>
                             
@@ -107,7 +107,7 @@
                      
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">$</span>
-                        <p-inputNumber inputId="valorAbono" [(ngModel)]="value9" placeholder="000.000.000" ></p-inputNumber>
+                        <p-inputNumber formControlName="valorAbono" inputId="valorAbono" [(ngModel)]="value9" placeholder="000.000.000" ></p-inputNumber>
                         <p-toast></p-toast>
                         <button class="ml-1" (click)="confirm2($event)" pButton icon="pi pi-plus" class="p-button-rounded p-button-success"></button>
                         <p-confirmPopup key="confirm2"></p-confirmPopup>
