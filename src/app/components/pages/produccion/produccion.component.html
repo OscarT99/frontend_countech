@@ -8,42 +8,83 @@
 
 <div class="card">
     <p-accordion>
-        
-        <p-accordionTab header="Lili-Pink #1302" [selected]="true" class="line-height-3 m-2">
 
-            <div class="col-12">
-                <div class="card card-w-title flex flex-wrap">
-                    <div class="col-12 md:col-8 h-full">
-                        <h5>TabMenu</h5>
-                        <p-tabMenu styleClass="mb-5" [model]="routeItems"></p-tabMenu>
-        
-                        <h5>Steps</h5>
-                        <!-- <p-steps [model]="routeItems" styleClass="mt-5" [readonly]="false"></p-steps> -->
-                    </div>
-                    <div class="col-12 md:col-4 mt-5 md:mt-0">
-                        <router-outlet></router-outlet>
-                    </div>
+        <p-table #dt [value]="listPedidos"  responsiveLayout="scroll" [rows]="10" [globalFilterFields]="[]" [paginator]="true" [rowsPerPageOptions]="[5,10,15]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
+            <ng-template pTemplate="caption">
+                <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                    <h5 class="m-0">Lista de Pedidos</h5>
                 </div>
-            </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>                        
+                    <th pSortableColumn="cliente">Cliente<p-sortIcon field="cliente"></p-sortIcon></th>
+                    <th pSortableColumn="ordenTrabajo">Orden Trabajo<p-sortIcon field="ordenTrabajo"></p-sortIcon></th>                        
+                    <th pSortableColumn="fechaOrdenTrabajo">Fecha orden<p-sortIcon field="fechaOrdenTrabajo"></p-sortIcon></th>
+                    <th pSortableColumn="fechaEntregaOrden">Fecha Engtrega<p-sortIcon field="fechaEntregaOrden"></p-sortIcon></th>
+                    <th pSortableColumn="valorTotal">Valor Total<p-sortIcon field="valorTotal"></p-sortIcon></th>                        
+                    <th pSortableColumn="estado">Estado<p-sortIcon field="estado"></p-sortIcon></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-pedido>
+                <tr>                        
+                    <td style="width:14%; min-width:5rem;"><span class="p-column-title">Cliente</span>
+                        {{ pedido.Cliente.razonSocial }}
+                    </td>
+                    <td style="width:14%; min-width:10rem;">
+                        <span class="p-column-title">Orden Trabajo</span>
+                        {{ pedido.Cliente.razonSocial}}
+                    </td>                        
+                    <td style="width:14%; min-width:8rem;">
+                        <span class="p-column-title">Fecha Orden</span>
+                        {{ pedido.fechaOrdenTrabajo }}
+                    </td>
+                    <td style="width:14%; min-width:10rem;">
+                        <span class="p-column-title">Fecha Entrega</span>
+                        {{ pedido.fechaEntregaOrden }}
+                    </td>  
+                    <td style="width:14%; min-width:10rem;">
+                        <span class="p-column-title">Valor Total</span>
+                        {{ pedido.valorTotal }}
+                    </td>                        
+                    <td style="width:14%; min-width: 5rem;">
+                        <span class="p-column-title">Estado</span>
+                        {{ pedido.estado }}
+                    </td>
+                    <td>
+                        <div class="flex">                                
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>                                
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        
+        <p-accordionTab *ngFor="let pedido of listPedidos" [header]="pedido.ordenTrabajo" class="line-height-3 m-2">
+
+            <p-tabView >
+                <p-tabPanel header="Header I">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                </p-tabPanel>
+                <p-tabPanel header="Header II">
+                    <p>
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
+                        ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                    </p>
+                </p-tabPanel>
+                <p-tabPanel header="Header III">
+                    <p>
+                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa
+                        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
+                    </p>
+                </p-tabPanel>
+            </p-tabView>
+            
         </p-accordionTab>
-        <p-accordionTab header="Header II" class="line-height-3 m-2">
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
-            totam rem aperiam, eaque
-            ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-            enim ipsam voluptatem quia
-            voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-            voluptatem sequi nesciunt.
-            Consectetur, adipisci velit, sed quia non numquam eius modi.
-        </p-accordionTab>
-        <p-accordionTab header="Header III" class="line-height-3 m-2">
-            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
-            deleniti atque corrupti quos dolores
-            et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
-            officia deserunt mollitia animi, id est laborum et dolorum fuga.
-            Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est
-            eligendi optio cumque nihil impedit
-            quo minus.
-        </p-accordionTab>
+
     </p-accordion>
 </div>
 </div>
