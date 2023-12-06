@@ -48,7 +48,7 @@ export class ListPedidoComponent implements OnInit {
         
     editarPedido(id: number): void {
         this.router.navigate(['/pages/pedido/add', id]);
-      }
+    }
       
     eliminarPedido(id: number, estado: string): void {
     if (estado === 'Registrado') {
@@ -74,9 +74,9 @@ export class ListPedidoComponent implements OnInit {
         }
     }
     
-      cerrarModalDetallePedido() {
+    cerrarModalDetallePedido() {
         this.mostrarModalDetalle = false;
         this.detallePedido = null; // Limpia los detalles al cerrar el modal
-      }
+    }
 
 }

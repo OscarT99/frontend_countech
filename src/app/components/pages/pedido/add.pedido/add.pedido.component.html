@@ -226,11 +226,11 @@
                                                             <ng-template pTemplate="body" let-color>
                                                                 <tr>
                                                                     <td>{{color.color}}</td>
-                                                                    <td id="S" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'S',color)"></td>
-                                                                    <td id="M" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'M',color)"></td>
-                                                                    <td id="L" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'L',color)"> </td>
-                                                                    <td id="XL" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'XL',color)"></td>
-                                                                    <td id="cantidadTotal">{{color.cantidadTotal}}</td>
+                                                                    <td id="S" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'S',color)">{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[0].cantidad }}</td>
+                                                                    <td id="M" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'M',color)">{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[1].cantidad }}</td>
+                                                                    <td id="L" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'L',color)">{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[2].cantidad }}</td>
+                                                                    <td id="XL" [contentEditable]="true" (input)="actualizarCantitadTotal($event, 'XL',color)">{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[3].cantidad}}</td>
+                                                                    <td id="cantidadTotal">{{color.cantidad}}</td>
                                                                     <td>
                                                                         <button pButton pRipple type="button" class="p-button-rounded  p-button-text" (click)="eliminarColor(color)">
                                                                             <i class="pi pi-trash" style="font-size: 1.5em; color: red;"></i>
@@ -268,8 +268,9 @@
                             <p-dropdown [autoDisplayFirst]="false" placeholder="Seleccione forma de pago" formControlName="formaPago" [options]="formaPago"></p-dropdown>
                         </div>
                         <div class="col-6">
-                            <label htmlFor="totalNeto"><h5>Total Neto:</h5></label>
-                            <input formControlName="totalNeto" [value]="formPedido.get('totalNeto')?.value | number:'1.2'" readonly pInputText />                            
+                            <label htmlFor="totalNeto"><h5>Total Neto:
+                                <input formControlName="totalNeto" [value]="formPedido.get('totalNeto')?.value | number:'1.2'" readonly pInputText />
+                            </h5></label>                                                        
                         </div>
                     </div>
     
