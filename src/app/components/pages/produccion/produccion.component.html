@@ -172,6 +172,35 @@
     <!-- Dialog detalle tareas asignadas -->
     <p-dialog [(visible)]="viewInfoDialog" [style]="{width: '450px'}" header="Tareas asignadas" [modal]="true" class="p-fluid">
         <div class="card">
+            <p-table>
+                <ng-template pTemplate="header">
+                    <tr>                                            
+                        <th>Color</th>                                                            
+                        <th>Cant. Total</th>  
+                        <th>Tallas</th> 
+                        <th>Asignadas</th> 
+                        <th>Terminadas</th>
+                        <th></th>                                                                                               
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-color>
+                    <tr>
+                        <td>{{color.color}}</td>
+                        <td>{{color.cantidad}}</td>
+                            <ng-container *ngFor="let talla of color.TallaEnColorEnProcesoEnReferenciaEnPedidos">
+                                <td>{{talla.talla}}</td>
+                                <td>{{talla.cantAsignada}}</td>
+                                <td>{{talla.cantHecha}}</td>
+                                <td>
+                                    <div class="flex">
+                                        <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-info mr-2" (click)="asignarTarea()"></button>
+                                        <button pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-warning mr-2" (click)="showInfo()"></button>
+                                    </div>
+                                </td>
+                            </ng-container>                                                         
+                    </tr>
+                </ng-template>
+            </p-table>
             <h4>Working!</h4>
         </div>
     </p-dialog>

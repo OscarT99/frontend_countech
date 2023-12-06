@@ -260,56 +260,56 @@
     <!-- <ng-template pTemplate="content"> -->
       <div class="field">
         <label for="tipoIdentidad">Tipo de identidad</label>
-        <input type="text" id="disabled-input" pInputText [disabled]="true" formControlName="tipoIdentificacion" />
+        <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" id="disabled-input" pInputText formControlName="tipoIdentificacion" />
         <!-- <small *ngIf="formularioEmpleado.get('tipoIdentificacion')?.hasError('required') && formularioEmpleado.get('tipoIdentificacion')?.touched">
           Tipo de identidad es requerido.
         </small> -->
       </div>
       <div class="field">
         <label for="numeroIdentificacion">N° Identificación</label>
-        <input type="text" pInputText formControlName="numeroIdentificacion"/>
+        <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="numeroIdentificacion"/>
         <small *ngIf="formularioEmpleado.get('numeroIdentificacion')?.hasError('required') && formularioEmpleado.get('numeroIdentificacion')?.touched">
             Nro. Identificación es requerido.
         </small>
     </div>
     <div class="field">
         <label for="nombre">Nombres</label>
-        <input type="text" pInputText formControlName="nombre"/>
+        <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="nombre"/>
         <small *ngIf="formularioEmpleado.get('nombre')?.hasError('required') && formularioEmpleado.get('nombre')?.touched">
             Nombre es requerido.
         </small>
     </div>
     <div class="field">
         <label for="apellido">Apellidos</label>
-        <input type="text" pInputText formControlName="apellido"/>
+        <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="apellido"/>
         <small *ngIf="formularioEmpleado.get('apellido')?.hasError('required') && formularioEmpleado.get('apellido')?.touched">
             Apellido es requerido.
         </small>
     </div>
     <div class="field">
         <label for="correo">Correo electrónico</label>
-        <input type="text" pInputText formControlName="correo"/>
+        <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="correo"/>
         <small *ngIf="formularioEmpleado.get('correo')?.hasError('required') && formularioEmpleado.get('correo')?.touched">
             Correo es requerido.
         </small>
     </div>
     <div class="field">
         <label for="telefono">Teléfono</label>
-        <input type="text" pInputText formControlName="telefono"/>
+        <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="telefono"/>
         <small *ngIf="formularioEmpleado.get('telefono')?.hasError('required') && formularioEmpleado.get('telefono')?.touched">
             Teléfono es requerido.
         </small>
     </div>
     <div class="field">
         <label for="ciudad">Ciudad</label>
-        <input type="text" pInputText formControlName="ciudad"/>
+        <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="ciudad"/>
         <small *ngIf="formularioEmpleado.get('ciudad')?.hasError('required') && formularioEmpleado.get('ciudad')?.touched">
             Ciudad es requerido.
         </small>
     </div>
     <div class="field">
         <label for="direccion">Dirección</label>
-        <input type="text" pInputText formControlName="direccion"/>
+        <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="direccion"/>
         <small *ngIf="formularioEmpleado.get('direccion')?.hasError('required') && formularioEmpleado.get('direccion')?.touched">
             Dirección es requerido.
         </small>
