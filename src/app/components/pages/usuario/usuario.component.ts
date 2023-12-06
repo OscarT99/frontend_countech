@@ -44,8 +44,7 @@ export class UsuarioComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 15];
 
-      
-      
+    
     constructor(private fb:FormBuilder,
       private _usuarioService: UsuarioService,
       private toastr: ToastrService,      

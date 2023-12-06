@@ -32,7 +32,7 @@ export class ListPedidoComponent implements OnInit {
       ){}
 
     ngOnInit():void {        
-        this.getListPedidos()                                
+                                      
     }
 
     

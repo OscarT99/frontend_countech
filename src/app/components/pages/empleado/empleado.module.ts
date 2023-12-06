@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { CrudRoutingModule } from './crud-routing.module';
-import { CrudComponent } from './crud.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EmpleadoRoutingModule } from './empleado-routing.module';
+import { EmpleadoComponent } from './empleado.component';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -16,14 +16,20 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { KeyFilterModule } from 'primeng/keyfilter';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
+
+
 
 @NgModule({
     imports: [
         CommonModule,
-        CrudRoutingModule,
+        EmpleadoRoutingModule,
         TableModule,
         FileUploadModule,
         FormsModule,
+        ReactiveFormsModule,
         ButtonModule,
         RippleModule,
         ToastModule,
@@ -34,8 +40,12 @@ import { DialogModule } from 'primeng/dialog';
         DropdownModule,
         RadioButtonModule,
         InputNumberModule,
-        DialogModule
+        DialogModule,
+        InputSwitchModule,
+        KeyFilterModule,
+
     ],
-    declarations: [CrudComponent]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    declarations: [EmpleadoComponent]
 })
-export class CrudModule { }
+export class EmpleadoModule { }
