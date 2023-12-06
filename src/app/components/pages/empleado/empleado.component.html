@@ -28,13 +28,13 @@
       </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="id">Id<p-sortIcon field="id"></p-sortIcon></th>
+            <!-- <th pSortableColumn="id">Id<p-sortIcon field="id"></p-sortIcon></th> -->
             <th>Tipo de identidad</th>
             <th>N° Identificación</th>
             <th pSortableColumn="nombre">Nombres<p-sortIcon field="nombre"></p-sortIcon></th>
             <th pSortableColumn="apellido">Apellidos<p-sortIcon field="apellido"></p-sortIcon></th>
-            <th>Correo electrónico</th>
-            <th>Teléfono</th>
+            <!-- <th>Correo electrónico</th> -->
+            <!-- <th>Teléfono</th> -->
             <!-- <th>Ciudad</th> -->
             <!-- <th>Dirección</th> -->
             <!-- <th>Fecha ingreso</th> -->
@@ -45,27 +45,27 @@
         <ng-template pTemplate="body" let-empleado>
           <tr>
             <!-- <td>{{ empleado.idEmpleado }}</td> -->
-            <td style="width:14%; min-width:5rem;"><span class="p-column-title">Id</span>
+            <!-- <td style="width:14%; min-width:5rem;"><span class="p-column-title">Id</span>
               {{empleado.idEmpleado }}
-            </td>
+            </td> -->
             <td style="width:14%; min-width:11rem;"><span class="p-column-title">Tipo identidad</span>
               {{ empleado.tipoIdentificacion }}
             </td>
-            <td style="width:14%; min-width:10rem;"><span class="p-column-title">Nro. identidad</span>
+            <td style="width:14%; min-width:11rem;"><span class="p-column-title">Nro. identidad</span>
               {{ empleado.numeroIdentificacion }}
             </td>
-            <td style="width:14%; min-width:10rem;"><span class="p-column-title">Nombres</span>
+            <td style="width:14%; min-width:11rem;"><span class="p-column-title">Nombres</span>
               {{ empleado.nombre }}
             </td>
-            <td style="width:14%; min-width:10rem;"><span class="p-column-title">Apellidos</span>
+            <td style="width:14%; min-width:11rem;"><span class="p-column-title">Apellidos</span>
               {{ empleado.apellido }}
             </td>
-            <td style="width:14%; min-width:10rem;"><span class="p-column-title">Correo</span>
+            <!-- <td style="width:14%; min-width:10rem;"><span class="p-column-title">Correo</span>
               {{ empleado.correo }}s
-            </td>
-            <td style="width:14%; min-width:12rem;"><span class="p-column-title">Telefono</span>
+            </td> -->
+            <!-- <td style="width:14%; min-width:12rem;"><span class="p-column-title">Telefono</span>
               {{ empleado.telefono }}
-            </td>
+            </td> -->
             <!-- <td>{{ empleado.ciudad }}</td> -->
             <!-- <td>{{ empleado.direccion }}</td> -->
             <!-- <td>{{ empleado.fechaIngreso }}</td> -->
@@ -74,12 +74,10 @@
               <p-inputSwitch [(ngModel)]="empleado.estado" (click)="cambiarEstado(empleado)"></p-inputSwitch>
             </td>
             <td>
-                
-                    <div class="flex">
-                        <button pButton pRipple icon="pi pi-ellipsis-v" class="p-button-rounded p-button-success mr-2" (click)="editProduct(empleado)"></button>
-                        <button pButton pRipple icon="pi pi-user-edit" class="p-button-rounded p-button-warning" (click)="editProduct(empleado)"></button>
-                    </div>
-                
+                  <div class="flex">
+                      <button pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-info mr-2" (click)="infoEmpleado(empleado.idEmpleado)"></button>
+                      <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning" (click)="editProduct(empleado.idEmpleado)"></button>
+                  </div>
             </td>
           </tr>
         </ng-template>
@@ -89,69 +87,251 @@
   </div>
 </div>
 
+<!-- Dialog crear un empleado -->
+<p-dialog [(visible)]="empleadoNuevoDialog" [style]="{width: '450px'}" header="Nuevo empleado" [modal]="true" class="p-fluid">
 
-<!--Visualizar y crear un empleado-->
-<p-dialog [(visible)]="empleadoDialog" [style]="{width: '450px'}" header="Nuevo empleado" [modal]="true" class="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="field">
-            <label for="tipoIdentidad">Tipo de identidad</label>
-            <p-dropdown [(ngModel)]="empleado.tipoIdentificacion" inputId="inventoryStatus" optionValue="label" [options]="tipoIdentidad" placeholder="Seleccionar">
-            </p-dropdown>
-        </div>
-        <div class="field">
-            <label for="numeroIdentificacion">N° Identificación</label>
-            <input type="text" pInputText id="numeroIdentificacion" [(ngModel)]="empleado.numeroIdentificacion" required [ngClass]="{'ng-invalid ng-dirty' : submitted && !empleado.numeroIdentificacion}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !empleado.numeroIdentificacion">Nro. Identificación es requerido.</small>
-        </div>
-        <div class="field">
-            <label for="name">Nombres</label>
-            <input type="text" pInputText id="name" [(ngModel)]="empleado.nombre" required [ngClass]="{'ng-invalid ng-dirty' : submitted && !empleado.nombre}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !empleado.nombre">Nombre es requerido.</small>
-        </div>
-        <div class="field">
-            <label for="apellido">Apellidos</label>
-            <input type="text" pInputText id="apellido" [(ngModel)]="empleado.apellido" required [ngClass]="{'ng-invalid ng-dirty' : submitted && !empleado.apellido}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !empleado.apellido">Apellido es requerido.</small>
-        </div>
-        <div class="field">
-            <label for="correo">Correo electrónico</label>
-            <input type="text" pInputText id="correo" [(ngModel)]="empleado.correo" required [ngClass]="{'ng-invalid ng-dirty' : submitted && !empleado.correo}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !empleado.correo">Correo es requerido.</small>
-        </div>
-        <div class="field">
-            <label for="telefono">Teléfono</label>
-            <input type="text" pInputText id="telefono" [(ngModel)]="empleado.telefono" required [ngClass]="{'ng-invalid ng-dirty' : submitted && !empleado.telefono}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !empleado.telefono">Teléfono es requerido.</small>
-        </div>
-        <div class="field">
-            <label for="ciudad">Ciudad</label>
-            <input type="text" pInputText id="ciudad" [(ngModel)]="empleado.ciudad" required [ngClass]="{'ng-invalid ng-dirty' : submitted && !empleado.ciudad}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !empleado.ciudad">Ciudad es requerido.</small>
-        </div>
-        <div class="field">
-            <label for="direccion">Dirección</label>
-            <input type="text" pInputText id="direccion" [(ngModel)]="empleado.direccion" required [ngClass]="{'ng-invalid ng-dirty' : submitted && !empleado.direccion}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !empleado.direccion">Dirección es requerido.</small>
-        </div>
-        <div class="field">
-            <label for="estado">Estado</label>
-            <input type="text" pInputText id="direccion" [(ngModel)]="empleado.estado" required [ngClass]="{'ng-invalid ng-dirty' : submitted && !empleado.estado}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !empleado.estado">Estado es requerido.</small>
-        </div>
-    </ng-template>
+  <form [formGroup]="formularioEmpleado" (ngSubmit)="addEmpleado()">
+    <!-- <ng-template pTemplate="content"> -->
+      <div class="field">
+        <label for="tipoIdentidad">Tipo de identidad*</label>
+        <input type="text" pInputText pKeyFilter="alpha" formControlName="tipoIdentificacion" required autofocus/>
+        <small *ngIf="formularioEmpleado.get('tipoIdentificacion')?.hasError('required') && formularioEmpleado.get('tipoIdentificacion')?.touched" style="color: red;">
+          El tipo de identidad es <strong>requerido</strong>
+        </small>
+      </div>
 
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
-    </ng-template>
+      <div class="field">
+        <label for="numeroIdentificacion">N° Identificación*</label>
+        <input type="text" pKeyFilter="int" pInputText formControlName="numeroIdentificacion"/>
+        <small *ngIf="formularioEmpleado.get('numeroIdentificacion')?.hasError('required') && formularioEmpleado.get('numeroIdentificacion')?.touched" style="color: red;">
+            El nro. de identificación es <strong>requerido</strong>  
+        </small>
+      </div>
+    <div class="field">
+        <label for="nombre">Nombres*</label>
+        <input type="text" pKeyFilter="alpha" pInputText formControlName="nombre"/>
+        <small *ngIf="formularioEmpleado.get('nombre')?.hasError('required') && formularioEmpleado.get('nombre')?.touched" style="color: red;">
+            El nombre es <strong>requerido</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="apellido">Apellidos*</label>
+        <input type="text" pKeyFilter="alpha" pInputText formControlName="apellido"/>
+        <small *ngIf="formularioEmpleado.get('apellido')?.hasError('required') && formularioEmpleado.get('apellido')?.touched" style="color: red;">
+            El apellido es <strong>requerido</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="correo">Correo electrónico*</label>
+        <input type="text" pInputText formControlName="correo"/>
+        <small *ngIf="formularioEmpleado.get('correo')?.hasError('required') && formularioEmpleado.get('correo')?.touched" style="color: red;">
+            El correo es <strong>requerido</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="telefono">Teléfono*</label>
+        <input type="text" pKeyFilter="int" pInputText formControlName="telefono"/>
+        <small *ngIf="formularioEmpleado.get('telefono')?.hasError('required') && formularioEmpleado.get('telefono')?.touched" style="color: red;">
+            El teléfono es <strong>requerido</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="ciudad">Ciudad*</label>
+        <input type="text" pKeyFilter="alpha" pInputText formControlName="ciudad"/>
+        <small *ngIf="formularioEmpleado.get('ciudad')?.hasError('required') && formularioEmpleado.get('ciudad')?.touched" style="color: red;">
+            La ciudad es <strong>requerida</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="direccion">Dirección*</label>
+        <input type="text" pInputText formControlName="direccion"/>
+        <small *ngIf="formularioEmpleado.get('direccion')?.hasError('required') && formularioEmpleado.get('direccion')?.touched" style="color: red;">
+            La dirección es <strong>requerida</strong>
+        </small>
+    </div>
+    <!-- <div class="field">
+        <label for="estado">Estado</label>
+        <input type="text" pInputText formControlName="estado"/>
+        <small *ngIf="formularioEmpleado.get('estado')?.hasError('required') && formularioEmpleado.get('estado')?.touched">
+            Estado es requerido.
+        </small>
+    </div> -->
+    <!-- </ng-template> -->
+  
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <div class="field">
+        <button type="button" pButton pRipple label="Cancelar" class="p-button-rounded p-button-danger" (click)="hideDialog()"></button>
+      </div>
+      <div class="field" style="margin-left: 8px;"> <!-- Agrega un margen entre los botones -->
+        <button type="submit" pButton pRipple label="Guardar" class="p-button-rounded p-button-success"></button>
+      </div>
+  </div>
+  
+  </form>
+  
+</p-dialog>
+<!-- Dialog editar un empleado -->
+<p-dialog [(visible)]="empleadoEditarDialog" [style]="{width: '450px'}" header="Editar empleado" [modal]="true" class="p-fluid">
+
+  <form [formGroup]="formularioEmpleado" (ngSubmit)="addEmpleado()">
+    <!-- <ng-template pTemplate="content"> -->
+      <div class="field">
+        <label for="tipoIdentidad">Tipo de identidad</label>
+        <input type="text" pInputText pKeyFilter="alpha" formControlName="tipoIdentificacion"/>
+        <small *ngIf="formularioEmpleado.get('tipoIdentificacion')?.hasError('required') && formularioEmpleado.get('tipoIdentificacion')?.touched" style="color: red;">
+          El tipo de identidad es <strong>requerido</strong>
+        </small>
+      </div>
+      <div class="field">
+        <label for="numeroIdentificacion">N° Identificación</label>
+        <input type="text" pInputText pKeyFilter="int" formControlName="numeroIdentificacion"/>
+        <small *ngIf="formularioEmpleado.get('numeroIdentificacion')?.hasError('required') && formularioEmpleado.get('numeroIdentificacion')?.touched" style="color: red;" style="color: red;">
+          El nro. de identificación es <strong>requerido</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="nombre">Nombres</label>
+        <input type="text" pInputText pKeyFilter="alpha" formControlName="nombre"/>
+        <small *ngIf="formularioEmpleado.get('nombre')?.hasError('required') && formularioEmpleado.get('nombre')?.touched" style="color: red;">
+          El nombre es <strong>requerido</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="apellido">Apellidos</label>
+        <input type="text" pInputText pKeyFilter="alpha" formControlName="apellido"/>
+        <small *ngIf="formularioEmpleado.get('apellido')?.hasError('required') && formularioEmpleado.get('apellido')?.touched" style="color: red;">
+          El apellido es <strong>requerido</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="correo">Correo electrónico</label>
+        <input type="text" pInputText formControlName="correo"/>
+        <small *ngIf="formularioEmpleado.get('correo')?.hasError('required') && formularioEmpleado.get('correo')?.touched" style="color: red;">
+          El correo es <strong>requerido</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="telefono">Teléfono</label>
+        <input type="text" pInputText pKeyFilter="int" formControlName="telefono"/>
+        <small *ngIf="formularioEmpleado.get('telefono')?.hasError('required') && formularioEmpleado.get('telefono')?.touched" style="color: red;">
+          El teléfono es <strong>requerido</strong>
+        </small>
+    </div>
+    <div class="field">
+        <label for="ciudad">Ciudad</label>
+        <input type="text" pInputText pKeyFilter="alpha" formControlName="ciudad"/>
+        <small *ngIf="formularioEmpleado.get('ciudad')?.hasError('required') && formularioEmpleado.get('ciudad')?.touched" style="color: red;">
+            Ciudad es requerido.
+        </small>
+    </div>
+    <div class="field">
+        <label for="direccion">Dirección</label>
+        <input type="text" pInputText formControlName="direccion"/>
+        <small *ngIf="formularioEmpleado.get('direccion')?.hasError('required') && formularioEmpleado.get('direccion')?.touched" style="color: red;">
+          La dirección es <strong>requerida</strong>
+        </small>
+    </div>
+    <!-- <div class="field">
+        <label for="estado">Estado</label>
+        <input type="text" pInputText formControlName="estado"/>
+        <small *ngIf="formularioEmpleado.get('estado')?.hasError('required') && formularioEmpleado.get('estado')?.touched">
+            Estado es requerido.
+        </small>
+    </div> -->
+    <!-- </ng-template> -->
+  
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <div class="field">
+        <button type="button" pButton pRipple label="Cancelar" class="p-button-rounded p-button-danger" (click)="hideDialog()"></button>
+      </div>
+      <div class="field" style="margin-left: 8px;"> <!-- Agrega un margen entre los botones -->
+        <button type="submit" pButton pRipple label="Guardar" class="p-button-rounded p-button-success"></button>
+      </div>
+  </div>
+  
+  </form>
+  
 </p-dialog>
 
-<df-messenger
-  intent="WELCOME"
-  chat-title="Bot-test"
-  agent-id="19ece6fc-7a8f-431c-a4eb-e32efa10d19c"
-  language-code="es"
-></df-messenger>
+<!-- Dialog información del empleado -->
+<p-dialog [(visible)]="empleadoInfoDialog" [style]="{width: '450px'}" header="Detalles del empleado" [modal]="true" class="p-fluid">
+
+  <form [formGroup]="formularioEmpleado">
+    <!-- <ng-template pTemplate="content"> -->
+      <div class="field">
+        <label for="tipoIdentidad">Tipo de identidad</label>
+        <input type="text" id="disabled-input" pInputText [disabled]="true" formControlName="tipoIdentificacion" />
+        <!-- <small *ngIf="formularioEmpleado.get('tipoIdentificacion')?.hasError('required') && formularioEmpleado.get('tipoIdentificacion')?.touched">
+          Tipo de identidad es requerido.
+        </small> -->
+      </div>
+      <div class="field">
+        <label for="numeroIdentificacion">N° Identificación</label>
+        <input type="text" pInputText formControlName="numeroIdentificacion"/>
+        <small *ngIf="formularioEmpleado.get('numeroIdentificacion')?.hasError('required') && formularioEmpleado.get('numeroIdentificacion')?.touched">
+            Nro. Identificación es requerido.
+        </small>
+    </div>
+    <div class="field">
+        <label for="nombre">Nombres</label>
+        <input type="text" pInputText formControlName="nombre"/>
+        <small *ngIf="formularioEmpleado.get('nombre')?.hasError('required') && formularioEmpleado.get('nombre')?.touched">
+            Nombre es requerido.
+        </small>
+    </div>
+    <div class="field">
+        <label for="apellido">Apellidos</label>
+        <input type="text" pInputText formControlName="apellido"/>
+        <small *ngIf="formularioEmpleado.get('apellido')?.hasError('required') && formularioEmpleado.get('apellido')?.touched">
+            Apellido es requerido.
+        </small>
+    </div>
+    <div class="field">
+        <label for="correo">Correo electrónico</label>
+        <input type="text" pInputText formControlName="correo"/>
+        <small *ngIf="formularioEmpleado.get('correo')?.hasError('required') && formularioEmpleado.get('correo')?.touched">
+            Correo es requerido.
+        </small>
+    </div>
+    <div class="field">
+        <label for="telefono">Teléfono</label>
+        <input type="text" pInputText formControlName="telefono"/>
+        <small *ngIf="formularioEmpleado.get('telefono')?.hasError('required') && formularioEmpleado.get('telefono')?.touched">
+            Teléfono es requerido.
+        </small>
+    </div>
+    <div class="field">
+        <label for="ciudad">Ciudad</label>
+        <input type="text" pInputText formControlName="ciudad"/>
+        <small *ngIf="formularioEmpleado.get('ciudad')?.hasError('required') && formularioEmpleado.get('ciudad')?.touched">
+            Ciudad es requerido.
+        </small>
+    </div>
+    <div class="field">
+        <label for="direccion">Dirección</label>
+        <input type="text" pInputText formControlName="direccion"/>
+        <small *ngIf="formularioEmpleado.get('direccion')?.hasError('required') && formularioEmpleado.get('direccion')?.touched">
+            Dirección es requerido.
+        </small>
+    </div>
+    <!-- <div class="field">
+        <label for="estado">Estado</label>
+        <input type="text" pInputText formControlName="estado"/>
+        <small *ngIf="formularioEmpleado.get('estado')?.hasError('required') && formularioEmpleado.get('estado')?.touched">
+            Estado es requerido.
+        </small>
+    </div> -->
+    <!-- </ng-template> -->
+  
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <div class="field">
+        <button type="button" pButton pRipple label="Cerrar" class="p-button-rounded p-button-danger" (click)="hideDialog()"></button>
+      </div>
+  </div>
+  
+  </form>
+  
+</p-dialog>
 
 <!-- Mensaje de validación -->
 <p-dialog [(visible)]="changeStateDialog" header="Confirmar" [modal]="true" [style]="{width:'450px'}">
@@ -164,3 +344,4 @@
       <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sí" (click)="confirmChangeState(true)"></button>
   </ng-template>
 </p-dialog>
+

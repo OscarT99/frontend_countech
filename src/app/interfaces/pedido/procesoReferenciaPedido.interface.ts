@@ -7,6 +7,6 @@ import { ColorProcesoReferenciaPedidoInstance } from "./colorProcesoReferenciaPe
     proceso: string;
     tipoDeMaquina: 'Fileteadora' | 'Plana' | 'Presilladora' | 'Recubridora' | 'Manual';
     cantidadTotal?: number;
-    ColorEnProcesoEnReferenciaEnPedidos?: ColorProcesoReferenciaPedidoInstance[];
+    ColorEnProcesoEnReferenciaEnPedidos: ColorProcesoReferenciaPedidoInstance[];
   }
   

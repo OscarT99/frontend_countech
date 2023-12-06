@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmpleadoRoutingModule } from './empleado-routing.module';
 import { EmpleadoComponent } from './empleado.component';
 import { TableModule } from 'primeng/table';
@@ -29,6 +29,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
         TableModule,
         FileUploadModule,
         FormsModule,
+        ReactiveFormsModule,
         ButtonModule,
         RippleModule,
         ToastModule,
@@ -41,7 +42,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
         InputNumberModule,
         DialogModule,
         InputSwitchModule,
-        KeyFilterModule
+        KeyFilterModule,
+
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     declarations: [EmpleadoComponent]
