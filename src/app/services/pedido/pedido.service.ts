@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/enviroments/environment';
-import { Pedido } from 'src/app/interfaces/pedido/pedido.interface'; 
+import { PedidoInstance } from 'src/app/interfaces/pedido/pedido.interface'; 
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -14,20 +14,24 @@ import { Observable } from 'rxjs';
       this.myApiUrl = 'api/pedidos/'
     }
   
-    getPedido(id:number): Observable<Pedido>{
-      return this.http.get<Pedido>(`${this.myAppUrl}${this.myApiUrl}${id}`)
+    getPedido(id:number): Observable<PedidoInstance>{
+      return this.http.get<PedidoInstance>(`${this.myAppUrl}${this.myApiUrl}${id}`)
     }
     
-    getListPedidos(): Observable<Pedido[]>{
-      return this.http.get<Pedido[]>(`${this.myAppUrl}${this.myApiUrl}`)    
+    getListPedidos(): Observable<PedidoInstance[]>{
+      return this.http.get<PedidoInstance[]>(`${this.myAppUrl}${this.myApiUrl}`)    
     }
   
-    postPedido(pedido : Pedido):Observable<void>{
+    postPedido(pedido : PedidoInstance):Observable<void>{
       return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}`,pedido)
     }
   
-    putPedido(id:number,pedido:Pedido):Observable<void>{
+    putPedido(id:number,pedido:PedidoInstance):Observable<void>{
       return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}`,pedido)
+    }
+
+    deletePedido(id:number): Observable<void>{
+      return this.http.delete<void>(`${this.myAppUrl}${this.myApiUrl}${id}`)
     }
       
   }

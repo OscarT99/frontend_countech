@@ -1,14 +1,10 @@
-import { TallaColorProcesoReferenciaPedido } from "./tallaColorProcesoReferenciaPedido.interface";
+import { TallaColorProcesoReferenciaPedidoInstance } from "./tallaColorProcesoReferenciaPedido.interface";
 
-export interface ColorProcesoReferenciaPedido {
-    proceso: number;
-    color: string;
-    cantidad: number;
-  }
-  
   export interface ColorProcesoReferenciaPedidoInstance {
     id?: number;
-    colorProcesoReferenciaPedido: ColorProcesoReferenciaPedido;
-    tallaColorProcesoReferenciaPedidos?: TallaColorProcesoReferenciaPedido[];
+    proceso?: number;
+    color: string;
+    cantidad?: number;
+    TallaEnColorEnProcesoEnReferenciaEnPedidos?: TallaColorProcesoReferenciaPedidoInstance[];
   }
   
