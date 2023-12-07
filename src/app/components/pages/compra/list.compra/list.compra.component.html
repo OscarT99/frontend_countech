@@ -1,0 +1,185 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">            
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/pages/compra/add', 0]"></button>                        
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">                    
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help" ></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="listCompras"  responsiveLayout="scroll" [rows]="10" [globalFilterFields]="[]" [paginator]="true" [rowsPerPageOptions]="[5,10,15]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Lista de Compras</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>                        
+                        <th pSortableColumn="proveedor">Proveedor<p-sortIcon field="proveedor"></p-sortIcon></th>
+                        <th pSortableColumn="numeroFactura">N° Factura<p-sortIcon field="numeroFactura"></p-sortIcon></th>                        
+                        <th pSortableColumn="fechaCompra">Fecha Compra<p-sortIcon field="fechaCompra"></p-sortIcon></th>
+                        <th pSortableColumn="formaPago">Forma Pago<p-sortIcon field="formaPago"></p-sortIcon></th>
+                        <th pSortableColumn="totalNeto">Valor Total<p-sortIcon field="totalNeto"></p-sortIcon></th>                        
+                        <th pSortableColumn="estadoPago">Estado<p-sortIcon field="estadoPago"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-compra>
+                    <tr>                        
+                        <td style="width:14%; min-width:5rem;"><span class="p-column-title">Proveedor</span>
+                            {{ compra.Proveedor.razonSocial }}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">N° Factura</span>
+                            {{ compra.numeroFactura }}
+                        </td>                        
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">Fecha Compra</span>
+                            {{ compra.fechaCompra }}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Forma Pago</span>
+                            {{ compra.formaPago }}
+                        </td>  
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Total Neto</span>
+                            {{ compra.totalNeto }}
+                        </td>                        
+                        <td style="width:14%; min-width: 5rem;">
+                            <span class="p-column-title">Estado</span>
+                            {{ compra.estadoPago }}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-file" class="p-button-rounded p-button-warning" ></button>                                                                
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editarCompra(compra.id)"></button>        
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" ></button>                                                        
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>  
+            
+            <!-- <p-dialog header="Detalle del Pedido" [(visible)]="mostrarModalDetalle" [modal]="true" [responsive]="true" [style]="{ width: '50vw' }">
+                <div *ngIf="detallePedido">
+
+                    <div class="grid mt-1">                        
+                            <div class="col-4">
+                                <span style="font-weight: bold;">Cliente:</span>
+                                <span>{{ detallePedido.Cliente.razonSocial }}</span>
+                            </div>
+                            <div class="col-4">
+                                <span style="font-weight: bold;">Contacto:</span>
+                                <span>{{ detallePedido.Cliente.contacto }}</span>
+                            </div>
+                            <div class="col-4">
+                                <span style="font-weight: bold;">Orden de Trabajo:</span>
+                                <span>{{ detallePedido.ordenTrabajo }}</span>
+                            </div>
+                        
+                            <div class="col-4">
+                                <span style="font-weight: bold;">Fecha Orden:</span>
+                                <span>{{ detallePedido.fechaOrdenTrabajo }}</span>
+                            </div>
+                            <div class="col-4">
+                                <span style="font-weight: bold;">Fecha Entrega:</span>
+                                <span>{{ detallePedido.fechaEntregaOrden }}</span>
+                            </div>
+
+                            <div class="col-12">
+                                <p-table [value]="detallePedido.ReferenciaEnPedidos" styleClass="p-datatable-sm">
+                                    <ng-template pTemplate="header">
+                                        <tr>                                            
+                                            <th>Referencia</th>
+                                            <th>Descripción</th>
+                                            <th>Valor Unitario</th>
+                                            <th>Cantidad</th>
+                                            <th>Valor Total</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-referencia>
+                                        <tr>
+                                            <td>{{referencia.referencia}}</td>
+                                            <td>{{referencia.descripcion}}</td>
+                                            <td>{{referencia.valorUnitario}}</td>
+                                            <td>{{referencia.cantidadTotal}}</td>
+                                            <td>{{referencia.valorTotalReferencia}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <ng-container >
+                                                    <p-table [value]="referencia.ProcesoEnReferenciaEnPedidos[0]?.ColorEnProcesoEnReferenciaEnPedidos">
+                                                        <ng-template pTemplate="header">
+                                                            <tr>                                            
+                                                                <th>Color/Talla</th>
+                                                                <th>S</th>
+                                                                <th>M</th>
+                                                                <th>L</th>
+                                                                <th>XL</th>
+                                                                <th>Cantidad Total</th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body"  let-color>
+                                                            <tr>
+                                                                <td>{{color.color}}</td>
+                                                                <td>{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[0].cantidad}}</td>
+                                                                <td>{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[1].cantidad}}</td>
+                                                                <td>{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[2].cantidad}}</td>
+                                                                <td>{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[3].cantidad}}</td>
+                                                                <td>{{color.cantidad}}</td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                </ng-container>
+                                            </td>
+                                            <td colspan="2">
+                                                <ng-container >
+                                                    <p-table [value]="referencia.ProcesoEnReferenciaEnPedidos">
+                                                        <ng-template pTemplate="header">
+                                                            <tr>                                            
+                                                                <th>Proceso</th>
+                                                                <th>Tipo Maquina</th>                                                                
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body"  let-proceso>
+                                                            <tr>
+                                                                <td>{{proceso.proceso}}</td>
+                                                                <td>{{proceso.tipoDeMaquina}}</td>                                                                
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                </ng-container>
+                                            </td>                                                                                        
+                                        </tr>
+                                        <tr>
+                                            <td></td>                                            
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+
+                            <div class="col-6">
+                                <span style="font-weight: bold;">Forma Pago:</span>
+                                <span>{{ detallePedido.formaPago }}</span>
+                            </div>
+                            <div class="col-6">
+                                <span style="font-weight: bold;">Valor Total:</span>
+                                <span>{{ detallePedido.valorTotal }}</span>
+                            </div>
+                    </div>
+                </div>
+            </p-dialog> -->
+
+        </div>    
+    </div>
+</div>

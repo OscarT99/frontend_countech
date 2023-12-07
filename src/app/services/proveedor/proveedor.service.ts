@@ -24,6 +24,10 @@ export class ProveedorService {
     return this.http.get<Proveedor[]>(`${this.myAppUrl}${this.myApiUrl}`)
    }
 
+   getListProveedoresCompra(): Observable<{ listProveedores: Proveedor[] }> {
+    return this.http.get<{ listProveedores: Proveedor[] }>(`${this.myAppUrl}${this.myApiUrl}`);
+  }
+
    postProveedor(proveedor: Proveedor):Observable<void>{
     return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}`,proveedor)
    }
@@ -36,11 +40,15 @@ export class ProveedorService {
     return this.http.delete<void>(`${this.myAppUrl}${this.myApiUrl}${id}`)
    }
 
-
    getCountries() {
     return this.http.get<any>('assets/demo/data/countries.json')
         .toPromise()
         .then(res => res.data as any[])
         .then(data => data);
+  }
+
+  buscarProveedores(termino: string): Observable<Proveedor[]> {
+    const url = `${this.myAppUrl}${this.myApiUrl}buscar?termino=${termino}`;
+    return this.http.get<Proveedor[]>(url);
   }
 }

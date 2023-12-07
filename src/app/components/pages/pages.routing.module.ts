@@ -11,6 +11,8 @@ import { RouterModule } from '@angular/router';
         {path:'abonoVenta',loadChildren:()=>import('./abonoVenta/abonoVenta.module').then(m => m.AbonoVentaModule)},                     
         {path:'pedido',loadChildren:()=>import('./pedido/list.pedido/list.pedido.module').then(m => m.ListPedidoModule)},
         {path:'pedido/add',loadChildren:()=>import('./pedido/add.pedido/add.pedido.module').then(m => m.AddPedidoModule)},
+        {path:'compra',loadChildren:()=>import('./compra/list.compra/list.compra.module').then(m => m.ListCompraModule)},
+        {path:'compra/add',loadChildren:()=>import('./compra/add.compra/add.compra.module').then(m => m.AddCompraModule)},
     ])],
     exports: [RouterModule]
 })
