@@ -93,7 +93,6 @@ export class ClienteComponent implements OnInit {
         });                        
     }
 
-    
 
     getListClientes(){     
         this._clienteService.getListClientes().subscribe((data:any) =>{      
@@ -196,6 +195,7 @@ export class ClienteComponent implements OnInit {
     confirmAction(confirmation: boolean) {
       if (confirmation && this.clienteSeleccionado) {      
         if (this.clienteSeleccionado.id) {
+          console.log(this.clienteSeleccionado)
           this._clienteService.putCliente(this.clienteSeleccionado.id, this.clienteSeleccionado).subscribe(() => {
             if (this.clienteSeleccionado!.estado !== undefined) {
               this.valSwitch = this.clienteSeleccionado!.estado;
@@ -203,7 +203,7 @@ export class ClienteComponent implements OnInit {
           });
         }
       }
-      this.showConfirmationDialog = false;
+      this.showConfirmationDialog = false;  
       this.clienteSeleccionado = null;
     }
     

@@ -1,0 +1,219 @@
+<div class="grid">
+
+    <div class="col-12">
+        <!-- <div class="card">
+            <h3>Pedidos</h3>
+                    <p-table #dt [value]="listPedidos"  responsiveLayout="scroll" [rows]="10" [globalFilterFields]="[]" [paginator]="true" [rowsPerPageOptions]="[5,10,15]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
+            <ng-template pTemplate="caption">
+                <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                    <h5 class="m-0">Lista de Pedidos</h5>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>                        
+                    <th pSortableColumn="cliente">Cliente<p-sortIcon field="cliente"></p-sortIcon></th>
+                    <th pSortableColumn="ordenTrabajo">Orden Trabajo<p-sortIcon field="ordenTrabajo"></p-sortIcon></th>                        
+                    <th pSortableColumn="fechaOrdenTrabajo">Fecha orden<p-sortIcon field="fechaOrdenTrabajo"></p-sortIcon></th>
+                    <th pSortableColumn="fechaEntregaOrden">Fecha Engtrega<p-sortIcon field="fechaEntregaOrden"></p-sortIcon></th>
+                    <th pSortableColumn="valorTotal">Valor Total<p-sortIcon field="valorTotal"></p-sortIcon></th>                        
+                    <th pSortableColumn="estado">Estado<p-sortIcon field="estado"></p-sortIcon></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-pedido>
+                <tr>                        
+                    <td style="width:14%; min-width:5rem;"><span class="p-column-title">Cliente</span>
+                        {{ pedido.Cliente.razonSocial }}
+                    </td>
+                    <td style="width:14%; min-width:10rem;">
+                        <span class="p-column-title">Orden Trabajo</span>
+                        {{ pedido.Cliente.razonSocial}}
+                    </td>                        
+                    <td style="width:14%; min-width:8rem;">
+                        <span class="p-column-title">Fecha Orden</span>
+                        {{ pedido.fechaOrdenTrabajo }}
+                    </td>
+                    <td style="width:14%; min-width:10rem;">
+                        <span class="p-column-title">Fecha Entrega</span>
+                        {{ pedido.fechaEntregaOrden }}
+                    </td>  
+                    <td style="width:14%; min-width:10rem;">
+                        <span class="p-column-title">Valor Total</span>
+                        {{ pedido.valorTotal }}
+                    </td>                        
+                    <td style="width:14%; min-width: 5rem;">
+                        <span class="p-column-title">Estado</span>
+                        {{ pedido.estado }}
+                    </td>
+                    <td>
+                        <div class="flex">                                
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>                                
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        </div> -->
+<!-- Listar pedidos para producción -->
+<div class="card">
+    <h3>Pedidos activos</h3>
+    <p-accordion [multiple]="true">        
+        <p-accordionTab *ngFor="let pedido of listPedidos" [header]="'Orden de trabajo: ' + pedido.ordenTrabajo" class="line-height-3 m-2">
+            <p-table [value]="[pedido]">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Información del pedido</h5>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>                                            
+                        <th>Cliente</th>
+                        <th>Fecha Orden</th>
+                        <th>Fecha Entrega</th>
+                        <th>Valor Total</th>
+                        <th>Estado</th>                                                                
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-pedido>
+                    <tr>
+                        <td>{{pedido.Cliente.razonSocial}}</td>
+                        <td>{{pedido.fechaOrdenTrabajo}}</td>
+                        <td>{{pedido.fechaEntregaOrden}}</td>
+                        <td>{{pedido.valorTotal}}</td>
+                        <td>{{pedido.estado}}</td>                                                                
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-tabView *ngIf="pedido.ReferenciaEnPedidos && pedido.ReferenciaEnPedidos.length">
+                <ng-container *ngFor="let referencia of pedido.ReferenciaEnPedidos">
+                    <p-accordionTab [header]="'Referencia: ' + referencia.referencia">
+                        <div>
+                            <p-table [value]="[referencia]" styleClass="p-datatable-sm">
+                                <ng-template pTemplate="header">
+                                    <tr>                                            
+                                        <th>Descripción</th>
+                                        <th>Valor Unit.</th>                                                                
+                                        <th>Cant. Total</th>                                                                                                                               
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-referenciaOne>
+                                    <tr>
+                                        <td>{{referenciaOne.descripcion}}</td>
+                                        <td>{{referenciaOne.valorUnitario}}</td>
+                                        <td>{{referenciaOne.cantidadTotal}}</td>                                                              
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        <p-tabView *ngIf="referencia.ProcesoEnReferenciaEnPedidos && referencia.ProcesoEnReferenciaEnPedidos.length">
+                            <ng-container *ngFor="let proceso of referencia.ProcesoEnReferenciaEnPedidos">
+                                <p-tabPanel [header]="proceso.proceso ? proceso.tipoDeMaquina : 'Valor Predeterminado'">
+                                    <p-table [value]="[proceso]">
+                                        <ng-template pTemplate="header">
+                                            <tr>                                            
+                                                <th>Proceso</th>                                                            
+                                                <th>Cant. Total</th>                                                                                                                               
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-proceso>
+                                            <tr>
+                                                <td>{{proceso.proceso}}</td>
+                                                <td>{{proceso.cantidadTotal}}</td>                                                              
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                    <p-table [value]="proceso.ColorEnProcesoEnReferenciaEnPedidos">
+                                        <ng-template pTemplate="header">
+                                            <tr>                                            
+                                                <th>Color</th>                                                            
+                                                <th>Cant. Total</th>  
+                                                <th>Tallas</th> 
+                                                <th>Asignadas</th> 
+                                                <th>Terminadas</th>
+                                                <th></th>
+                                                                                                                                        
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-color>
+                                            <tr>
+                                                <td>{{color.color}}</td>
+                                                <td>{{color.cantidad}}</td>
+                                                    <ng-container *ngFor="let talla of color.TallaEnColorEnProcesoEnReferenciaEnPedidos">
+                                                        <td>{{talla.talla}}</td>
+                                                        <td>{{talla.cantAsignada}}</td>
+                                                        <td>{{talla.cantHecha}}</td>
+                                                        <td>
+                                                            <div class="flex">
+                                                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-info mr-2" (click)="asignarTarea()"></button>
+                                                                <button pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-warning mr-2" (click)="showInfo()"></button>
+
+                                                            </div>
+                                                        </td>
+                                                    </ng-container>                                                         
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                    <!-- <ng-container *ngFor="let color of proceso.ColorEnProcesoEnReferenciaEnPedidos">
+                                        <p-tabPanel [header]="color.color ? color.color : 'Valor Predeterminado'">
+                                            <p>
+                                                {{ color.color }}
+                                            </p>
+                                        </p-tabPanel>
+                                    </ng-container> -->
+                                </p-tabPanel>
+                            </ng-container>
+                        </p-tabView>
+                    </p-accordionTab>
+                </ng-container>
+            </p-tabView>
+        </p-accordionTab>
+    </p-accordion>
+
+    <!-- Dialog detalle tareas asignadas -->
+    <p-dialog [(visible)]="viewInfoDialog" [style]="{width: '450px'}" header="Tareas asignadas" [modal]="true" class="p-fluid">
+        <div class="card">
+            <p-table>
+                <ng-template pTemplate="header">
+                    <tr>                                            
+                        <th>Color</th>                                                            
+                        <th>Cant. Total</th>  
+                        <th>Tallas</th> 
+                        <th>Asignadas</th> 
+                        <th>Terminadas</th>
+                        <th></th>                                                                                               
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-color>
+                    <tr>
+                        <td>{{color.color}}</td>
+                        <td>{{color.cantidad}}</td>
+                            <ng-container *ngFor="let talla of color.TallaEnColorEnProcesoEnReferenciaEnPedidos">
+                                <td>{{talla.talla}}</td>
+                                <td>{{talla.cantAsignada}}</td>
+                                <td>{{talla.cantHecha}}</td>
+                                <td>
+                                    <div class="flex">
+                                        <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-info mr-2" (click)="asignarTarea()"></button>
+                                        <button pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-warning mr-2" (click)="showInfo()"></button>
+                                    </div>
+                                </td>
+                            </ng-container>                                                         
+                    </tr>
+                </ng-template>
+            </p-table>
+            <h4>Working!</h4>
+        </div>
+    </p-dialog>
+
+    <!-- Dialog asignar tarea a empelado -->
+    <p-dialog [(visible)]="asignarTareaDialog" [style]="{width: '450px'}" header="Asignar tarea" [modal]="true" class="p-fluid">
+        <div class="card">
+            <h4>Working 2.0!</h4>
+        </div>
+    </p-dialog>
+    
+    
+</div>
+
+</div>
+</div>
