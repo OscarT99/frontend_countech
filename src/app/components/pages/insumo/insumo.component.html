@@ -1,0 +1,166 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">     
+            
+            <p-tabView>
+                <p-tabPanel header="Insumos">
+
+                    <p-toolbar styleClass="mb-4">
+                        <ng-template pTemplate="left">
+                            <div class="my-2">
+                                <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialogInsumo()"></button>                        
+                            </div>
+                        </ng-template>
+        
+                        <ng-template pTemplate="right">                    
+                            <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help" ></button>
+                        </ng-template>
+                    </p-toolbar>
+                    
+                    <p-table #dt  [value]="insumos" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="[]" [paginator]="true" [rowsPerPageOptions]="[5,10,15]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
+                        <ng-template pTemplate="caption">
+                            <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                                <h5 class="m-0">Lista de Insumos</h5>
+                                <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                    <i class="pi pi-search"></i>
+                                    <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
+                                </span>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header" >
+                            <tr>                        
+                                <th pSortableColumn="categoria">Categoria<p-sortIcon field="categoria"></p-sortIcon></th>
+                                <th pSortableColumn="nombre">Insumo<p-sortIcon field="nombre"></p-sortIcon></th>                        
+                                <th pSortableColumn="cantidad">Cantidad<p-sortIcon field="cantidad"></p-sortIcon></th>                                
+                                <th></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-insumo>
+                            <tr>                        
+                                <td style="width:14%; min-width:5rem;">
+                                    <span class="p-column-title">Categoria</span>
+                                    {{insumo.categoria}}                                    
+                                </td>
+                                <td style="width:14%; min-width:10rem;">
+                                    <span class="p-column-title">Insumo</span>
+                                    {{insumo.nombre}}                                    
+                                </td>                        
+                                <td style="width:14%; min-width:8rem;">
+                                    <span class="p-column-title">Cantidad</span>
+                                    {{insumo.cantidad}}                                    
+                                </td>                                
+                                <td>
+                                    <div class="flex">                                
+                                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>                                
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table> 
+                    
+                    <p-dialog header="Nuevo Insumo" class="p-fluid" [(visible)]="modalCrearInsumo" [style]="{width: '500px'}" [modal]="true">
+                        <div style="display: flex; flex-direction: row;">
+                            <form [formGroup]="formInsumo" (ngSubmit)="addInsumo()">
+                                <div>
+                                    <label>Categoria</label>                                                                    
+                                    <p-autoComplete class="inputs-pedido"
+                                    formControlName="categoria"
+                                    [suggestions]="sugerenciaCategoriasInsumo"
+                                    (completeMethod)="buscarCategorias($event)"
+                                    [dropdown]="true"
+                                    [minLength]="1"                            
+                                    [placeholder]="'Buscar Categoria'"
+                                    (onSelect)="seleccionarCategoria($event)">
+                                    <ng-template let-categoria pTemplate="item">
+                                      {{categoria.nombre}}
+                                    </ng-template>
+                                  </p-autoComplete>
+                                </div>
+                                <div>
+                                    <label >Nombre</label>                        
+                                    <input formControlName="nombre" type="text" pInputText />
+                                </div>
+                                
+                                <footer>
+                                    <p-button icon="pi pi-check" (click)="modalCrearInsumo = false" label="Cancelar" styleClass="p-button-text"></p-button>
+                                    <button type="submit" pButton icon="pi pi-check" label="Guardar"></button>                                
+                                </footer>                                
+                            </form>                            
+                        </div>                                                                                                                                                                                                                                                                                                                                                        
+                    </p-dialog>
+
+                </p-tabPanel>
+                <p-tabPanel header="Categorias">
+                    
+                    <p-toolbar styleClass="mb-4">
+                        <ng-template pTemplate="left">
+                            <div class="my-2">
+                                <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2"(click)="showDialogCategoriaInsumo()"></button>                        
+                            </div>
+                        </ng-template>
+        
+                        <ng-template pTemplate="right">                    
+                            <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help" ></button>
+                        </ng-template>
+                    </p-toolbar>
+                    
+                    <p-table #dt  [value]="categoriasDeInsumo" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="[]" [paginator]="true" [rowsPerPageOptions]="[5,10,15]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
+                        <ng-template pTemplate="caption">
+                            <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                                <h5 class="m-0">Lista de Categorias</h5>
+                                <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                    <i class="pi pi-search"></i>
+                                    <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
+                                </span>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header" >
+                            <tr>                        
+                                <th pSortableColumn="nombre">Categoria<p-sortIcon field="nombre"></p-sortIcon></th>
+                                <th pSortableColumn="cantidad">Cantidad<p-sortIcon field="cantidad"></p-sortIcon></th>                                
+                                <th></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-categoriaInsumo>
+                            <tr>                        
+                                <td style="width:14%; min-width:5rem;">
+                                    <span class="p-column-title">Categoria</span>
+                                    {{categoriaInsumo.nombre}}                                    
+                                </td>
+                                <td style="width:14%; min-width:10rem;">
+                                    <span class="p-column-title">Insumo</span>
+                                    {{categoriaInsumo.cantidad}}                                    
+                                </td>                        
+                                                                
+                                <td>
+                                    <div class="flex">                                
+                                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>                                
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table> 
+                    
+                    <p-dialog header="Nuevo Categoria" class="p-fluid" [(visible)]="modalCrearCategoria" [style]="{width: '500px'}" [modal]="true">
+                        <div style="display: flex; flex-direction: row;">
+                            <form [formGroup]="formCategoria" (ngSubmit)="addCategoriaInsumo()">
+                                <div>
+                                    <label >Nombre</label>                        
+                                    <input  formControlName="nombre" type="text" pInputText />
+                                </div>
+                                
+                                <footer>
+                                    <p-button  icon="pi pi-check" (click)="modalCrearCategoria = false" label="Cancelar" styleClass="p-button-text"></p-button>
+                                    <button type="submit" pButton icon="pi pi-check" label="Guardar"></button>                                
+                                </footer>
+                                    
+                            </form>                                                       
+                        </div>                                                                                                                                                                                                                                                                                                                                
+                        
+                    </p-dialog>
+                </p-tabPanel>
+            </p-tabView>
+
+        </div>          
+    </div>
+</div>

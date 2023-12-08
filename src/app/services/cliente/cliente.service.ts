@@ -38,14 +38,6 @@ import { Observable } from 'rxjs';
     deleteCliente(id:number): Observable<void>{
       return this.http.delete<void>(`${this.myAppUrl}${this.myApiUrl}${id}`)
     }
-  
-    getCountries() {
-      return this.http.get<any>('assets/demo/data/countries.json')
-          .toPromise()
-          .then(res => res.data as any[])
-          .then(data => data);
-    }
-
     buscarClientes(termino: string): Observable<Cliente[]> {
       const url = `${this.myAppUrl}${this.myApiUrl}buscar?termino=${termino}`;
       return this.http.get<Cliente[]>(url);

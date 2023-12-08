@@ -1,4 +1,4 @@
-export interface UsuarioLogin {
+export interface Login {
     email?: string;
     contrasena?: string;
 }

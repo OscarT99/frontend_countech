@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/interfaces/product';
 import { SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -10,27 +10,29 @@ import { ActivatedRoute } from '@angular/router';
 import * as XLSX from 'xlsx';
 
 
+
 @Component({
     templateUrl: './cliente.component.html',
     
 })
-export class ClienteComponent implements OnInit {
+export class ClienteComponent implements OnInit{
+      
     listClientes: Cliente[] = []
     cliente: Cliente = {}
     formCliente:FormGroup;
     id:number=0;
 
     valSwitch: boolean = false;
-    showConfirmationDialog: boolean = false;
+    showConfirmationDialog: boolean = false; 
     clienteSeleccionado: Cliente | null = null;
     switchState: boolean | undefined = undefined;
 
-    tipoCliente: SelectItem[] = [
+    tiposDeCliente: SelectItem[] = [
       { label: 'Empresa', value: 'Empresa' },
       { label: 'Persona', value: 'Persona' }
     ];
 
-    tipoIdentificacion:SelectItem[] = [
+    tipoIdentificacion = [
       { label: 'NIT',value:'NIT' },
       { label: 'Cédula de ciudadanía', value:'Cédula de ciudadanía' },
       { label: 'Registro civil', value:'Registro civil' },
@@ -44,23 +46,12 @@ export class ClienteComponent implements OnInit {
       { label: 'Activo', value: true },
       { label: 'Inactivo', value: false }
     ];
-
-    
-    countries: any[] = [];
-    filteredCountries: any[] = [];
-
     
     productDialog: boolean = false;
-    
-
     products: Product[] = [];
-
     product: Product = {};
-
     selectedProducts: Product[] = [];
-
     rowsPerPageOptions = [5, 10, 15];
-
 
     constructor(private fb:FormBuilder,
       private _clienteService:ClienteService,
@@ -68,8 +59,8 @@ export class ClienteComponent implements OnInit {
       private aRouter:ActivatedRoute,
       ){
         this.formCliente = this.fb.group({
-          tipoCliente: ['',Validators.required],
-          tipoIdentificacion: ['',Validators.required],
+          tipoCliente: [undefined,Validators.required],
+          tipoIdentificacion: [undefined,Validators.required],
           numeroIdentificacion: ['',Validators.required],
           razonSocial: ['',Validators.required],
           nombreComercial: ['',Validators.required],
@@ -78,7 +69,7 @@ export class ClienteComponent implements OnInit {
           contacto: ['',],
           telefono: ['',],
           correo: ['',],
-          estado: ['',],
+          estado: ['true'],
         })
         this.aRouter.params.subscribe(params => {
           this.id = +params['id']; // Obtén el valor del parámetro 'id' de la URL y actualiza id
@@ -87,12 +78,7 @@ export class ClienteComponent implements OnInit {
 
     ngOnInit():void {        
         this.getListClientes()
-
-        this._clienteService.getCountries().then(countries => {
-            this.countries = countries;
-        });                        
     }
-
 
     getListClientes(){     
         this._clienteService.getListClientes().subscribe((data:any) =>{      
@@ -119,51 +105,45 @@ export class ClienteComponent implements OnInit {
       })
     }
 
-
-    addCliente(){
-      const cliente : Cliente = {
-       tipoCliente: this.formCliente.value.tipoCliente,
-       tipoIdentificacion: this.formCliente.value.tipoIdentificacion,
-       numeroIdentificacion: this.formCliente.value.numeroIdentificacion,
-       razonSocial: this.formCliente.value.razonSocial,
-       nombreComercial: this.formCliente.value.nombreComercial,
-       ciudad: this.formCliente.value.ciudad,
-       direccion: this.formCliente.value.direccion,
-       contacto: this.formCliente.value.contacto,
-       telefono: this.formCliente.value.telefono,
-       correo: this.formCliente.value.correo,
-       estado: this.formCliente.value.estado,
-      }
- 
-      if(this.id !== 0){
-       cliente.id = this.id
-       this._clienteService.putCliente(this.id,cliente).subscribe(()=>{         
-        this.productDialog = false;
-        this.toastr.info(`El cliente ${cliente.razonSocial} fue actualizado con exito`,`Cliente actualizado`)
-        this.getListClientes();         
-       })
-      }else{            
-       this._clienteService.postCliente(cliente).subscribe(() => {        
-        this.productDialog = false;
-                
-        this.getListClientes();
-       })
-      }
- 
-      this.productDialog = false;
-     
-   }
-
-    filterCountry(event: any) {
-        const filtered: any[] = [];
-        const query = event!.query;
-        for (let i = 0; i < this.countries.length; i++) {
-            const country = this.countries[i];
-            if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }
+    addCliente() {
+      // Marcar todos los controles como tocados para activar la validación
+      this.formCliente.markAllAsTouched();
+  
+      // Verificar si el formulario es válido antes de continuar
+      if (this.formCliente.valid) {
+        const cliente: Cliente = {
+          tipoCliente: this.formCliente.value.tipoCliente,
+          tipoIdentificacion: this.formCliente.value.tipoIdentificacion,
+          numeroIdentificacion: this.formCliente.value.numeroIdentificacion,
+          razonSocial: this.formCliente.value.razonSocial,
+          nombreComercial: this.formCliente.value.nombreComercial,
+          ciudad: this.formCliente.value.ciudad,
+          direccion: this.formCliente.value.direccion,
+          contacto: this.formCliente.value.contacto,
+          telefono: this.formCliente.value.telefono,
+          correo: this.formCliente.value.correo,
+          estado: this.formCliente.value.estado,
+        };
+  
+        if (this.id !== 0) {
+          cliente.id = this.id;
+          this._clienteService.putCliente(this.id, cliente).subscribe(() => {
+            this.productDialog = false;
+            this.toastr.info(`El cliente ${cliente.razonSocial} fue actualizado con éxito`, `Cliente actualizado`);
+            this.getListClientes();
+          });
+        } else {
+          this._clienteService.postCliente(cliente).subscribe(() => {
+            this.productDialog = false;
+            this.toastr.success(`El cliente ${cliente.razonSocial} fue creado con éxito`, `Cliente creado`);
+            this.getListClientes();
+          });
         }
-        this.filteredCountries = filtered;
+  
+        this.productDialog = false;
+      } else {
+        this.toastr.error('Por favor, complete todos los campos obligatorios.', 'Error de validación');
+      }
     }
 
     openNew() {
@@ -207,6 +187,8 @@ export class ClienteComponent implements OnInit {
       this.clienteSeleccionado = null;
     }
     
+
+
     exportToExcel() {
       const data: any[] = []; // Array para almacenar los datos
     
@@ -243,7 +225,5 @@ export class ClienteComponent implements OnInit {
     
       // Guardar el libro de Excel como archivo
       XLSX.writeFile(wb, 'clientes.xlsx');
-    }
-    
-            
+    }        
 }

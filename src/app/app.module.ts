@@ -18,9 +18,10 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UsuarioService } from './services/usuario/usuario.service';
-import { LoginService } from './services/login/login.service';
+import { AuthService } from './services/login/login.service';
 import { VentaService } from './services/venta/venta.service';
 import { AbonoVentaService } from './services/abonoVenta/abonoVenta.service';
+import { OlvidoContrasenaComponent } from './components/auth/olvido-contrasena/olvido-contrasena.component';
 import { CompraService } from './services/compra/compra.service';
 
 
@@ -28,7 +29,7 @@ import { CompraService } from './services/compra/compra.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,7 +45,7 @@ import { CompraService } from './services/compra/compra.service';
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    ProductService,ClienteService,UsuarioService,LoginService, VentaService, AbonoVentaService,PedidoService,CompraService
+    ProductService,ClienteService,UsuarioService,AuthService, VentaService, AbonoVentaService,PedidoService,CompraService
   ],
   bootstrap: [AppComponent]
 })

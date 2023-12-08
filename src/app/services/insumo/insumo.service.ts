@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/enviroments/environment';
 import { InsumoInstance } from 'src/app/interfaces/insumo/insumo.interface'; 
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +44,18 @@ export class InsumoService {
     buscarInsumos(termino: string): Observable<InsumoInstance[]> {
         const url = `${this.myAppUrl}${this.myApiUrl}buscar?termino=${termino}`;
         return this.http.get<InsumoInstance[]>(url);
+    }
+
+    actualizarCantidadInsumo(id: number, nuevaCantidad: number): Observable<any> {
+      const url = `${this.myAppUrl}${this.myApiUrl}actualizarCantidad/${id}`;
+      const body = { nuevaCantidad };
+    
+      return this.http.put<any>(url, body)
+        .pipe(
+          catchError((error: any) => {
+            console.error('Error al actualizar la cantidad del insumo desde el servicio:', error);
+            throw error;
+          })
+        );
     }
 }

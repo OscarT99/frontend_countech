@@ -57,7 +57,7 @@
                             {{ proveedor.correo }}
                         </td>                        
                         <td style="width:14%; min-width: 5rem;"><span class="p-column-title">Estado</span>
-                            <p-inputSwitch class="mr-2" [(ngModel)]="proveedor.estado"   (click)="showConfirmation(proveedor)"></p-inputSwitch>
+                            <p-inputSwitch class="mr-2" (click)="showConfirmation(proveedor)"></p-inputSwitch>
                         </td>
                         <td>
                             <div class="flex">                                
@@ -73,13 +73,13 @@
                 <form [formGroup]="formProveedor" (ngSubmit)="addProveedor()">
                     <div class="formgrid grid">
                         <div class="field col">
-                            <p-dropdown formControlName="tipoProveedor" [options]="tipoProveedor" [(ngModel)]="selectedProveedor" placeholder="Tipo Proveedor" [showClear]="true"></p-dropdown>
+                            <p-dropdown formControlName="tipoProveedor" [options]="tipoProveedor"  placeholder="Tipo Proveedor" [showClear]="true"></p-dropdown>
                             <span *ngIf="formProveedor.get('tipoProveedor')?.hasError('required') && formProveedor.get('tipoProveedor')?.touched">
                                 El Tipo de proveedor es <strong>requerido</strong>
                             </span>                        
                         </div>
                         <div class="field col">
-                            <p-dropdown formControlName="tipoIdentificacion" [options]="tipoIdentificacion" [(ngModel)]="selectedIdentificacion" placeholder="Tipo Documento" [showClear]="true"></p-dropdown>
+                            <p-dropdown formControlName="tipoIdentificacion" [options]="tipoIdentificacion" placeholder="Tipo Documento" [showClear]="true"></p-dropdown>
                             <span *ngIf="formProveedor.get('tipoIdentificacion')?.hasError('required') && formProveedor.get('tipoIdentificacion')?.touched">
                                 El Tipo de identificación es <strong>requerido</strong>
                             </span>
@@ -118,7 +118,7 @@
                             </span>                                               
                         </div>
                         <div class="field col mt-3">
-                            <p-autoComplete formControlName="ciudad" placeholder="Ciudad" [(ngModel)]="selectedCountryAdvanced" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name" [dropdown]="true"> 
+                            <p-autoComplete formControlName="ciudad" placeholder="Ciudad" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name" [dropdown]="true"> 
                             </p-autoComplete>
                             <span *ngIf="formProveedor.get('ciudad')?.hasError('required') && formProveedor.get('ciudad')?.touched">
                                 La ciudad es <strong>requerida</strong>

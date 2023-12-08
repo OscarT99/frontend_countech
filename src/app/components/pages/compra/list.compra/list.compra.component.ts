@@ -37,7 +37,7 @@ export class ListCompraComponent implements OnInit {
 
     
     getListCompras(){     
-        this._compraService.getListCompras().subscribe((data:any) =>{      
+        this._compraService.getListCompras().subscribe((data:any) =>{                
           this.listCompras = data.listaCompras;          
         })        
     }
