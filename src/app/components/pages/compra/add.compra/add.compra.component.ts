@@ -272,7 +272,7 @@ export class AddCompraComponent implements OnInit {
         this.router.navigate(['/pages/compra']);        
         this.toastr.success(`La compra ${compra.numeroFactura} fue registrada con exito`,`Compra agregada`)
         this.detallesInsumo.forEach(detalle => {
-          this._insumoService.actualizarCantidadInsumo(detalle.insumo!, detalle.cantidad!)
+          this._insumoService.sumarCantidadInsumo(detalle.insumo!, detalle.cantidad!)
             .subscribe();
         });
       })

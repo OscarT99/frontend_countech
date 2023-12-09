@@ -46,14 +46,27 @@ export class InsumoService {
         return this.http.get<InsumoInstance[]>(url);
     }
 
-    actualizarCantidadInsumo(id: number, nuevaCantidad: number): Observable<any> {
-      const url = `${this.myAppUrl}${this.myApiUrl}actualizarCantidad/${id}`;
+    sumarCantidadInsumo(id: number, nuevaCantidad: number): Observable<any> {
+      const url = `${this.myAppUrl}${this.myApiUrl}sumarCantidad/${id}`;
       const body = { nuevaCantidad };
     
       return this.http.put<any>(url, body)
         .pipe(
           catchError((error: any) => {
-            console.error('Error al actualizar la cantidad del insumo desde el servicio:', error);
+            console.error('Error al sumar la cantidad del insumo desde el servicio:', error);
+            throw error;
+          })
+        );
+    }
+
+    restarCantidadInsumo(id: number, nuevaCantidad: number): Observable<any> {
+      const url = `${this.myAppUrl}${this.myApiUrl}restarCantidad/${id}`;
+      const body = { nuevaCantidad };
+    
+      return this.http.put<any>(url, body)
+        .pipe(
+          catchError((error: any) => {
+            console.error('Error al restar la cantidad del insumo desde el servicio:', error);
             throw error;
           })
         );

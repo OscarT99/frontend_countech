@@ -9,12 +9,29 @@ import { ActivatedRoute } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { CategoriaInsumoInstance } from 'src/app/interfaces/insumo/categoriaInsumo.interface';
 import { CategoriaInsumoService } from 'src/app/services/insumo/categoriaInsumo.service';
+import { SalidaInsumoInstance } from 'src/app/interfaces/insumo/salidaInsumo.interface';
+import { SalidaInsumoService } from 'src/app/services/insumo/salidaInsumo.service';
 
 @Component({
     templateUrl: './insumo.component.html',
     
 })
 export class InsumoComponent implements OnInit {
+
+    tipoMaquina: any[] = [
+      { label: 'Fileteadora', value: 'Fileteadora' },
+      { label: 'Plana', value: 'Plana' },
+      { label: 'Presilladora', value: 'Presilladora' },
+      { label: 'Recubridora', value: 'Recubridora' },
+      { label: 'Manual', value: 'Manual' }
+    ];
+
+    listInsumosGastados: SalidaInsumoInstance[]=[]
+
+    sugerenciasInsumos:InsumoInstance[]=[];
+
+    showConfirmationSalidaInsumo:boolean = false;
+  
     showConfirmationDialogInsumo: boolean = false;
     insumoSeleccionado: InsumoInstance | null = null;
 
@@ -27,12 +44,16 @@ export class InsumoComponent implements OnInit {
 
     formCategoria:FormGroup;
     formInsumo:FormGroup;
+    formSalidaInsumo:FormGroup;
 
     insumos: InsumoInstance[] = []
     categoriasDeInsumo: CategoriaInsumoInstance[] =[]
 
     modalCrearInsumo:  boolean = false;
+    modalSalidaInsumo: boolean = false;
+
     modalCrearCategoria: boolean = false;
+    
     sugerenciaCategoriasInsumo: CategoriaInsumoInstance[]=[]
 
     rowsPerPageOptions = [5, 10, 15];
@@ -43,17 +64,27 @@ export class InsumoComponent implements OnInit {
       private toastr: ToastrService,      
       private aRouter:ActivatedRoute,
       private _categoriaInsumoService:CategoriaInsumoService,
-      ){this.formCategoria=this.fb.group({
+      private _salidaInsumoService:SalidaInsumoService
+      ){
+      this.formCategoria=this.fb.group({
         nombre:['',Validators.required] 
-      }),this.formInsumo=this.fb.group({
+      }),
+      this.formInsumo=this.fb.group({
         categoria:['',Validators.required],
         nombre:['',Validators.required]
-      })}
+      }),
+      this.formSalidaInsumo=this.fb.group({
+        insumo:['',Validators.required],
+        cantidad:[0,Validators.required],
+        tipoDeMaquina:['',Validators.required]
+      })
+    }
 
     ngOnInit():void {                      
         this.getListInsumos();
         this.getListCategoriasDeInsumo();
-        this.obtenerListaCategorias();                          
+        this.obtenerListaCategorias();
+        this.obtenerListaInsumos();                          
     }
 
     onGlobalFilter(table: Table, event: Event) {
@@ -76,6 +107,10 @@ export class InsumoComponent implements OnInit {
       this.idInsumo = id;
       this.modalCrearInsumo = true;
       this.getInsumo(id);
+    }
+
+    openSalidaInsumo(){
+      this.modalSalidaInsumo = true
     }
 
     openNewCategoria() {
@@ -265,4 +300,111 @@ export class InsumoComponent implements OnInit {
         this.showConfirmationDialogCategoria = false;
         this.categoriaSeleccionado = null;
       }
+
+      obtenerListaInsumos(): void {
+        this._insumoService.getListInsumosCompra().subscribe(
+          (data: { listInsumos: InsumoInstance[] }) => {
+            this.sugerenciasInsumos = data.listInsumos;
+          },
+          (error: any) => {
+            console.error(error);
+          }
+        );
+      }
+
+      buscarInsumos(event: any): void {
+        this.sugerenciasInsumos = this.filterInsumos(event.query);
+      }
+      
+      filterInsumos(query: string): InsumoInstance[] {
+        return this.sugerenciasInsumos.filter(
+          (insumo) =>
+            insumo.nombre!.toLowerCase().includes(query.toLowerCase()) 
+        );
+      }
+    
+      seleccionarInsumo(event: any): void {
+        const insumoId = event.value.id;
+        this.formSalidaInsumo.get('insumo')!.setValue(insumoId);
+      }
+
+      addInsumoGastado(){
+        this.formSalidaInsumo.markAllAsTouched();
+  
+        if (this.formSalidaInsumo.valid) {
+            const salidaInsumo: SalidaInsumoInstance = {
+              insumo:this.formSalidaInsumo.value.insumo,
+              cantidad:this.formSalidaInsumo.value.cantidad,
+              tipoDeMaquina:this.formSalidaInsumo.value.tipoDeMaquina
+            }
+
+            this.listInsumosGastados.push(salidaInsumo)
+
+            this.formSalidaInsumo.reset({
+              ...this.formSalidaInsumo.value,
+              insumo: '',
+              cantidad: 0,
+              tipoDeMaquina: ''
+            });
+        }else{
+          this.toastr.error(
+            'Por favor, complete todos los campos obligatorios.',
+            'Error de validación'
+          );
+        }
+
+      }
+
+      eliminarInsumoGastado(insumoGastado: SalidaInsumoInstance): void {
+        const index = this.listInsumosGastados.indexOf(insumoGastado);
+        
+        if (index !== -1) {
+          this.listInsumosGastados.splice(index, 1);          
+        } else {
+          console.error("No se encontró el insumo en la lista.");
+        }
+      }
+
+      confirmActionSalidaInsumo(aceptar: boolean): void {
+        if (aceptar) {
+          for (const salidaInsumo of this.listInsumosGastados) {
+            this._salidaInsumoService.postSalidaInsumo(salidaInsumo).subscribe(() => {
+              this._insumoService.restarCantidadInsumo(salidaInsumo.insumo!, salidaInsumo.cantidad!)
+                .subscribe(() => { 
+                  this.getListInsumos();                 
+                }, error => {
+                  console.error('Error al restar cantidad del insumo:', error);
+                });
+            }, error => {
+              console.error('Error al crear salida de insumo:', error);
+            });
+          }          
+          this.formSalidaInsumo.reset();
+          this.listInsumosGastados = [];
+          this.showConfirmationSalidaInsumo = false;
+          this.modalSalidaInsumo = false;          
+          this.toastr.success(`La salida de los insumos fue registrada con éxito`, `Salida insumo registrada`);
+          
+        } else {
+          this.showConfirmationSalidaInsumo = false;
+        }
+      }
+      
+      
+
+      confirmarSalidaInsumo(){        
+        if(this.listInsumosGastados.length < 1){
+          this.formSalidaInsumo.markAllAsTouched();
+          this.toastr.error(
+            'Debes de agregar por lo menos un insumo.',
+            'Error de validación'
+          );
+          return
+        }
+        
+        this.showConfirmationSalidaInsumo = true
+        
+        
+      }
+     
 }      
