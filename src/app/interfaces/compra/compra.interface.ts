@@ -10,5 +10,7 @@ export interface CompraInstance {
     iva?:number,
     totalNeto?:number
     DetalleEnCompras?: DetalleCompraInstance[];
-    observaciones?:string
+    observaciones?:string;
+    estadoCompra?:boolean,
+    motivoDeAnulacion?:string
 }

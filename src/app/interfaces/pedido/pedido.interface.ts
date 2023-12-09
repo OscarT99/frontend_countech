@@ -8,8 +8,10 @@
       fechaEntregaOrden?: Date;
       formaPago?: 'Contado' | 'Crédito';
       valorTotal?: number;
-      observaciones?: string;
       ReferenciaEnPedidos? : ReferenciaPedidoInstance[];
+      observaciones?: string;
+      estadoPedido?:boolean,
+      motivoDeAnulacion?:string
     }
     
     

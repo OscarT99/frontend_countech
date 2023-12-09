@@ -2,7 +2,7 @@ import { Injectable, numberAttribute } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/enviroments/environment';
 import { CategoriaInsumoInstance } from 'src/app/interfaces/insumo/categoriaInsumo.interface';  
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +43,18 @@ export class CategoriaInsumoService {
     buscarCategoriaInsumos(termino: string): Observable<CategoriaInsumoInstance[]> {
         const url = `${this.myAppUrl}${this.myApiUrl}buscar?termino=${termino}`;
         return this.http.get<CategoriaInsumoInstance[]>(url);
+    }
+
+    actualizarEstadoCategoria(id: number, estado: boolean): Observable<any> {
+      const url = `${this.myAppUrl}${this.myApiUrl}actualizarEstado/${id}`;
+      const body = { estado }; // Agregamos el estado al cuerpo
+
+      return this.http.put<any>(url, body)
+        .pipe(
+          catchError((error: any) => {
+            console.error('Error al actualizar el estado del insumo desde el servicio:', error);
+            throw error;
+          })
+        );
     }
 }

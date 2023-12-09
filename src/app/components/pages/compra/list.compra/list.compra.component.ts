@@ -12,6 +12,10 @@ import { Dialog } from 'primeng/dialog';
     
 })
 export class ListCompraComponent implements OnInit {
+    motivoAnulacion: string = '';
+    showConfirmationDialogCompra: boolean = false;
+    compraSeleccionada: CompraInstance | null = null;
+
     listCompras: CompraInstance[] = []
     compra: CompraInstance = {}
     id:number=0;
@@ -49,5 +53,66 @@ export class ListCompraComponent implements OnInit {
     editarCompra(id: number): void {
         this.router.navigate(['/pages/compra/add', id]);
       }
+
+      async mostrarDetalleCompra(id: number) {
+        try {
+            this.detalleCompra = await this._compraService.getCompra(id).toPromise();
+            console.log('Detalle de la compra:', this.detalleCompra);
+            this.mostrarModalDetalle = true;
+        } catch (error) {
+            console.error('Error al obtener el detalle de la compra:', error);
+        }
+    }
+
+    anularCompra(compra: CompraInstance): void {
+        // Mostrar el cuadro de diálogo de confirmación
+        this.compraSeleccionada = compra;
+        this.showConfirmationDialogCompra = true;
+    }
+
+    // confirmActionCompra(confirm: boolean): void {
+    //     if (confirm && this.compraSeleccionada) {
+    //         // Realizar la anulación de compra
+    //         const id = this.compraSeleccionada.id ?? 0; // Si compraSeleccionada.id es undefined, asigna 0
+    //         this._compraService.anularCompra(id, false).subscribe(
+    //             (response) => {
+    //                 this.toastr.success('La compra se anuló correctamente.', 'Compra Anulada');
+    //                 this.getListCompras();
+    //             },
+    //             (error) => {
+    //                 console.error('Error al anular la compra:', error);
+    //             }
+    //         );
+    //     }
+    
+    //     this.showConfirmationDialogCompra = false;
+    //     this.compraSeleccionada = null;
+    // }
+
+    confirmActionCompra(confirm: boolean): void {
+        if (confirm && this.compraSeleccionada) {
+            if (this.motivoAnulacion.trim() === '') {
+                this.toastr.warning('Ingrese un motivo de anulación.', 'Motivo Requerido');
+                return;
+            }
+    
+            const id = this.compraSeleccionada.id ?? 0;
+            this._compraService.anularCompra(id, false, this.motivoAnulacion).subscribe(
+                (response) => {
+                    this.toastr.success('La compra se anuló correctamente.', 'Compra Anulada');
+                    this.getListCompras();
+                },
+                (error) => {
+                    console.error('Error al anular la compra:', error);
+                }
+            );
+        }
+    
+        this.showConfirmationDialogCompra = false;
+        this.compraSeleccionada = null;
+        this.motivoAnulacion = ''; // Restablecer el motivo de anulación
+    }
+    
+    
       
 }

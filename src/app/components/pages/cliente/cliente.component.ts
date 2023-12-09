@@ -5,10 +5,14 @@ import { Table } from 'primeng/table';
 import { ClienteService } from 'src/app/services/cliente/cliente.service'; 
 import { Cliente } from 'src/app/interfaces/cliente/cliente.interface';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as XLSX from 'xlsx';
 
+interface City {
+  name: string;
+  code: string;
+}
 
 
 @Component({
@@ -16,7 +20,6 @@ import * as XLSX from 'xlsx';
     
 })
 export class ClienteComponent implements OnInit{
-      
     listClientes: Cliente[] = []
     cliente: Cliente = {}
     formCliente:FormGroup;
@@ -27,7 +30,8 @@ export class ClienteComponent implements OnInit{
     clienteSeleccionado: Cliente | null = null;
     switchState: boolean | undefined = undefined;
 
-    tiposDeCliente: SelectItem[] = [
+
+    tiposDeCliente = [
       { label: 'Empresa', value: 'Empresa' },
       { label: 'Persona', value: 'Persona' }
     ];
@@ -42,15 +46,13 @@ export class ClienteComponent implements OnInit{
       { label: 'Tarjeta de identidad', value:'Tarjeta de identidad' },
     ];
 
-    estado:SelectItem[] = [
-      { label: 'Activo', value: true },
-      { label: 'Inactivo', value: false }
+    estados = [
+      { label: 'Activo',  value:'true' },
+      { label: 'Inactivo', value:'false' }
     ];
     
     productDialog: boolean = false;
-    products: Product[] = [];
-    product: Product = {};
-    selectedProducts: Product[] = [];
+
     rowsPerPageOptions = [5, 10, 15];
 
     constructor(private fb:FormBuilder,
@@ -69,7 +71,7 @@ export class ClienteComponent implements OnInit{
           contacto: ['',],
           telefono: ['',],
           correo: ['',],
-          estado: ['true'],
+          estado: [],
         })
         this.aRouter.params.subscribe(params => {
           this.id = +params['id']; // Obtén el valor del parámetro 'id' de la URL y actualiza id
@@ -106,10 +108,8 @@ export class ClienteComponent implements OnInit{
     }
 
     addCliente() {
-      // Marcar todos los controles como tocados para activar la validación
       this.formCliente.markAllAsTouched();
   
-      // Verificar si el formulario es válido antes de continuar
       if (this.formCliente.valid) {
         const cliente: Cliente = {
           tipoCliente: this.formCliente.value.tipoCliente,
@@ -188,6 +188,10 @@ export class ClienteComponent implements OnInit{
     }
     
 
+    get isNIT(): boolean {
+      return this.formCliente.get('tipoIdentificacion')?.value === 'NIT';
+    }
+    
 
     exportToExcel() {
       const data: any[] = []; // Array para almacenar los datos

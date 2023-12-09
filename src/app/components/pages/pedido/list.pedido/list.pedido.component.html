@@ -61,9 +61,10 @@
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-file" class="p-button-rounded p-button-warning" (click)="mostrarDetallePedido(pedido.id)"></button>                                                                
+                                <button pButton pRipple icon="pi pi-file" class="p-button-rounded p-button-warning mr-2" (click)="mostrarDetallePedido(pedido.id)"></button>                                                                
                                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"  (click)="editarPedido(pedido.id)"></button>        
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="eliminarPedido(pedido.id,pedido.estado)"></button>                                                        
+                                <button *ngIf="pedido.estado != 'Registrado'" pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger mr-2"></button>
+                                <button *ngIf="pedido.estado == 'Registrado'" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="eliminarPedido(pedido.id,pedido.estado)"></button>                                                         
                             </div>
                         </td>
                     </tr>
@@ -72,7 +73,6 @@
             
             <p-dialog header="Detalle del Pedido" [(visible)]="mostrarModalDetalle" [modal]="true" [responsive]="true" [style]="{ width: '50vw' }">
                 <div *ngIf="detallePedido">
-
                     <div class="grid mt-1">                        
                             <div class="col-4">
                                 <span style="font-weight: bold;">Cliente:</span>
@@ -181,7 +181,7 @@
                 </div>
                 
                 <!-- <button pButton type="button" label="Cerrar" class="p-button-secondary" (click)="cerrarModalDetallePedido()"></button> -->
-              </p-dialog>
+            </p-dialog>
         </div>    
     </div>
 </div>

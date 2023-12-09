@@ -56,7 +56,10 @@
                             {{ cliente.correo }}
                         </td>                        
                         <td style="width:14%; min-width: 5rem;"><span class="p-column-title">Estado</span>
-                            <p-inputSwitch class="mr-2" [(ngModel)]="cliente.estado"   (click)="showConfirmation(cliente)"></p-inputSwitch>
+                            <p-inputSwitch (click)="showConfirmation(cliente)"
+                                class="mt-2 {{ cliente.estado ? 'p-inputswitch-success' : 'p-inputswitch-warning' }}"
+                                [(ngModel)]="cliente.estado">
+                            </p-inputSwitch>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(cliente.id)"></button>
                         </td>                        
                     </tr>
@@ -74,7 +77,7 @@
                             </span>                        
                         </div>
                         <div class="field col">
-                            <p-dropdown formControlName="tipoIdentificacion" [options]="tipoIdentificacion"  placeholder="Tipo Documento"></p-dropdown>
+                            <p-dropdown formControlName="tipoIdentificacion" [options]="tipoIdentificacion" placeholder="Tipo Documento"></p-dropdown>
                             <small *ngIf="formCliente.get('tipoIdentificacion')?.hasError('required') && formCliente.get('tipoIdentificacion')?.touched" style="color: red;">
                                 El Tipo de identificación es <strong>requerido</strong>
                             </small>
@@ -93,13 +96,13 @@
                             </small>                                                                               
                         </div>
                         <div class="field col mt-2">
-                            <span class="p-float-label ">
+                            <span class="p-float-label">
                                 <input formControlName="razonSocial" id="razonSocial" type="text" pInputText>
-                                <label for="razonSocial">Razon Social</label>
+                                <label for="razonSocial">{{ isNIT ? 'Razon Social' : 'Nombres' }}</label>
                             </span>
                             <small *ngIf="formCliente.get('razonSocial')?.hasError('required') && formCliente.get('razonSocial')?.touched" style="color: red;">
-                                La Razon Social es <strong>requerida</strong>
-                            </small>
+                                {{ isNIT ? 'La razón social es' : 'El nombre es' }} <strong>requerido</strong>
+                            </small>                              
                         </div>
                     </div>
 
@@ -107,10 +110,10 @@
                         <div class="field col mt-2">
                             <span class="p-float-label ">
                                 <input formControlName="nombreComercial" id="nombreComercial" type="text" pInputText>
-                                <label for="nombreComercial">Nombre Comercial</label>
+                                <label for="nombreComercial">{{ isNIT ? 'Nombre Comercial' : 'Apellidos' }}</label>
                             </span>
                             <small *ngIf="formCliente.get('nombreComercial')?.hasError('required') && formCliente.get('nombreComercial')?.touched" style="color: red;">
-                                El Nombre Comercial es <strong>requerido</strong>
+                                {{ isNIT ? 'El nombre comercial es ' : 'El apellido es' }} <strong>requerido</strong>
                             </small>                                               
                         </div>
                         <div class="field col mt-2">
@@ -155,12 +158,12 @@
                     </div>
     
                     <div class="formgrid mt-3" *ngIf="id!=0">                   
-                        <p-dropdown formControlName="estado" [options]="estado" placeholder="Estado" [style]="{'width': '48%'}"></p-dropdown>                   
+                        <p-dropdown formControlName="estado" [options]="estados" [style]="{'width': '48%'}"></p-dropdown>                   
                     </div>
                                 
                     
-                        <div class="col-6"><button pButton pRipple label="Cancelar" type="button" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button></div>
-                        <div class="col-6"><button type="submit" pButton pRipple label="Guadar" icon="pi pi-check" class="p-button-text" ></button></div>                        
+                    <div><button pButton pRipple label="Cancelar" type="button" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button></div>
+                    <div><button type="submit" pButton pRipple label="Guadar" icon="pi pi-check" class="p-button-text" ></button></div>                        
                                                                                                                                                                   
                 </form>                                                                      
         </p-dialog>

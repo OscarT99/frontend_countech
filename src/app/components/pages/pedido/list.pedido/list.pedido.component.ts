@@ -74,9 +74,9 @@ export class ListPedidoComponent implements OnInit {
         }
     }
     
-    cerrarModalDetallePedido() {
-        this.mostrarModalDetalle = false;
-        this.detallePedido = null; // Limpia los detalles al cerrar el modal
-    }
+    // cerrarModalDetallePedido() {
+    //     this.mostrarModalDetalle = false;
+    //     this.detallePedido = null; 
+    // }
 
 }

@@ -18,7 +18,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { InputSwitchModule } from 'primeng/inputswitch';
-
+import { InputMaskModule } from 'primeng/inputmask';
 
 @NgModule({
     imports: [
@@ -40,7 +40,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
         DialogModule,
         AutoCompleteModule,
         ReactiveFormsModule,
-        InputSwitchModule,             
+        InputSwitchModule,
+        InputMaskModule             
     ],
     declarations: [ProveedorComponent]
 })

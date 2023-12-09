@@ -58,4 +58,18 @@ export class InsumoService {
           })
         );
     }
+
+    actualizarEstadoInsumo(id: number, estado: boolean): Observable<any> {
+      const url = `${this.myAppUrl}${this.myApiUrl}actualizarEstado/${id}`;
+      const body = { estado }; // Agregamos el estado al cuerpo
+
+      return this.http.put<any>(url, body)
+        .pipe(
+          catchError((error: any) => {
+            console.error('Error al actualizar el estado del insumo desde el servicio:', error);
+            throw error;
+          })
+        );
+    }
+
 }
