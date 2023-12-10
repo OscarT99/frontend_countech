@@ -34,7 +34,9 @@ export class VentaComponent implements OnInit {
   listVentas: Venta[] = []
   listClientes: Cliente[] = []
   venta: Venta = {}
+  formAbonoVenta: FormGroup;
   formVenta: FormGroup;
+
   id: number = 0;
 
   valSwitch: boolean = false;
@@ -88,6 +90,12 @@ export class VentaComponent implements OnInit {
       formaPago: ['', Validators.required],
       valorTotal: ['', Validators.required],
       estadoPago: ['', Validators.required],
+    })
+    this.formAbonoVenta = this.fb.group({
+      id: ['', Validators.required],
+      venta: ['', Validators.required],
+      fechaAbono: ['', Validators.required],
+      valorAbono: ['', Validators.required],
     })
     this.aRouter.params.subscribe(params => {
       this.id = +params['id'];
@@ -202,28 +210,28 @@ export class VentaComponent implements OnInit {
     this.productDialogAbono = true;
 }
 
+confirm2(event: Event) {
+  this.confirmationService.confirm({
+    key: 'confirm2',
+    target: event.target || new EventTarget,
+    message: '¿Está seguro de realizar el abono?',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Sí', 
+    accept: () => {
+      this.agregarAbonoVenta(this.value9);
+      console.log(this.getValorRestante());
+      this.value9 = undefined; 
+    },
+    reject: () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Cancelado',
+        detail: 'El abono no fue agregado a la venta'
+      });
+    }
+  });
+}
 
-  confirm2(event: Event) {
-    this.confirmationService.confirm({
-      key: 'confirm2',
-      target: event.target || new EventTarget,
-      message: '¿Está seguro de realizar el abono?',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        // Llama a la función para agregar el abono de venta con el valor actual del input
-        this.agregarAbonoVenta(this.value9);
-        console.log(this.getValorRestante())
-      },
-      reject: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Cancelado',
-          detail: 'El abono no fue agregado a la venta'
-        });
-      }
-    });
-  }
-  
 
 
 
@@ -293,11 +301,9 @@ export class VentaComponent implements OnInit {
   //Agregar abono 
   agregarAbonoVenta(valorAbono: number) {
     const nuevoAbono: AbonoVenta = {
-      // Aquí debes construir el objeto del abono de venta con los datos necesarios
-      // Por ejemplo:
       valorAbono: valorAbono,
-      fechaAbono: new Date(), // Puedes ajustar esto según la fecha que necesites
-      venta: this.id // Asigna el ID de la venta correspondiente
+      fechaAbono: new Date(), 
+      venta: this.id 
     };
   
     this._abonoVentaService.postAbonoVenta(nuevoAbono).subscribe(
@@ -341,11 +347,11 @@ export class VentaComponent implements OnInit {
   
   
   getValorRestante(): number {
-    if (this.abonoVenta.valorAbono && typeof this.venta.valorTotal === 'number') {
+    //if (this.listAbonoVentas && this.listAbonoVentas.length > 0 && this.venta && typeof this.venta.valorTotal === 'number') {
       const abonosTotal = this.listAbonoVentas.reduce((total, abono) => total + (abono.valorAbono || 0), 0);
-      return this.venta.valorTotal - abonosTotal;
-    }
-    return 0; // O cualquier otro valor predeterminado en caso de que no haya datos válidos
+      
+      return abonosTotal;
+    //Resultado 050000.0020000.0060000.0040000.0040000.0020000.0017000.001000.003000.001000.001500.001000.001000.00
   }
   
 
