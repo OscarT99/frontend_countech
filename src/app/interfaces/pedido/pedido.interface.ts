@@ -11,7 +11,7 @@
       ReferenciaEnPedidos? : ReferenciaPedidoInstance[];
       observaciones?: string;
       estadoPedido?:boolean,
-      motivoDeAnulacion?:string
+      motivoDeAnulacion?:string,
+      estado?:string
     }
-    
     

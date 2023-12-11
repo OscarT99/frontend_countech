@@ -32,13 +32,14 @@ export class ListPedidoComponent implements OnInit {
       ){}
 
     ngOnInit():void {        
-        this.getListPedidos();                               
+        this.getListPedidos()                               
     }
 
     
     getListPedidos(){     
         this._pedidoService.getListPedidos().subscribe((data:any) =>{              
-          this.listPedidos = data.listaPedidos;          
+          this.listPedidos = data.listaPedidos; 
+         
         })        
     }
 

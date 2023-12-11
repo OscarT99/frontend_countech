@@ -10,4 +10,5 @@ export interface Empleado {
     direccion?: string;
     fechaIngreso?: Date;
     estado?: boolean;
+    estadoProduccion?: boolean;
   }

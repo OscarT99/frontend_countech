@@ -92,7 +92,8 @@
 
   <form [formGroup]="formularioEmpleado" (ngSubmit)="addEmpleado()">
     <!-- <ng-template pTemplate="content"> -->
-      <div class="field">
+      <div class="formgrid grid" style="margin-top: 20px;">
+      <div class="field col">
         <label for="tipoIdentidad">Tipo de identidad*</label>
         <input type="text" pInputText pKeyFilter="alpha" formControlName="tipoIdentificacion" required autofocus/>
         <small *ngIf="formularioEmpleado.get('tipoIdentificacion')?.hasError('required') && formularioEmpleado.get('tipoIdentificacion')?.touched" style="color: red;">
@@ -100,13 +101,14 @@
         </small>
       </div>
 
-      <div class="field">
+      <div class="field col">
         <label for="numeroIdentificacion">N° Identificación*</label>
         <input type="text" pKeyFilter="int" pInputText formControlName="numeroIdentificacion"/>
         <small *ngIf="formularioEmpleado.get('numeroIdentificacion')?.hasError('required') && formularioEmpleado.get('numeroIdentificacion')?.touched" style="color: red;">
             El nro. de identificación es <strong>requerido</strong>  
         </small>
       </div>
+    </div>
     <div class="field">
         <label for="nombre">Nombres*</label>
         <input type="text" pKeyFilter="alpha" pInputText formControlName="nombre"/>
@@ -121,26 +123,28 @@
             El apellido es <strong>requerido</strong>
         </small>
     </div>
-    <div class="field">
+    <div class="field"> 
         <label for="correo">Correo electrónico*</label>
         <input type="text" pInputText formControlName="correo"/>
         <small *ngIf="formularioEmpleado.get('correo')?.hasError('required') && formularioEmpleado.get('correo')?.touched" style="color: red;">
             El correo es <strong>requerido</strong>
         </small>
     </div>
-    <div class="field">
+    <div class="formgrid grid" style="margin-top: 20px;">
+    <div class="field col">
         <label for="telefono">Teléfono*</label>
         <input type="text" pKeyFilter="int" pInputText formControlName="telefono"/>
         <small *ngIf="formularioEmpleado.get('telefono')?.hasError('required') && formularioEmpleado.get('telefono')?.touched" style="color: red;">
             El teléfono es <strong>requerido</strong>
         </small>
     </div>
-    <div class="field">
+    <div class="field col">
         <label for="ciudad">Ciudad*</label>
         <input type="text" pKeyFilter="alpha" pInputText formControlName="ciudad"/>
         <small *ngIf="formularioEmpleado.get('ciudad')?.hasError('required') && formularioEmpleado.get('ciudad')?.touched" style="color: red;">
             La ciudad es <strong>requerida</strong>
         </small>
+    </div>
     </div>
     <div class="field">
         <label for="direccion">Dirección*</label>
@@ -175,19 +179,21 @@
 
   <form [formGroup]="formularioEmpleado" (ngSubmit)="addEmpleado()">
     <!-- <ng-template pTemplate="content"> -->
-      <div class="field">
+      <div class="formgrid grid" style="margin-top: 20px;">
+      <div class="field col">
         <label for="tipoIdentidad">Tipo de identidad</label>
         <input type="text" pInputText pKeyFilter="alpha" formControlName="tipoIdentificacion"/>
         <small *ngIf="formularioEmpleado.get('tipoIdentificacion')?.hasError('required') && formularioEmpleado.get('tipoIdentificacion')?.touched" style="color: red;">
           El tipo de identidad es <strong>requerido</strong>
         </small>
       </div>
-      <div class="field">
+      <div class="field col">
         <label for="numeroIdentificacion">N° Identificación</label>
         <input type="text" pInputText pKeyFilter="int" formControlName="numeroIdentificacion"/>
         <small *ngIf="formularioEmpleado.get('numeroIdentificacion')?.hasError('required') && formularioEmpleado.get('numeroIdentificacion')?.touched" style="color: red;" style="color: red;">
           El nro. de identificación es <strong>requerido</strong>
         </small>
+    </div>
     </div>
     <div class="field">
         <label for="nombre">Nombres</label>
@@ -210,19 +216,21 @@
           El correo es <strong>requerido</strong>
         </small>
     </div>
-    <div class="field">
+    <div class="formgrid grid" style="margin-top: 20px;">
+    <div class="field col">
         <label for="telefono">Teléfono</label>
         <input type="text" pInputText pKeyFilter="int" formControlName="telefono"/>
         <small *ngIf="formularioEmpleado.get('telefono')?.hasError('required') && formularioEmpleado.get('telefono')?.touched" style="color: red;">
           El teléfono es <strong>requerido</strong>
         </small>
     </div>
-    <div class="field">
+    <div class="field col">
         <label for="ciudad">Ciudad</label>
         <input type="text" pInputText pKeyFilter="alpha" formControlName="ciudad"/>
         <small *ngIf="formularioEmpleado.get('ciudad')?.hasError('required') && formularioEmpleado.get('ciudad')?.touched" style="color: red;">
             Ciudad es requerido.
         </small>
+    </div>
     </div>
     <div class="field">
         <label for="direccion">Dirección</label>
@@ -258,19 +266,21 @@
 
   <form [formGroup]="formularioEmpleado">
     <!-- <ng-template pTemplate="content"> -->
-      <div class="field">
+      <div class="formgrid grid" style="margin-top: 20px;">
+      <div class="field col">
         <label for="tipoIdentidad">Tipo de identidad</label>
         <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" id="disabled-input" pInputText formControlName="tipoIdentificacion" />
         <!-- <small *ngIf="formularioEmpleado.get('tipoIdentificacion')?.hasError('required') && formularioEmpleado.get('tipoIdentificacion')?.touched">
           Tipo de identidad es requerido.
         </small> -->
       </div>
-      <div class="field">
+      <div class="field col">
         <label for="numeroIdentificacion">N° Identificación</label>
         <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="numeroIdentificacion"/>
         <small *ngIf="formularioEmpleado.get('numeroIdentificacion')?.hasError('required') && formularioEmpleado.get('numeroIdentificacion')?.touched">
             Nro. Identificación es requerido.
         </small>
+      </div>
     </div>
     <div class="field">
         <label for="nombre">Nombres</label>
@@ -293,20 +303,22 @@
             Correo es requerido.
         </small>
     </div>
-    <div class="field">
+    <div class="formgrid grid" style="margin-top: 20px;">
+    <div class="field col">
         <label for="telefono">Teléfono</label>
         <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="telefono"/>
         <small *ngIf="formularioEmpleado.get('telefono')?.hasError('required') && formularioEmpleado.get('telefono')?.touched">
             Teléfono es requerido.
         </small>
     </div>
-    <div class="field">
+    <div class="field col">
         <label for="ciudad">Ciudad</label>
         <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="ciudad"/>
         <small *ngIf="formularioEmpleado.get('ciudad')?.hasError('required') && formularioEmpleado.get('ciudad')?.touched">
             Ciudad es requerido.
         </small>
     </div>
+  </div>
     <div class="field">
         <label for="direccion">Dirección</label>
         <input [readonly]="true" [ngStyle]="{'pointer-events': 'none', 'background-color': '#f4f4f4', 'caret-color': 'transparent'}" type="text" pInputText formControlName="direccion"/>
