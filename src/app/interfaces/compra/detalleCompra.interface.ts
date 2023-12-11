@@ -1,4 +1,5 @@
 export interface DetalleCompraInstance {
+    id?:string,
     compra?:number;
     insumo?:number;
     cantidad?:number;

@@ -1,7 +1,7 @@
 <div class="grid">    
     <div class="col-12">
         <div class="card px-6 ">
-            <h4>Nueva Compra</h4>
+            <h4>{{ id === 0 ? 'Nueva Compra' : 'Editar Compra' }}</h4>
                 <form [formGroup]="formCompra">
                         <div class="grid p-fluid mt-3">
                             <div class="col-4">                            
@@ -43,6 +43,11 @@
                         </div>
 
                         <strong >Detalles de Insumos</strong>
+                        <div *ngIf="mostrarID != false" class="col-8">
+                            <label >id</label>
+                            <input type="text"  class="inputs-pedido" formControlName="idTemporal"/>
+                        </div>
+
                         <div class="grid p-fluid mt-1" style="border-top: 1px solid var(--surface-border);">
                             <div class="col-3">
                                 <label>Insumo</label>
@@ -92,60 +97,14 @@
                                     </ng-template>
                                     <ng-template pTemplate="body" let-insumo let-i="index" >
                                         <tr>
-                                            <td [pEditableColumn]="" pEditableColumnField="">
-                                                <p-cellEditor>
-                                                    <ng-template pTemplate="input">
-                                                        <input pInputText type="text" insumo.insumo />
-                                                    </ng-template>
-                                                    <ng-template pTemplate="output" >
-                                                      {{insumo.insumo}}  
-                                                    </ng-template>
-                                                </p-cellEditor>
-                                            </td>
-                                            <td [pEditableColumn]="" pEditableColumnField="">
-                                                <p-cellEditor>
-                                                    <ng-template pTemplate="input">
-                                                        <input pInputText type="text"  required />
-                                                    </ng-template>
-                                                    <ng-template pTemplate="output">
-                                                        {{insumo.cantidad}}
-                                                    </ng-template>
-                                                </p-cellEditor>
-                                            </td>
-                                            <td [pEditableColumn]="" pEditableColumnField="">
-                                                <p-cellEditor>
-                                                    <ng-template pTemplate="input">
-                                                        <input pInputText />
-                                                    </ng-template>
-                                                    <ng-template pTemplate="output">
-                                                        {{insumo.valorUnitario | currency}}
-                                                    </ng-template>
-                                                </p-cellEditor>
-                                            </td>
-                                            <td [pEditableColumn]="" pEditableColumnField="">
-                                                <p-cellEditor>
-                                                    <ng-template pTemplate="input">
-                                                        <input pInputText type="text"  />
-                                                    </ng-template>
-                                                    <ng-template pTemplate="output">
-                                                        {{insumo.impuestoIva | currency}}
-                                                    </ng-template>
-                                                </p-cellEditor>
-                                            </td>
-                                            <td [pEditableColumn]="" pEditableColumnField="">
-                                                <p-cellEditor>
-                                                    <ng-template pTemplate="input">
-                                                        <input pInputText type="text"  />
-                                                    </ng-template>
-                                                    <ng-template pTemplate="output">
-                                                        {{insumo.valorTotal | currency}}
-                                                    </ng-template>
-                                                </p-cellEditor>
-                                            </td>                                            
+                                            <td>{{insumo.insumo}}</td>
+                                            <td>{{insumo.cantidad}}</td>
+                                            <td>{{insumo.valorUnitario | currency}}</td>
+                                            <td>{{insumo.impuestoIva | currency}}</td>
+                                            <td>{{insumo.valorTotal | currency}}</td>                                            
                                             <td>
-                                                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" ></p-button>
+                                                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" (click)="getInsumoModificar(insumo)"></p-button>
                                                 <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger " (click)="eliminarInsumo(insumo)"></p-button>
-
                                             </td>
                                         </tr>
                                     </ng-template>
