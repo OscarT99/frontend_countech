@@ -10,22 +10,18 @@
 
                         <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
                         <input formControlName="email"  type="text" placeholder="Email" pInputText class="w-full md:w-25rem mb-5" style="padding:1rem">
-                        <span *ngIf="formLogin.get('email')?.hasError('required') && formLogin.get('email')?.touched">
+                        <span *ngIf="formLogin.get('email')?.hasError('required') && formLogin.get('email')?.touched" style="color: red;">
                             El email es <strong>requerido</strong>
                         </span>
 
-
                         <label for="contrasena" class="block text-900 text-xl font-medium mb-2">Contraseña</label>
-                        <input type="password" pInputText formControlName="contrasena" placeholder="Contraseña" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-25rem">
-                        <span *ngIf="formLogin.get('contrasena')?.hasError('required') && formLogin.get('contrasena')?.touched">
+                        <input formControlName="contrasena"  type="password" placeholder="Contraseña" pInputText class="w-full md:w-25rem mb-5" style="padding:1rem">
+                        <span *ngIf="formLogin.get('contrasena')?.hasError('required') && formLogin.get('contrasena')?.touched"  style="color: red;">
                             La contraseña es <strong>requerida</strong>
                         </span>
-
+                        
+                        
                         <div class="flex align-items-center justify-content-between mb-5 gap-5">
-                            <div class="flex align-items-center">
-                                <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
-                                <label for="rememberme1">Recuérdame</label>
-                            </div>
                             <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: #00bcd4;" (click)="olvidoContrasena()" >¿Olvidaste tu contraseña?</a>
                         </div>
                         <button type="submit" pButton pRipple label="Ingresar" class="w-full p-3 text-xl" style="background-color: #00bcd4; color: white; border: 2px solid #00bcd4;"></button>

@@ -59,7 +59,7 @@ export class AbonoVentaComponent implements OnInit {
     this.formAbonoVenta = this.fb.group({
       venta: ['', Validators.required],
       fechaAbono: ['', Validators.required],
-      valorAbono: ['', Validators.required],
+      valorAbono: ['0', Validators.required],
     })
     this.aRouter.params.subscribe(params => {
       this.id = +params['id']; // Obtén el valor del parámetro 'id' de la URL y actualiza id

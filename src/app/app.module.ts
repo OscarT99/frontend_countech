@@ -21,7 +21,6 @@ import { UsuarioService } from './services/usuario/usuario.service';
 import { AuthService } from './services/login/login.service';
 import { VentaService } from './services/venta/venta.service';
 import { AbonoVentaService } from './services/abonoVenta/abonoVenta.service';
-import { OlvidoContrasenaComponent } from './components/auth/olvido-contrasena/olvido-contrasena.component';
 import { CompraService } from './services/compra/compra.service';
 
 
