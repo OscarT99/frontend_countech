@@ -9,7 +9,7 @@
       formaPago?: 'Contado' | 'Crédito';
       valorTotal?: number;
       observaciones?: string;
+      estado?: string;
       ReferenciaEnPedidos? : ReferenciaPedidoInstance[];
     }
-    
     
