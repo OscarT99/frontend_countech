@@ -1,7 +1,7 @@
 <div class="grid">    
     <div class="col-12">
         <div class="card px-6 ">
-            <h4>Nuevo Pedido</h4>
+            <h4>{{ id === 0 ? 'Nuevo Pedido' : 'Editar Pedido' }}</h4>
                 <form  [formGroup]="formPedido" (ngSubmit)="addPedido()"  >                    
                     <div class="grid p-fluid mt-3">
                         <div class="col-4">

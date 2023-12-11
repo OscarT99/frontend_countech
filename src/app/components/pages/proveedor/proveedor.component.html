@@ -88,7 +88,7 @@
                         <div class="field col mt-2">
                             <span class="p-float-label">
                                 <p-inputMask *ngIf="formProveedor.get('tipoIdentificacion')?.value === 'NIT'"  formControlName="numeroIdentificacion" mask="999999999-9"></p-inputMask>
-                                <input *ngIf="formProveedor.get('tipoIdentificacion')?.value != 'NIT'" formControlName="numeroIdentificacion" id="numeroIdentificacion" pInputText>
+                                <input maxlength="10" *ngIf="formProveedor.get('tipoIdentificacion')?.value != 'NIT'" formControlName="numeroIdentificacion" id="numeroIdentificacion" pInputText>
                                 <label for="numeroIdentificacion">N° Identificación</label>
                             </span>
                             <small *ngIf="formProveedor.get('numeroIdentificacion')?.hasError('required') && formProveedor.get('numeroIdentificacion')?.touched" style="color: red;">

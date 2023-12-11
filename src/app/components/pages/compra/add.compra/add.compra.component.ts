@@ -19,6 +19,8 @@ import { InsumoInstance } from 'src/app/interfaces/insumo/insumo.interface';
   templateUrl: './add.compra.component.html',
 })
 export class AddCompraComponent implements OnInit {
+
+  mostrarID:boolean=false;
   
   id: number = 0;
   proveedores: Proveedor[] = [];
@@ -64,7 +66,8 @@ export class AddCompraComponent implements OnInit {
         totalBruto:['',Validators.required],
         ivaTotal:['',Validators.required],
         totalNeto:['',Validators.required],
-        observaciones:['']
+        observaciones:[''],
+        idTemporal:[null]
     })
   }
 
@@ -82,6 +85,16 @@ export class AddCompraComponent implements OnInit {
         this.obtenerListaProveedores()    
       }
     });
+  }
+
+  getInsumoModificar(detalleCompra:DetalleCompraInstance){
+    this.formCompra.patchValue({      
+      insumo:detalleCompra.insumo,
+      cantidad:detalleCompra.cantidad,
+      valorUnitario:detalleCompra.valorUnitario,
+      ivaInsumo:detalleCompra.impuestoIva,
+      idTemporal:detalleCompra.id,
+    })
   }
 
   getCompra(id:number){
@@ -103,51 +116,91 @@ export class AddCompraComponent implements OnInit {
   }
          
   agregarInsumo(): void {
-    const insumo = this.formCompra.value.insumo;
-    const cantidad = this.formCompra.value.cantidad;
-    const valorUnitario = this.formCompra.value.valorUnitario;
-    const impuestoIva = this.formCompra.value.ivaInsumo.value;
-    const valorIva = valorUnitario * impuestoIva;
+
+    if(this.formCompra.value.idTemporal == null){
+
+      const insumo = this.formCompra.value.insumo;
+      const cantidad = this.formCompra.value.cantidad;
+      const valorUnitario = this.formCompra.value.valorUnitario;
+      const impuestoIva = this.formCompra.value.ivaInsumo.value;
+      const valorIva = valorUnitario * impuestoIva;
+    
+      if (!insumo || !cantidad || !valorUnitario) {
+        this.toastr.warning('Complete los campos requeridos.');
+        return;
+      }
+    
+      // Verificar si el insumo ya existe en la lista
+      const detalleExistente = this.detallesInsumo.find(
+        detalle =>
+          detalle.insumo === insumo && detalle.valorUnitario === valorUnitario
+      );
+    
+      if (detalleExistente) {
+        // Actualizar la cantidad del insumo existente
+        detalleExistente.cantidad += cantidad;
+    
+        // Actualizar el valorTotal del insumo existente
+        detalleExistente.valorTotal = detalleExistente.cantidad! * (valorUnitario + valorIva);
+      } else {
+        // Agregar un nuevo detalle si el insumo no existe con el mismo valorUnitario
+        const nuevoInsumoInstance: DetalleCompraInstance = {
+          id: uuidv4(),
+          insumo: insumo,
+          cantidad: cantidad,
+          valorUnitario: valorUnitario,
+          impuestoIva: valorIva,
+          valorTotal: cantidad * (valorUnitario + valorIva)
+        };
+    
+        this.detallesInsumo.push(nuevoInsumoInstance);
+      }
+    
+      this.actualizarTotales();
+    
+      this.formCompra.reset({
+        ...this.formCompra.value,
+        insumo: '',
+        cantidad: 0,
+        valorUnitario: 0,
+        ivaInsumo: ''
+      });
+    }else{
+      const index = this.detallesInsumo.findIndex(
+        detalle => detalle.id === this.formCompra.value.idTemporal
+      );
   
-    if (!insumo || !cantidad || !valorUnitario) {
-      this.toastr.warning('Complete los campos requeridos.');
-      return;
-    }
+      if (index !== -1) {
+        // Actualizar el detalle existente con los nuevos valores
+        const detalleExistente = this.detallesInsumo[index];
   
-    // Verificar si el insumo ya existe en la lista
-    const detalleExistente = this.detallesInsumo.find(
-      detalle =>
-        detalle.insumo === insumo && detalle.valorUnitario === valorUnitario
-    );
+        detalleExistente.insumo = this.formCompra.value.insumo;
+        detalleExistente.cantidad = this.formCompra.value.cantidad;
+        detalleExistente.valorUnitario = this.formCompra.value.valorUnitario;
+        detalleExistente.impuestoIva = (this.formCompra.value.ivaInsumo.value * this.formCompra.value.valorUnitario);
+        
+
+        // Actualizar el valorTotal del detalle existente
+        detalleExistente.valorTotal =
+          detalleExistente.cantidad! *
+          (detalleExistente.valorUnitario! + detalleExistente.impuestoIva!);
   
-    if (detalleExistente) {
-      // Actualizar la cantidad del insumo existente
-      detalleExistente.cantidad += cantidad;
+        // Actualizar los totales
+        this.actualizarTotales();
   
-      // Actualizar el valorTotal del insumo existente
-      detalleExistente.valorTotal = detalleExistente.cantidad! * (valorUnitario + valorIva);
-    } else {
-      // Agregar un nuevo detalle si el insumo no existe con el mismo valorUnitario
-      const nuevoInsumoInstance: DetalleCompraInstance = {
-        insumo: insumo,
-        cantidad: cantidad,
-        valorUnitario: valorUnitario,
-        impuestoIva: valorIva,
-        valorTotal: cantidad * (valorUnitario + valorIva)
-      };
-  
-      this.detallesInsumo.push(nuevoInsumoInstance);
-    }
-  
-    this.actualizarTotales();
-  
-    this.formCompra.reset({
-      ...this.formCompra.value,
-      insumo: '',
-      cantidad: 0,
-      valorUnitario: 0,
-      ivaInsumo: ''
-    });
+        // Limpiar los campos del formulario
+        this.formCompra.reset({
+          ...this.formCompra.value,
+          insumo: '',
+          cantidad: 0,
+          valorUnitario: 0,
+          ivaInsumo: '',
+          idTemporal: null  // También puedes restablecer el idTemporal a null
+        });
+      } else {
+        console.error('No se encontró el detalle en la lista.');
+      }
+    }    
   }
   
   
