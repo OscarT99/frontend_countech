@@ -27,6 +27,8 @@ export class AddCompraComponent implements OnInit {
   sugerenciasInsumos:InsumoInstance[]=[];
   campoBusqueda: string = '';
 
+  insumoEditandoIndex: number | null = null;
+
   formaPago: SelectItem[] = [
     { label: 'Crédito', value: 'Crédito' },
     { label: 'Contado', value: 'Contado' }
@@ -41,11 +43,6 @@ export class AddCompraComponent implements OnInit {
     { label: '5%', value: 0.05 }
     ];
     
-  formasDePago:{label:string, value:string}[]= [
-    {label:'Crédito',value:'Crédito'},
-    {label:'Contado',value:'Contado'}
-  ]
-
     constructor(private fb: FormBuilder,
     private _compraService: CompraService,
     private toastr: ToastrService,
@@ -56,14 +53,18 @@ export class AddCompraComponent implements OnInit {
   ) {
     this.formCompra=this.fb.group({
         proveedor:['',Validators.required],
-        contacto:['',Validators.required],
+        numeroFactura:['',Validators.required],
+        fechaCompra:['',Validators.required],
+        contacto:[{ value: '', disabled: true}],
         insumo:['',Validators.required],
         cantidad:[0,Validators.required],
         valorUnitario:[0,Validators.required],
         ivaInsumo:['',Validators.required],
+        formaPago:['',Validators.required],
         totalBruto:['',Validators.required],
         ivaTotal:['',Validators.required],
-        totalNeto:['',Validators.required]
+        totalNeto:['',Validators.required],
+        observaciones:['']
     })
   }
 
@@ -85,58 +86,103 @@ export class AddCompraComponent implements OnInit {
 
   getCompra(id:number){
     this._compraService.getCompra(id).subscribe((data:CompraInstance) => {        
-      console.log(data)      
+      console.log(data)
+      this.formCompra.patchValue({
+        proveedor:data.proveedor,
+        numeroFactura:data.numeroFactura,
+        fechaCompra:data.fechaCompra,
+        formaPago:data.formaPago,
+        totalBruto:data.totalBruto,
+        ivaTotal:data.iva,
+        totalNeto:data.totalNeto,        
+      })
+
+      this.detallesInsumo = data.DetalleEnCompras || []
+      console.log(this.detallesInsumo)            
     })
   }
          
-  agregarInsumo(): void{
+  agregarInsumo(): void {
     const insumo = this.formCompra.value.insumo;
     const cantidad = this.formCompra.value.cantidad;
     const valorUnitario = this.formCompra.value.valorUnitario;
     const impuestoIva = this.formCompra.value.ivaInsumo.value;
-    const valorIva = valorUnitario*impuestoIva;
-
-    if(!insumo || !cantidad || !valorUnitario){
-        this.toastr.warning('Complete los campos requeridos.');
-        return;
+    const valorIva = valorUnitario * impuestoIva;
+  
+    if (!insumo || !cantidad || !valorUnitario) {
+      this.toastr.warning('Complete los campos requeridos.');
+      return;
     }
-
-    const nuevoInsumoInstance: DetalleCompraInstance = {
-        insumo:insumo,
-        cantidad:cantidad,
-        valorUnitario:valorUnitario,
-        impuestoIva:valorIva,
-        valorTotal:cantidad*(valorUnitario+valorIva)
+  
+    // Verificar si el insumo ya existe en la lista
+    const detalleExistente = this.detallesInsumo.find(
+      detalle =>
+        detalle.insumo === insumo && detalle.valorUnitario === valorUnitario
+    );
+  
+    if (detalleExistente) {
+      // Actualizar la cantidad del insumo existente
+      detalleExistente.cantidad += cantidad;
+  
+      // Actualizar el valorTotal del insumo existente
+      detalleExistente.valorTotal = detalleExistente.cantidad! * (valorUnitario + valorIva);
+    } else {
+      // Agregar un nuevo detalle si el insumo no existe con el mismo valorUnitario
+      const nuevoInsumoInstance: DetalleCompraInstance = {
+        insumo: insumo,
+        cantidad: cantidad,
+        valorUnitario: valorUnitario,
+        impuestoIva: valorIva,
+        valorTotal: cantidad * (valorUnitario + valorIva)
+      };
+  
+      this.detallesInsumo.push(nuevoInsumoInstance);
     }
-    
+  
+    this.actualizarTotales();
+  
+    this.formCompra.reset({
+      ...this.formCompra.value,
+      insumo: '',
+      cantidad: 0,
+      valorUnitario: 0,
+      ivaInsumo: ''
+    });
+  }
+  
+  
 
-    this.detallesInsumo.push(nuevoInsumoInstance)
+  eliminarInsumo(insumo: DetalleCompraInstance): void {
+    const index = this.detallesInsumo.indexOf(insumo);
     
+    if (index !== -1) {
+      this.detallesInsumo.splice(index, 1);
+      this.actualizarTotales();
+    } else {
+      console.error("No se encontró el insumo en la lista.");
+    }
+  }
+
+  actualizarTotales(): void {
     this.formCompra.get('totalBruto')!.setValue(this.calcularTotalBruto());
     this.formCompra.get('ivaTotal')!.setValue(this.calcularIvaTotal());
     this.formCompra.get('totalNeto')!.setValue(this.calcularTotalNeto());
-
-    this.formCompra.get('insumo')!.reset();
-    this.formCompra.get('cantidad')!.reset();
-    this.formCompra.get('valorUnitario')!.reset();
-    this.formCompra.get('iva')!.reset();
   }
 
   calcularTotalBruto(): number {
     return this.detallesInsumo.reduce((total, detalle) => total + (detalle.cantidad! * detalle.valorUnitario!), 0);
-}
+  }
 
-// Método para calcular ivaTotal
-calcularIvaTotal(): number {
-    return this.detallesInsumo.reduce((total, detalle) => total + detalle.impuestoIva!, 0);
-}
 
-// Método para calcular totalNeto
-calcularTotalNeto(): number {
-    const totalBruto = this.formCompra.value.totalBruto;
-    const ivaTotal = this.formCompra.value.ivaTotal;
-    return totalBruto + ivaTotal;
-}
+  calcularIvaTotal(): number {
+      return this.detallesInsumo.reduce((total, detalle) => total + (detalle.impuestoIva! * detalle.cantidad!), 0);
+  }
+
+  calcularTotalNeto(): number {
+      const totalBruto = this.formCompra.value.totalBruto;
+      const ivaTotal = this.formCompra.value.ivaTotal;
+      return totalBruto + ivaTotal;
+  }
 
   obtenerListaProveedores(): void {
     this._proveedorService.getListProveedoresCompra().subscribe(
@@ -150,7 +196,7 @@ calcularTotalNeto(): number {
   }
 
   buscarProveedores(event: any): void {
-      this.sugerenciasProveedores = this.filterProveedores(event.query);
+    this.sugerenciasProveedores = this.filterProveedores(event.query);
   }
   
   filterProveedores(query: string): Proveedor[] {
@@ -201,4 +247,36 @@ calcularTotalNeto(): number {
     const insumoId = event.value.id;
     this.formCompra.get('insumo')!.setValue(insumoId);
   }
+
+  addCompra(){
+    const compra : CompraInstance = {
+      proveedor:this.formCompra.value.proveedor,
+      fechaCompra:this.formCompra.value.fechaCompra,
+      numeroFactura:this.formCompra.value.numeroFactura,
+      formaPago:this.formCompra.value.formaPago,
+      totalBruto:this.formCompra.value.totalBruto,
+      iva:this.formCompra.value.ivaTotal,
+      totalNeto:this.formCompra.value.totalNeto,
+      DetalleEnCompras:this.detallesInsumo,
+      observaciones:this.formCompra.value.observaciones
+    }
+
+    if(this.id !== 0){
+      compra.id = this.id
+      this._compraService.putCompra(this.id,compra).subscribe(()=>{
+        this.router.navigate(['/pages/compra']);
+        this.toastr.info(`la compra ${compra.numeroFactura} fue actualizada con exito`,`Compra actualizado`)
+      })
+    }else{
+      this._compraService.postCompra(compra).subscribe(()=>{        
+        this.router.navigate(['/pages/compra']);        
+        this.toastr.success(`La compra ${compra.numeroFactura} fue registrada con exito`,`Compra agregada`)
+        this.detallesInsumo.forEach(detalle => {
+          this._insumoService.sumarCantidadInsumo(detalle.insumo!, detalle.cantidad!)
+            .subscribe();
+        });
+      })
+    }
+  }
+   
 }

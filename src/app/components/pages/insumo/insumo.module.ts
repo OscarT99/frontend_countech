@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ClienteRoutingModule } from './cliente.routing';  
-import { ClienteComponent } from './cliente.component'; 
+import { InsumoRoutingModule } from './insumo.routing';    
+import { InsumoComponent } from './insumo.component';   
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -18,12 +18,12 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { InputMaskModule } from 'primeng/inputmask';
+import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
     imports: [
         CommonModule,
-        ClienteRoutingModule,
+        InsumoRoutingModule,
         TableModule,
         FileUploadModule,
         FormsModule,
@@ -41,8 +41,8 @@ import { InputMaskModule } from 'primeng/inputmask';
         AutoCompleteModule,
         ReactiveFormsModule,
         InputSwitchModule,
-        InputMaskModule             
+        TabViewModule,                     
     ],
-    declarations: [ClienteComponent]
+    declarations: [InsumoComponent]
 })
-export class ClienteModule { }
+export class InsumoModule { }

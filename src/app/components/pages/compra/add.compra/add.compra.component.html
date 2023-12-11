@@ -90,7 +90,7 @@
                                             <th></th>
                                         </tr>
                                     </ng-template>
-                                    <ng-template pTemplate="body" let-insumo >
+                                    <ng-template pTemplate="body" let-insumo let-i="index" >
                                         <tr>
                                             <td [pEditableColumn]="" pEditableColumnField="">
                                                 <p-cellEditor>
@@ -118,7 +118,7 @@
                                                         <input pInputText />
                                                     </ng-template>
                                                     <ng-template pTemplate="output">
-                                                        {{insumo.valorUnitario}}
+                                                        {{insumo.valorUnitario | currency}}
                                                     </ng-template>
                                                 </p-cellEditor>
                                             </td>
@@ -128,7 +128,7 @@
                                                         <input pInputText type="text"  />
                                                     </ng-template>
                                                     <ng-template pTemplate="output">
-                                                        {{insumo.impuestoIva}}
+                                                        {{insumo.impuestoIva | currency}}
                                                     </ng-template>
                                                 </p-cellEditor>
                                             </td>
@@ -138,12 +138,13 @@
                                                         <input pInputText type="text"  />
                                                     </ng-template>
                                                     <ng-template pTemplate="output">
-                                                        {{insumo.valorTotal}}
+                                                        {{insumo.valorTotal | currency}}
                                                     </ng-template>
                                                 </p-cellEditor>
                                             </td>                                            
                                             <td>
-                                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger "></p-button>
+                                                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" ></p-button>
+                                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger " (click)="eliminarInsumo(insumo)"></p-button>
 
                                             </td>
                                         </tr>
@@ -156,21 +157,21 @@
                             <div class="col-3">
                                 <label>Forma Pago</label>
                                 <div>
-                                    <p-dropdown formControlName="formaPago" [options]="formasDePago" class="inputs-pedido" placeholder="Seleciona forma Pago"></p-dropdown>
+                                    <p-dropdown formControlName="formaPago" [options]="formaPago" class="inputs-pedido" placeholder="Seleciona forma Pago"></p-dropdown>
                                 </div>
                             </div>
                             <div class="col-7 ">
                                 <div>
                                     <label >Total bruto</label>
-                                    <p-inputNumber  formControlName="totalBruto" class="inputs-pedido col-4" [disabled]="true" mode="decimal"></p-inputNumber>
+                                    <p-inputNumber  formControlName="totalBruto" class="inputs-pedido col-4"  mode="decimal"></p-inputNumber>
                                 </div>
                                 <div>
                                     <label >Iva</label>
-                                    <p-inputNumber formControlName="ivaTotal" class="inputs-pedido col-4" [disabled]="true" mode="decimal"></p-inputNumber>
+                                    <p-inputNumber formControlName="ivaTotal" class="inputs-pedido col-4"  mode="decimal"></p-inputNumber>
                                 </div>
                                 <div>
                                     <label><h5>Total Neto
-                                        <p-inputNumber formControlName="totalNeto" class="inputs-pedido col-4" [disabled]="true" mode="decimal"></p-inputNumber>
+                                        <p-inputNumber  formControlName="totalNeto" class="inputs-pedido col-4"  mode="decimal"></p-inputNumber>
                                     </h5></label>
                                     
                                 </div>
@@ -179,13 +180,13 @@
                         
                         <div class="grid p-fluid col-8" >
                             <div><strong >Observaciones</strong></div>                            
-                            <textarea rows="2" cols="50" placeholder="Aqui puedes ingresar observaciones adicionales." pInputTextarea></textarea>                           
+                            <textarea formControlName="observaciones" rows="2" cols="50" placeholder="Aqui puedes ingresar observaciones adicionales." pInputTextarea></textarea>                           
                         </div>
                     
                     <footer class="footer-pedido">
                         <div>
                             <button pButton pRipple type="button" label="Cancelar" class="p-button-danger" routerLink="/pages/compra" ></button>                                    
-                            <button pButton pRipple label="Guardar" class="p-button-success" ></button>
+                            <button pButton pRipple label="Guardar" class="p-button-success" (click)="addCompra()"></button>
                         </div>
                     </footer>
                 </form>                       

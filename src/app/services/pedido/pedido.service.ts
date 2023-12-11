@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   
     constructor(private http: HttpClient) { 
       this.myAppUrl = environment.endpoint
-      this.myApiUrl = 'api/pedidos/'
+      this.myApiUrl = 'api/pedido/'
     }
   
     getPedido(id:number): Observable<PedidoInstance>{

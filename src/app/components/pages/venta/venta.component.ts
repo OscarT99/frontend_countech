@@ -348,9 +348,9 @@ confirm2(event: Event) {
   
   getValorRestante(): number {
     //if (this.listAbonoVentas && this.listAbonoVentas.length > 0 && this.venta && typeof this.venta.valorTotal === 'number') {
-      const abonosTotal = this.listAbonoVentas.reduce((total, abono) => total + (abono.valorAbono || 0), 0);
-      
-      return abonosTotal;
+      let abonosTotal = this.listAbonoVentas.reduce((total, abono) => total + (abono.valorAbono || 0), 0);
+      let valorRestante = 0
+      return valorRestante;
     //Resultado 050000.0020000.0060000.0040000.0040000.0020000.0017000.001000.003000.001000.001500.001000.001000.00
   }
   

@@ -6,8 +6,11 @@ export interface CompraInstance {
     fechaCompra?:Date;
     numeroFactura?: string;
     formaPago?:'Contado' | 'Crédito';
-    detalleEnCompras?: DetalleCompraInstance[];
     totalBruto?:number,
     iva?:number,
     totalNeto?:number
+    DetalleEnCompras?: DetalleCompraInstance[];
+    observaciones?:string;
+    estadoCompra?:boolean,
+    motivoDeAnulacion?:string
 }

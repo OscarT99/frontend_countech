@@ -21,12 +21,7 @@ import { Observable } from 'rxjs';
     getListClientes(): Observable<Cliente[]>{
       return this.http.get<Cliente[]>(`${this.myAppUrl}${this.myApiUrl}`)    
     }
- 
-    getListClientesPedido(): Observable<{ listClientes: Cliente[] }> {
-      return this.http.get<{ listClientes: Cliente[] }>(`${this.myAppUrl}${this.myApiUrl}`);
-    }
-
-  
+      
     postCliente(cliente : Cliente):Observable<void>{
       return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}`,cliente)
     }
@@ -34,23 +29,16 @@ import { Observable } from 'rxjs';
     putCliente(id:number,cliente:Cliente):Observable<void>{
       return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}`,cliente)
     }
-  
-    deleteCliente(id:number): Observable<void>{
-      return this.http.delete<void>(`${this.myAppUrl}${this.myApiUrl}${id}`)
-    }
-  
-    getCountries() {
-      return this.http.get<any>('assets/demo/data/countries.json')
-          .toPromise()
-          .then(res => res.data as any[])
-          .then(data => data);
+      
+
+    getListClientesPedido(): Observable<{ listClientes: Cliente[] }> {
+      return this.http.get<{ listClientes: Cliente[] }>(`${this.myAppUrl}${this.myApiUrl}`);
     }
 
     buscarClientes(termino: string): Observable<Cliente[]> {
       const url = `${this.myAppUrl}${this.myApiUrl}buscar?termino=${termino}`;
       return this.http.get<Cliente[]>(url);
     }
-  
     
   }
   

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/enviroments/environment';
 import { InsumoInstance } from 'src/app/interfaces/insumo/insumo.interface'; 
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -44,4 +45,44 @@ export class InsumoService {
         const url = `${this.myAppUrl}${this.myApiUrl}buscar?termino=${termino}`;
         return this.http.get<InsumoInstance[]>(url);
     }
+
+    sumarCantidadInsumo(id: number, nuevaCantidad: number): Observable<any> {
+      const url = `${this.myAppUrl}${this.myApiUrl}sumarCantidad/${id}`;
+      const body = { nuevaCantidad };
+    
+      return this.http.put<any>(url, body)
+        .pipe(
+          catchError((error: any) => {
+            console.error('Error al sumar la cantidad del insumo desde el servicio:', error);
+            throw error;
+          })
+        );
+    }
+
+    restarCantidadInsumo(id: number, nuevaCantidad: number): Observable<any> {
+      const url = `${this.myAppUrl}${this.myApiUrl}restarCantidad/${id}`;
+      const body = { nuevaCantidad };
+    
+      return this.http.put<any>(url, body)
+        .pipe(
+          catchError((error: any) => {
+            console.error('Error al restar la cantidad del insumo desde el servicio:', error);
+            throw error;
+          })
+        );
+    }
+
+    actualizarEstadoInsumo(id: number, estado: boolean): Observable<any> {
+      const url = `${this.myAppUrl}${this.myApiUrl}actualizarEstado/${id}`;
+      const body = { estado }; // Agregamos el estado al cuerpo
+
+      return this.http.put<any>(url, body)
+        .pipe(
+          catchError((error: any) => {
+            console.error('Error al actualizar el estado del insumo desde el servicio:', error);
+            throw error;
+          })
+        );
+    }
+
 }
