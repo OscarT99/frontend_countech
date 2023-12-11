@@ -65,6 +65,7 @@
 
         <p-dialog [(visible)]="productDialog" [style]="{width: '650px'}" header="Nuevo Usuario" [modal]="true" class="p-fluid">            
                 <form [formGroup]="formUsuario" (ngSubmit)="addUsuario()">
+                    
                     <div class="formgrid grid" style="margin-top: 20px;">
                         <div class="field col">
                             <span class="p-float-label">
@@ -84,7 +85,6 @@
                                 La Cédula es <strong>requerida</strong>
                             </span>
                         </div>
-                        
                     </div>
 
 

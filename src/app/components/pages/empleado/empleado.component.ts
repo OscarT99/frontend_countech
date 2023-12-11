@@ -182,7 +182,8 @@ export class EmpleadoComponent implements OnInit {
   }
 
   confirmChangeState(confirmacion: boolean) {
-    if (confirmacion && this.empleadoSeleccionado) {
+    this.empleadoInfoDialog = false;
+    if (confirmacion && this.empleadoSeleccionado && this.empleadoSeleccionado.estadoProduccion === false) {
       if (this.empleadoSeleccionado.idEmpleado){
         this._empleadoService.putEmpleado(this.empleadoSeleccionado.idEmpleado, this.empleadoSeleccionado).subscribe(() => {
           this.empleado.estado = !this.empleado.estado;
@@ -193,6 +194,7 @@ export class EmpleadoComponent implements OnInit {
           }
           this.getListEmpleados();
         });
+      
       }
     }
     else{
