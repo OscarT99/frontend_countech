@@ -25,43 +25,28 @@ export class ProveedorComponent implements OnInit {
     proveedorSeleccionado: Proveedor | null = null;
     switchState: boolean | undefined = undefined;
 
-    tipoProveedor: SelectItem[] = [
+    tipoProveedor = [
       { label: 'Empresa', value: 'Empresa' },
       { label: 'Persona', value: 'Persona' }
     ];
-    selectedProveedor: string = ''; 
-
-    tipoIdentificacion:SelectItem[] = [
+    
+    tipoIdentificacion = [
       { label: 'NIT',value:'NIT' },
-      { label: 'Cedula de Ciudadania', value:'Cedula de ciudadania' },
+      { label: 'Cédula de ciudadanía', value:'Cédula de ciudadanía' },
       { label: 'Registro civil', value:'Registro civil' },
-      { label: 'Tarjeta de extranjero', value:'Tarjeta de extranjero' },
-      { label: 'Cedula de extranjero', value:'Cedula de extranjero' },
+      { label: 'Tarjeta de extranjería', value:'Tarjeta de extranjería' },
+      { label: 'Cedula de extranjero', value:'Cédula de extranjería' },
       { label: 'Pasaporte', value:'Pasaporte' },
       { label: 'Tarjeta de identidad', value:'Tarjeta de identidad' },
     ];
-    selectedIdentificacion: SelectItem = { value: '' };
-
-    estado:SelectItem[] = [
-      { label: 'Activo', value: true },
-      { label: 'Inactivo', value: false }
+    
+    estado = [
+      { label: 'Activo', value: 'true' },
+      { label: 'Inactivo', value: 'false' }
     ];
-    selectedEstado: SelectItem = {value: ''};
-
-    countries: any[] = [];
-    filteredCountries: any[] = [];
-    selectedCountryAdvanced: any[] = [];
 
     productDialog: boolean = false;
-    
-    products: Product[] = [];
-
-    product: Product = {};
-
-    selectedProducts: Product[] = [];
-
     rowsPerPageOptions = [5, 10, 15];
-
 
     constructor(private fb:FormBuilder,
       private _proveedorService:ProveedorService,
@@ -79,22 +64,16 @@ export class ProveedorComponent implements OnInit {
           contacto: ['',],
           telefono: ['',],
           correo: ['',],
-          estado: ['',],
+          estado: [],
         })
         this.aRouter.params.subscribe(params => {
-          this.id = +params['id']; // Obtén el valor del parámetro 'id' de la URL y actualiza id
+          this.id = +params['id']; 
         });
        }
 
     ngOnInit():void {        
         this.getListProveedores()
-
-        this._proveedorService.getCountries().then(countries => {
-            this.countries = countries;
-        });                        
     }
-
-    
 
     getListProveedores(){     
         this._proveedorService.getListProveedores().subscribe((data:any) =>{      
@@ -123,56 +102,48 @@ export class ProveedorComponent implements OnInit {
 
 
     addProveedor(){
-      const proveedor : Proveedor = {
-       tipoProveedor: this.formProveedor.value.tipoProveedor,
-       tipoIdentificacion: this.formProveedor.value.tipoIdentificacion,
-       numeroIdentificacion: this.formProveedor.value.numeroIdentificacion,
-       razonSocial: this.formProveedor.value.razonSocial,
-       nombreComercial: this.formProveedor.value.nombreComercial,
-       ciudad: this.formProveedor.value.ciudad,
-       direccion: this.formProveedor.value.direccion,
-       contacto: this.formProveedor.value.contacto,
-       telefono: this.formProveedor.value.telefono,
-       correo: this.formProveedor.value.correo,
-       estado: this.formProveedor.value.estado,
-      }
- 
-      if(this.id !== 0){
-        proveedor.id = this.id
-       this._proveedorService.putProveedor(this.id,proveedor).subscribe(()=>{         
-        this.productDialog = false;
-        this.toastr.info(`El proveedor ${proveedor.razonSocial} fue actualizado con exito`,`Cliente actualizado`)
-        this.getListProveedores();         
-       })
-      }else{            
-       this._proveedorService.postProveedor(proveedor).subscribe(() => {        
-        this.productDialog = false;
-        this.toastr.success(`El proveedor ${proveedor.razonSocial} fue registrado con exito`,`Cliente agregado`)        
-        this.getListProveedores();
-       })
-      }
- 
-      this.productDialog = false;
-     
-   }
+      this.formProveedor.markAllAsTouched();
 
-    filterCountry(event: any) {
-        const filtered: any[] = [];
-        const query = event!.query;
-        for (let i = 0; i < this.countries.length; i++) {
-            const country = this.countries[i];
-            if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }
-        }
-        this.filteredCountries = filtered;
-    }
+      if (this.formProveedor.valid) {
+        const proveedor : Proveedor = {
+          tipoProveedor: this.formProveedor.value.tipoProveedor,
+          tipoIdentificacion: this.formProveedor.value.tipoIdentificacion,
+          numeroIdentificacion: this.formProveedor.value.numeroIdentificacion,
+          razonSocial: this.formProveedor.value.razonSocial,
+          nombreComercial: this.formProveedor.value.nombreComercial,
+          ciudad: this.formProveedor.value.ciudad,
+          direccion: this.formProveedor.value.direccion,
+          contacto: this.formProveedor.value.contacto,
+          telefono: this.formProveedor.value.telefono,
+          correo: this.formProveedor.value.correo,
+          estado: this.formProveedor.value.estado,
+         }
+    
+         if(this.id !== 0){
+           proveedor.id = this.id
+          this._proveedorService.putProveedor(this.id,proveedor).subscribe(()=>{         
+           this.productDialog = false;
+           this.toastr.info(`El proveedor ${proveedor.razonSocial} fue actualizado con exito`,`Cliente actualizado`)
+           this.getListProveedores();         
+          })
+         }else{            
+          this._proveedorService.postProveedor(proveedor).subscribe(() => {        
+           this.productDialog = false;
+           this.toastr.success(`El proveedor ${proveedor.razonSocial} fue registrado con exito`,`Cliente agregado`)        
+           this.getListProveedores();
+          })
+         }
+    
+         this.productDialog = false;
+      }else{
+        this.toastr.error('Por favor, complete todos los campos obligatorios.', 'Error de validación');
+      }           
+   }
 
     openNew() {
         this.id = 0;                
         this.formProveedor.reset()
         this.productDialog = true;
-        this.selectedCountryAdvanced = [];
     }
     
     editProduct(id:number) {
@@ -209,6 +180,10 @@ export class ProveedorComponent implements OnInit {
       this.proveedorSeleccionado = null;
     }
     
+    get isNIT(): boolean {
+      return this.formProveedor.get('tipoIdentificacion')?.value === 'NIT';
+    }
+
     exportToExcel() {
       const data: any[] = []; // Array para almacenar los datos
     

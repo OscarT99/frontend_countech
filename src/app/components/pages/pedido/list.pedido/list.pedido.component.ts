@@ -32,13 +32,14 @@ export class ListPedidoComponent implements OnInit {
       ){}
 
     ngOnInit():void {        
-                                      
+        this.getListPedidos()                               
     }
 
     
     getListPedidos(){     
-        this._pedidoService.getListPedidos().subscribe((data:any) =>{      
-          this.listPedidos = data.listaPedidos;          
+        this._pedidoService.getListPedidos().subscribe((data:any) =>{              
+          this.listPedidos = data.listaPedidos; 
+         
         })        
     }
 
@@ -48,7 +49,7 @@ export class ListPedidoComponent implements OnInit {
         
     editarPedido(id: number): void {
         this.router.navigate(['/pages/pedido/add', id]);
-      }
+    }
       
     eliminarPedido(id: number, estado: string): void {
     if (estado === 'Registrado') {
@@ -74,9 +75,9 @@ export class ListPedidoComponent implements OnInit {
         }
     }
     
-      cerrarModalDetallePedido() {
-        this.mostrarModalDetalle = false;
-        this.detallePedido = null; // Limpia los detalles al cerrar el modal
-      }
+    // cerrarModalDetallePedido() {
+    //     this.mostrarModalDetalle = false;
+    //     this.detallePedido = null; 
+    // }
 
 }

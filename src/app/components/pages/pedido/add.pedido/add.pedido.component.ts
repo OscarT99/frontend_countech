@@ -376,8 +376,7 @@
       })
     }
     
-    addPedido(){
-      console.log(this.referencias)
+    addPedido(){      
       const pedido : PedidoInstance = {
         cliente: this.formPedido.value.cliente,
         ordenTrabajo:this.formPedido.value.ordenTrabajo,

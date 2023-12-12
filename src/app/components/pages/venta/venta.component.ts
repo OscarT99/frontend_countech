@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Product } from 'src/app/interfaces/product';
 import { SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -14,8 +14,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-
-
+import { PedidoService } from 'src/app/services/pedido/pedido.service'; 
+import { PedidoInstance } from 'src/app/interfaces/pedido/pedido.interface'; 
+import { Dialog } from 'primeng/dialog';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import * as XLSX from 'xlsx';
 import { Observable } from 'rxjs';
 
@@ -34,7 +36,18 @@ export class VentaComponent implements OnInit {
   listVentas: Venta[] = []
   listClientes: Cliente[] = []
   venta: Venta = {}
+  formAbonoVenta: FormGroup;
   formVenta: FormGroup;
+
+  listPedidos: PedidoInstance[] = []
+  pedido: PedidoInstance = {}
+  mostrarModalDetalle: boolean = false;
+  pedidoIdSeleccionado!: number;
+  detallePedido: any; // Puedes ajustar esto según la estructura de tu pedido
+  @ViewChild('detallePedidoModal') detallePedidoModal!: Dialog;
+ 
+
+  
   id: number = 0;
 
   valSwitch: boolean = false;
@@ -77,6 +90,8 @@ export class VentaComponent implements OnInit {
     private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
+    private _pedidoService:PedidoService,
+
 
 
   ) {
@@ -88,9 +103,28 @@ export class VentaComponent implements OnInit {
       formaPago: ['', Validators.required],
       valorTotal: ['', Validators.required],
       estadoPago: ['', Validators.required],
+      valorRestante: [{ value: 0, disabled: true }],
+
+    })
+    this.formAbonoVenta = this.fb.group({
+      id: ['', Validators.required],
+      venta: ['', Validators.required],
+      fechaAbono: ['', Validators.required],
+      valorAbono: ['', Validators.required],
+      valorRestante: [{ value: 0, disabled: true }],
     })
     this.aRouter.params.subscribe(params => {
       this.id = +params['id'];
+    });
+    this.formVenta.get('valorRestante')?.valueChanges.pipe(
+      debounceTime(300), // Espera 300ms después del último cambio
+      distinctUntilChanged() // Solo emite si el valor cambió
+    ).subscribe((valorRestante: number) => {
+      if (valorRestante === 0) {
+        this.formVenta.get('estadoPago')?.setValue('Pago');
+      } else {
+        this.formVenta.get('estadoPago')?.setValue('Pendiente');
+      }
     });
   }
 
@@ -100,7 +134,32 @@ export class VentaComponent implements OnInit {
     this.getListVentas()
     this.getListClientes()
     this.getListAbonoVentas()
+    this.getListPedidos() 
+    this.verificarFormaPago()                              
+
   }
+  getListPedidos(){     
+    this._pedidoService.getListPedidos().subscribe((data:any) =>{              
+      this.listPedidos = data.listaPedidos; 
+     
+    })        
+  }
+
+
+  async mostrarDetallePedido(id: number) {
+    try {
+        this.detallePedido = await this._pedidoService.getPedido(id).toPromise();
+        console.log('Detalle del pedido:', this.detallePedido);
+        this.mostrarModalDetalle = true;
+    } catch (error) {
+        console.error('Error al obtener el detalle del pedido:', error);
+    }
+  }
+
+  esPagoPendiente(estadoPago: string): boolean {
+    return estadoPago === 'Pendiente';
+  }
+
 
   getListClientes() {
     this._clienteService.getListClientes().subscribe((data: any) => {
@@ -202,28 +261,33 @@ export class VentaComponent implements OnInit {
     this.productDialogAbono = true;
 }
 
+confirm2(event: Event) {
+  this.confirmationService.confirm({
+    key: 'confirm2',
+    target: event.target || new EventTarget,
+    message: '¿Está seguro de realizar el abono?',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Sí', 
+    accept: () => {
+      this.agregarAbonoVenta(this.value9);
+      console.log(this.getValorRestante());
+      const valorRestante = this.getValorRestante();
+      this.value9 = undefined; 
+      this.formVenta.get('valorRestante')?.setValue(valorRestante);
 
-  confirm2(event: Event) {
-    this.confirmationService.confirm({
-      key: 'confirm2',
-      target: event.target || new EventTarget,
-      message: '¿Está seguro de realizar el abono?',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        // Llama a la función para agregar el abono de venta con el valor actual del input
-        this.agregarAbonoVenta(this.value9);
-        console.log(this.getValorRestante())
-      },
-      reject: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Cancelado',
-          detail: 'El abono no fue agregado a la venta'
-        });
-      }
-    });
-  }
-  
+
+      
+    },
+    reject: () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Cancelado',
+        detail: 'El abono no fue agregado a la venta'
+      });
+    }
+  });
+}
+
 
 
 
@@ -293,11 +357,9 @@ export class VentaComponent implements OnInit {
   //Agregar abono 
   agregarAbonoVenta(valorAbono: number) {
     const nuevoAbono: AbonoVenta = {
-      // Aquí debes construir el objeto del abono de venta con los datos necesarios
-      // Por ejemplo:
       valorAbono: valorAbono,
-      fechaAbono: new Date(), // Puedes ajustar esto según la fecha que necesites
-      venta: this.id // Asigna el ID de la venta correspondiente
+      fechaAbono: new Date(), 
+      venta: this.id 
     };
   
     this._abonoVentaService.postAbonoVenta(nuevoAbono).subscribe(
@@ -338,16 +400,41 @@ export class VentaComponent implements OnInit {
     // Filtra la lista de abonos para mostrar solo los abonos asociados a la venta seleccionada
     this.listAbonoVentas = this.listAbonoVentas.filter(abono => abono.venta === ventaId);
   }
-  
-  
+
+
+
+
   getValorRestante(): number {
-    if (this.abonoVenta.valorAbono && typeof this.venta.valorTotal === 'number') {
-      const abonosTotal = this.listAbonoVentas.reduce((total, abono) => total + (abono.valorAbono || 0), 0);
-      return this.venta.valorTotal - abonosTotal;
+    if (
+      this.venta &&
+      this.venta.valorTotal !== undefined &&
+      this.listAbonoVentas &&
+      this.listAbonoVentas.length > 0
+    ) {
+      const abonosRelacionados = this.listAbonoVentas.filter(abono => abono.venta === this.id);
+  
+      if (abonosRelacionados.length > 0 && !isNaN(parseFloat(this.venta.valorTotal.toString()))) {
+        let totalAbonos = 0;
+  
+        abonosRelacionados.forEach(abono => {
+          if (abono.valorAbono !== undefined) {
+            const valorAbono = parseFloat(abono.valorAbono.toString());
+            if (!isNaN(valorAbono)) {
+              totalAbonos += valorAbono;
+            }
+          }
+        });
+  
+        const valorTotal = parseFloat(this.venta.valorTotal.toString());
+        const valorRestante = valorTotal - totalAbonos;
+        return valorRestante;
+      }
     }
-    return 0; // O cualquier otro valor predeterminado en caso de que no haya datos válidos
+  
+    return 0;
   }
   
+
 
 
   //DETALLE VENTA
@@ -358,6 +445,19 @@ export class VentaComponent implements OnInit {
     // Filtra los abonos por la venta seleccionada
     this.filtrarAbonosPorVenta(id);
     this.getListAbonoVentas();
+  }
+  
+
+  mostrarTablaAbonos: boolean = false;
+
+
+  // Lógica para mostrar la tabla de abonos si la forma de pago es "Crédito"
+  verificarFormaPago() {
+    if (this.detallePedido && this.detallePedido.formaPago === 'Crédito') {
+      this.mostrarTablaAbonos = true;
+    } else {
+      this.mostrarTablaAbonos = false;
+    }
   }
   
 }

@@ -72,16 +72,16 @@
                                 <input formControlName="nombre" id="nombre" type="text" pInputText>
                                 <label for="nombre">Nombre</label>
                             </span>
-                            <span *ngIf="formUsuario.get('nombre')?.hasError('required') && formUsuario.get('nombre')?.touched">
+                            <span *ngIf="formUsuario.get('nombre')?.hasError('required') && formUsuario.get('nombre')?.touched" style="color: red;">
                                 El nombre es <strong>requerido</strong>
                             </span>                       
                         </div>
                         <div class="field col">
                             <span class="p-float-label">
-                                <input formControlName="cedula" id="cedula" type="text" pInputText>
+                                <input formControlName="cedula" id="cedula" type="text"  pInputText>
                                 <label for="cedula">Cédula</label>
                             </span>
-                            <span *ngIf="formUsuario.get('cedula')?.hasError('required') && formUsuario.get('cedula')?.touched">
+                            <span *ngIf="formUsuario.get('cedula')?.hasError('required') && formUsuario.get('cedula')?.touched" style="color: red;">
                                 La Cédula es <strong>requerida</strong>
                             </span>
                         </div>
@@ -94,7 +94,7 @@
                                 <input formControlName="email" id="email" type="text" pInputText>
                                 <label for="email">Email</label>
                             </span>
-                            <span *ngIf="formUsuario.get('email')?.hasError('required') && formUsuario.get('email')?.touched">
+                            <span *ngIf="formUsuario.get('email')?.hasError('required') && formUsuario.get('email')?.touched" style="color: red;">
                                 El Email es <strong>requerido</strong>
                             </span>
                         </div>
@@ -104,7 +104,7 @@
                         <div class="field">
                           <button type="button" pButton pRipple label="Cancelar" class="p-button-rounded p-button-danger" (click)="hideDialog()"></button>
                         </div>
-                        <div class="field" style="margin-left: 8px;"> <!-- Agrega un margen entre los botones -->
+                        <div class="field" style="margin-left: 8px;"> 
                           <button type="submit" pButton pRipple label="Guardar" class="p-button-rounded p-button-success"></button>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
             [closable]="false"
             >
             <p>
-                ¿Está seguro de y desea
+                ¿Está seguro de 
                 {{ usuarioSeleccionado?.estado ? 'activar' : 'desactivar' }} el usuario?
             </p>
             <button pButton type="button" label="Sí" icon="pi pi-check" (click)="confirmAction(true)"></button>

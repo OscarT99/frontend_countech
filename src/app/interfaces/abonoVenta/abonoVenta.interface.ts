@@ -3,5 +3,4 @@ export interface AbonoVenta {
     venta?: number;
     fechaAbono?: Date | null;
     valorAbono?: number;
-    //estado?: boolean;
 }

@@ -46,15 +46,15 @@
                         </td>  
                         <td style="width:14%; min-width:10rem;">
                             <span class="p-column-title">Valor Total</span>
-                            {{ venta.valorTotal }}
+                            {{ venta.valorTotal | currency:'USD':'symbol':'1.2-2'  }}
                         </td>  
                         <td style="width:14%; min-width:10rem;">
                             <span class="p-column-title">Estado de Pago</span>
                             {{ venta.estadoPago }}
                         </td>
                         <td>
-                            <div class="flex">                                
-                                <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-primary mr-2" (click)="detalleVenta(venta.id)"></button>
+                            <div class="flex"> 
+                                <button pButton pRipple icon="pi pi-file" class="p-button-rounded p-button-warning mr-2" (click)="mostrarDetallePedido(venta.id)"></button>
                                 <button (click)="newAbonoVenta(venta.id)" pButton pRipple icon="pi pi-dollar" class="p-button-rounded p-button-success mr-2"></button>    
                             </div>
                             
@@ -93,10 +93,12 @@
                                 <label for="valorAbono">Restante</label>
                                 <div class="p-inputgroup">
                                     <span class="p-inputgroup-addon" readonly>$</span>
-                                    <p-inputNumber inputId="valorRestante" [ngModel]="getValorRestante()" [readonly]="true"></p-inputNumber>
+                                    <input type="number" formControlName="valorRestante" [readonly]="true" value="{{ getValorRestante() }}">
                                 </div>
+
+                                  
                             </div>
-                            
+                                                         
                     
                         </div>
                        
@@ -107,14 +109,17 @@
                      
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">$</span>
-                        <p-inputNumber inputId="valorAbono" [(ngModel)]="value9" placeholder="000.000.000" ></p-inputNumber>
+                        <p-inputNumber  inputId="valorAbono" [(ngModel)]="value9" placeholder="000.000.000" ></p-inputNumber>
+                        <span *ngIf="formAbonoVenta.get('valorAbono')?.hasError('required') && formAbonoVenta.get('valorAbono')?.touched" style="color: red;">
+                            El valor del abono es <strong>requerido</strong>
+                        </span>
                         <p-toast></p-toast>
                         <button class="ml-1" (click)="confirm2($event)" pButton icon="pi pi-plus" class="p-button-rounded p-button-success"></button>
                         <p-confirmPopup key="confirm2"></p-confirmPopup>
                     </div>
                 </div>
                 <div style="flex: 1;"> 
-                    <div class="card m-5" [style]="{width: '500px'}">
+                    <div class="card m-5" [style]="{width: '500px', textAlign: 'center'}">
                             <h5 >Abonos De La Venta {{ id }}</h5>
                             <p-table #dt [value]="listAbonoVentas" responsiveLayout="scroll" [rows]="10" dataKey="id">
                                 <ng-template pTemplate="header">
@@ -141,13 +146,10 @@
                                 </ng-template>
                             </p-table>
                     </div>
-                    <div style="display: flex; justify-content: flex-end; flex: 1;">
-                        <div class="field">
-                            <button pButton pRipple label="Regresar" class="p-button-rounded p-button-info" (click)="hideDialog()"></button>
-                        </div>
-                    </div>
                     
                     
+                    
+        
                 
                 </div>
                 
@@ -155,55 +157,168 @@
         </p-dialog>
 
 
-        <p-dialog [(visible)]="productDialogDetalle" [style]="{width: '1300px', height: '800px' }" header="Detalle Venta" [modal]="true" class="p-fluid">         
-            <div style="display: flex;">
-                <div style="flex: 1;">    
-                    <form [formGroup]="formVenta" (ngSubmit)="addVenta()">
-                        <div class="formgrid grid">
-                            <div class="field col">
-                                <label for="id">Id Venta</label>
-                                    <input formControlName="id" id="id" type="number" pInputText readonly >
-                            </div>
-                            <div class="field col">
-                                <label for="cliente">Cliente</label>
-                                    <input id="cliente" type="text" pInputText readonly [value]="getNombreCliente(venta.cliente)">
-                            </div>
-                            <div class="field col">
-                                <label for="ordenTrabajo">Orden Trabajo</label>
-                                    <input formControlName="ordenTrabajo" id="ordenTrabajo" type="text" pInputText readonly >
-                            </div>
-                        </div>
+        <p-dialog header="Detalle de Venta" [(visible)]="mostrarModalDetalle" [modal]="true" [responsive]="true" [style]="{width: '900px', height: '500px' }">
+            <div *ngIf="detallePedido">
+                <div class="grid mt-1" style="justify-content: center"> 
+                    <div class="col-4">
+                        <span style="font-weight: bold;">Id Venta:</span>
+                        <span> {{ venta.id }}</span>
+                    </div>                       
+                    <div class="col-4">
+                        <span style="font-weight: bold;">Cliente:</span>
+                        <span> {{ detallePedido.Cliente.razonSocial }}</span>
+                    </div>
+                    <div class="col-4">
+                        <span style="font-weight: bold;">Fecha Venta:</span>
+                        <span> {{ venta.fechaVenta }} 2023-12-12</span>
+                    </div>
+                    <div class="col-4">
+                        <span style="font-weight: bold;">Orden de Trabajo:</span>
+                        <span> {{ detallePedido.ordenTrabajo }}</span>
+                    </div>
+                
+                    <div class="col-4">
+                        <span style="font-weight: bold;">Fecha Orden:</span>
+                        <span> {{ detallePedido.fechaOrdenTrabajo }}</span>
+                    </div>
+                    <div class="col-4">
+                        <span style="font-weight: bold;">Fecha Entrega:</span>
+                        <span> {{ detallePedido.fechaEntregaOrden }}</span>
+                    </div>
 
-                        <div class="formgrid grid">
-                            <div class="field col">
-                                <label for="fechaVenta">Fecha Venta</label>
-                                    <input formControlName="fechaVenta" id="fechaVenta" type="text" pInputText readonly >
-                            </div>
-                            <div class="field col">
-                                <label for="formaPago">Fecha Venta</label>
-                                    <input formControlName="formaPago" id="formaPago" type="text" pInputText readonly >
-                            </div>
-                            <div class="field col">
-                                <label for="valorAbono">Valor Total</label>
-                                <div class="p-inputgroup">
-                                    <span class="p-inputgroup-addon">$</span>
-                                    <p-inputNumber formControlName="valorTotal" [(ngModel)]="value8" [readonly]="true"></p-inputNumber>
-                                </div>
-                            </div>
-                        </div>   
-                        <div class="formgrid grid">
-                            <div class="field col-4">
-                                <label for="estadoPago">Estado de Pago</label>
-                                    <input formControlName="estadoPago" id="estadoPago" type="text" pInputText readonly >
-                            </div>
-                        </div>     
-                            
+                    <div class="col-12">
+                        <p-table [value]="detallePedido.ReferenciaEnPedidos" styleClass="p-datatable-sm">
+                            <ng-template pTemplate="header">
+                                <tr>                                            
+                                    <th>Referencia</th>
+                                    <th>Descripción</th>
+                                    <th>Valor Unitario</th>
+                                    <th>Cantidad</th>
+                                    <th>Valor Total</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-referencia>
+                                <tr>
+                                    <td>{{referencia.referencia}}</td>
+                                    <td>{{referencia.descripcion}}</td>
+                                    <td>{{referencia.valorUnitario | currency:'USD':'symbol':'1.2-2'}}</td>
+                                    <td>{{referencia.cantidadTotal}}</td>
+                                    <td>{{referencia.valorTotalReferencia | currency:'USD':'symbol':'1.2-2'}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <ng-container >
+                                            <p-table [value]="referencia.ProcesoEnReferenciaEnPedidos[0]?.ColorEnProcesoEnReferenciaEnPedidos">
+                                                <ng-template pTemplate="header">
+                                                    <tr>                                            
+                                                        <th>Color/Talla</th>
+                                                        <th>S</th>
+                                                        <th>M</th>
+                                                        <th>L</th>
+                                                        <th>XL</th>
+                                                        <th>Cantidad Total</th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"  let-color>
+                                                    <tr>
+                                                        <td>{{color.color}}</td>
+                                                        <td>{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[0].cantidad}}</td>
+                                                        <td>{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[1].cantidad}}</td>
+                                                        <td>{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[2].cantidad}}</td>
+                                                        <td>{{color.TallaEnColorEnProcesoEnReferenciaEnPedidos[3].cantidad}}</td>
+                                                        <td>{{color.cantidad}}</td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </ng-container>
+                                    </td>
+                                    <td colspan="2">
+                                        <ng-container >
+                                            <p-table [value]="referencia.ProcesoEnReferenciaEnPedidos">
+                                                <ng-template pTemplate="header">
+                                                    <tr>                                            
+                                                        <th>Proceso</th>
+                                                        <th>Tipo Maquina</th>                                                                
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"  let-proceso>
+                                                    <tr>
+                                                        <td>{{proceso.proceso}}</td>
+                                                        <td>{{proceso.tipoDeMaquina}}</td>                                                                
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </ng-container>
+                                    </td>                                                                                        
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+
+                    <div class="col-4">
+                        <span style="font-weight: bold;">Forma Pago:</span>
+                        <span> {{ detallePedido.formaPago }}</span>
+                    </div>
+                    <div class="col-4">
+                        <span style="font-weight: bold;">Estado de Pago:</span>
+                        <span> {{ venta.estadoPago }}</span>
+                    </div>
+                    <div class="col-4">
+                        <span style="font-weight: bold;">Valor Total:</span>
+                        <span> {{ detallePedido.valorTotal | currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+
+
+
+
+
+                    <div> 
+                        <div class="card m-5" [style]="{width: '500px', textAlign: 'center'}">
+                                <h5>Abonos De La Venta {{ id }}</h5>
+                                <p-table #dt [value]="listAbonoVentas" responsiveLayout="scroll" [rows]="10" dataKey="id">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th pSortableColumn="idAbono">Id Abono</th>
+                                            <th pSortableColumn="fechaAbono">Fecha</th>
+                                            <th pSortableColumn="valorAbono">Valor Abonado</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-abonoVenta>
+                                        <tr>
+                                            <td style="width:14%; min-width:5rem;"><span class="p-column-title">Id Abono</span>
+                                                {{ abonoVenta.id }}
+                                            </td>
+                                            <td style="width:14%; min-width:10rem;">
+                                                <span class="p-column-title">Fecha</span>
+                                                {{ abonoVenta.fechaAbono }}
+                                            </td>
+                                            <td style="width:14%; min-width:8rem;">
+                                                <span class= "p-column-title">Valor Abonado</span>
+                                                {{ abonoVenta.valorAbono  }}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                        </div>
+                        
+                        
                     
-                    </form> 
-                </div>
-                <div style="flex: 1;"> 
-                    <div class="card m-5" [style]="{width: '500px'}">
-                            <h5 >Abonos De La Venta {{ id }}</h5>
+                    </div>
+
+
+
+
+
+                    
+                    <!-- Botón para ver los abonos si la forma de pago es "Crédito" -->
+                    <div *ngIf="mostrarTablaAbonos">
+                        <button pButton type="button" label="Ver Abonos" (click)="mostrarTablaAbonos = !mostrarTablaAbonos"></button>
+                    </div>
+
+                    <!-- Tabla de abonos si se muestra -->
+                    <div *ngIf="mostrarTablaAbonos">
+                        <div class="card m-5" [style]="{width: '500px'}">
+                            <h5>Abonos De La Venta {{ id }}</h5>
                             <p-table #dt [value]="listAbonoVentas" responsiveLayout="scroll" [rows]="10" dataKey="id">
                                 <ng-template pTemplate="header">
                                     <tr>
@@ -222,26 +337,21 @@
                                             {{ abonoVenta.fechaAbono }}
                                         </td>
                                         <td style="width:14%; min-width:8rem;">
-                                            <span class= "p-column-title">Valor Abonado</span>
-                                            {{ abonoVenta.valorAbono  }}
+                                            <span class="p-column-title">Valor Abonado</span>
+                                            {{ abonoVenta.valorAbono }}
                                         </td>
                                     </tr>
                                 </ng-template>
                             </p-table>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; flex: 1;">
-                        <div class="field">
-                            <button pButton pRipple label="Regresar" class="p-button-rounded p-button-info" (click)="hideDialog()"></button>
                         </div>
                     </div>
                     
-                    
-                
                 </div>
-                
-            </div>
-        </p-dialog>
 
-          
+            </div>
+            
+            <!-- <button pButton type="button" label="Cerrar" class="p-button-secondary" (click)="cerrarModalDetallePedido()"></button> -->
+        </p-dialog>
+   
     </div>
 </div>
