@@ -93,6 +93,89 @@ export class ProduccionComponent implements OnInit {
     this.getProcesosEnReferenciaEnPedido();
   }
 
+validarPrimerProceso(pedidoId: number){
+  const pedido = this.listPedidos.find(p => p.id === pedidoId);
+
+
+  if (pedido && pedido.ReferenciaEnPedidos) {
+    pedido.ReferenciaEnPedidos.every(referencia => {
+      if(referencia.ProcesoEnReferenciaEnPedidos.length > 0){
+        const pedidoEstado: PedidoInstance = {
+          estado: 'En proceso',
+        }
+        this._pedidoService.putPedidoEstado(pedidoId, pedidoEstado).subscribe(() => {
+          this.toastr.success('Pedido en proceso', 'Éxito');
+          this.getListPedidos(); // Actualiza la lista de pedidos si es necesario
+        })
+      };
+
+    });
+  }
+}
+
+  async validarYCambiarEstadoPedido(pedidoId: number): Promise<void> {
+    // console.log('Validando pedido:', pedidoId);
+
+    try {
+        await this.recorrerPedidos();
+        const pedido = this.listPedidos.find(p => p.id === pedidoId);
+
+        // pedido?.ReferenciaEnPedidos?.forEach(referencia => {
+        //   referencia.ProcesoEnReferenciaEnPedidos.every(proceso => {
+        //     console.log('Proceso:', proceso.estado);
+        //   });
+        // });
+      
+        if (pedido && pedido.ReferenciaEnPedidos) {
+          const todosTerminados = pedido.ReferenciaEnPedidos.every(referencia => {
+            if (referencia.ProcesoEnReferenciaEnPedidos) {
+              return referencia.ProcesoEnReferenciaEnPedidos.every(proceso => proceso.estado === true);
+            }
+            return true; 
+          });
+      
+          const pedidoEstado: PedidoInstance = {
+            estado: 'Terminado',
+          };
+      
+          // console.log(pedidoEstado);
+      
+          if (todosTerminados) {
+            console.log('Todos los procesos están terminados');
+
+            this._pedidoService.putPedidoEstado(pedidoId, pedidoEstado).subscribe(() => {
+              this.toastr.success('Pedido terminado correctamente', 'Éxito');
+              this.getListPedidos(); // Actualiza la lista de pedidos si es necesario
+            })
+
+          }else{
+            console.log('No todos los procesos están terminados');
+          }
+        }
+       
+        // this.validarYCambiarEstadoPedido2(pedidoId);
+    }catch (error) {
+      console.error('Error al validar y cambiar estado del pedido:', error);
+      // Puedes manejar el error según tus necesidades (por ejemplo, mostrar una notificación de error)
+    }
+  }
+
+  async recorrerPedidos(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this._pedidoService.getListPedidos().subscribe((data: any) => {
+        this.listPedidos = data.listaPedidos;
+        
+        this._procesoReferenciaPedidoService.getProcesosEnReferenciaEnPedido().subscribe((procesoData: any) => {
+          this.listProcesos = procesoData.listProcesoEnReferenciaEnPedido;
+          console.log(this.listProcesos);
+          resolve();
+        });
+      });
+    });
+  }
+  
+  
+
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
@@ -159,6 +242,28 @@ getProcesosEnReferenciaEnPedido() {
     // console.log(this.listProcesos);
   });
 }
+
+pedidos: PedidoInstance[] = []
+
+
+async getListPedidos(): Promise<void> {
+  try {
+    this._pedidoService.getListPedidos().subscribe((data: any) => {
+      if (data && data.listaPedidos) {
+        // Filtra la lista de pedidos
+        this.listPedidos = data.listaPedidos.filter((pedido: PedidoInstance) => {
+          return pedido.estado === 'Registrado' || pedido.estado === 'En proceso';
+        });
+      } else {
+        console.error('La respuesta del servicio no tiene la propiedad esperada:', data);
+      }
+    });
+  } catch (error) {
+    console.error('Error al obtener la lista de pedidos:', error);
+  }
+}
+
+
 
 
 validarRegistroProceso(pedidoId: number): boolean {
@@ -284,6 +389,8 @@ addAsignarProceso() {
     estado: false
   }
 
+  this.recorrePedido2(this.procesoId);
+
   console.log('Asignar proceso:', asignarProcesoEmpleado)
 
   const empleadoTarea: Empleado = {
@@ -306,8 +413,11 @@ addAsignarProceso() {
   
 }
 
+pedidoEstadoId = 0;
+
 async actualizarCantidadHecha(procesoId: number): Promise<void> {
   try {
+
     const asignarProcesos = this.listAsignarProceso
       .filter(asignar => asignar.proceso === procesoId && asignar.estado === true);
 
@@ -317,31 +427,62 @@ async actualizarCantidadHecha(procesoId: number): Promise<void> {
       cantidadHecha: cantidadHecha,
     };
 
-    // Actualiza la propiedad cantidadHecha en el proceso
-    await this._procesoReferenciaPedidoService.putProcesoCantidad(procesoId, procesoReferencia).toPromise();
+    await this._procesoReferenciaPedidoService.putProcesoCantidad(procesoId, procesoReferencia).toPromise().then(() => {
+        this.getProcesosEnReferenciaEnPedido(); 
+     });
 
-    console.log('Cantidad hecha:', cantidadHecha);
-    console.log('Cantidad total:', this.cantidadTotal);
-    
-    // Verifica si la cantidadTotal es igual a cantidadHecha
     if (cantidadHecha === this.cantidadTotal) {
-      // Actualiza el estado del proceso si es necesario
+
       const estadoActualizado = cantidadHecha === this.cantidadTotal;
       const procesoReferenciaConEstado: ProcesoReferenciaPedido = {
         cantidadHecha: cantidadHecha,
         estado: estadoActualizado,
       };
 
-      console.log(procesoReferenciaConEstado)
+      await this._procesoReferenciaPedidoService.putProcesoCantidad(procesoId, procesoReferenciaConEstado).toPromise().then(() => {
+        this.recorrePedido(procesoId)
+      });
       
-      // Actualiza la propiedad cantidadHecha y el estado en el proceso
-      await this._procesoReferenciaPedidoService.putProcesoCantidad(procesoId, procesoReferenciaConEstado).toPromise();
     }
-    this.getAsignarProcesos();
+
     this.getProcesosEnReferenciaEnPedido();
-    // Actualiza la lista de procesos (opcional)
+    this.hideDialog();
+
   } catch (error) {
     console.error('Error al actualizar cantidadHecha:', error);
+  }
+}
+
+recorrePedido(procesoId: number){
+  for (const pedido of this.listPedidos) {
+    if(pedido.ReferenciaEnPedidos){
+    for(const referencia of pedido.ReferenciaEnPedidos){
+      for(const proceso of referencia.ProcesoEnReferenciaEnPedidos){
+        if(proceso.id === procesoId){
+          this.pedidoEstadoId = pedido.id || 0;
+          console.log('Pedido dentro del estado:', this.pedidoEstadoId);
+          this.validarYCambiarEstadoPedido(this.pedidoEstadoId)
+        }
+      }
+    }
+  }
+  }
+}
+recorrePedido2(procesoId: number){
+  for (const pedido of this.listPedidos) {
+    if(pedido.ReferenciaEnPedidos){
+    for(const referencia of pedido.ReferenciaEnPedidos){
+      for(const proceso of referencia.ProcesoEnReferenciaEnPedidos){
+        if(proceso.id === procesoId){
+          this.pedidoEstadoId = pedido.id || 0;
+          console.log('Pedido dentro del estado:', this.pedidoEstadoId);
+          if (pedido.estado !== 'En proceso') {
+            this.validarPrimerProceso(this.pedidoEstadoId);
+          }
+        }
+      }
+    }
+  }
   }
 }
 
@@ -376,11 +517,6 @@ showInfo(procesoId: number) {
   // console.log(this.filteredAsignarProceso);
 }
 
-getListPedidos(){     
-  this._pedidoService.getListPedidos().subscribe((data:any) =>{      
-    this.listPedidos = data.listaPedidos;   
-    // console.log(this.listPedidos);       
-  })        
-}
+
 
 }

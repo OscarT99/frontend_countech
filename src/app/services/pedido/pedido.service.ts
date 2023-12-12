@@ -8,10 +8,12 @@ import { Observable } from 'rxjs';
   export class PedidoService {
     private myAppUrl: string;  
     private myApiUrl: string; 
+    private myApiUrlEstado: string;
   
     constructor(private http: HttpClient) { 
       this.myAppUrl = environment.endpoint
       this.myApiUrl = 'api/pedidos/'
+      this.myApiUrlEstado = '/estado/'
     }
   
     getPedido(id:number): Observable<PedidoInstance>{
@@ -28,6 +30,10 @@ import { Observable } from 'rxjs';
   
     putPedido(id:number,pedido:PedidoInstance):Observable<void>{
       return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}`,pedido)
+    }
+
+    putPedidoEstado(id:number, pedido:PedidoInstance):Observable<void>{
+      return this.http.put<void>(`${this.myAppUrl}${this.myApiUrl}${id}${this.myApiUrlEstado}`,pedido)
     }
 
     deletePedido(id:number): Observable<void>{

@@ -15,8 +15,6 @@
                                       </div>
             </ng-template>
 
-
-
             <p-table [value]="[pedido]">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -29,7 +27,8 @@
                         <th>Fecha Orden</th>
                         <th>Fecha Entrega</th>
                         <th>Valor Total</th>
-                        <th>Estado</th>                                                                
+                        <th>Estado</th>
+                                                           
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-pedido>
@@ -38,7 +37,8 @@
                         <td>{{pedido.fechaOrdenTrabajo}}</td>
                         <td>{{pedido.fechaEntregaOrden}}</td>
                         <td>{{pedido.valorTotal}}</td>
-                        <td>{{pedido.estado}}</td>                                                                
+                        <td>{{pedido.estado}}</td>
+                                                           
                     </tr>
                 </ng-template>
             </p-table>
@@ -130,7 +130,7 @@
                                             <ng-container *ngFor="let talla of color.TallaEnColorEnProcesoEnReferenciaEnPedidos">
                                                 <tr>
                                                     <td>{{color.color}}</td>
-                                                    <td>{{color.cantidad}}</td>
+                                                    <td>{{talla.cantidad}}</td>
                                                     <td>{{talla.talla}}</td>
                                                 </tr>
                                             </ng-container>
